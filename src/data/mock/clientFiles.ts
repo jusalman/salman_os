@@ -1,0 +1,70 @@
+import type { ClientFile } from '../../types'
+
+export const clientFilesByClientId: Record<string, ClientFile[]> = {
+  c1: [
+    {
+      id: 'f1',
+      name: '2026-05 Campaign Brief.pdf',
+      type: 'pdf',
+      folderPath: 'Ridge Campaign/02_Work',
+      driveUrl: 'https://drive.google.com/',
+      status: 'active',
+      uploadedBy: 'Mina',
+      uploadedAt: '2026-05-05 16:20',
+    },
+    {
+      id: 'f2',
+      name: 'Creative Set A.png',
+      type: 'image',
+      folderPath: 'Ridge Campaign/04_Assets',
+      driveUrl: 'https://drive.google.com/',
+      status: 'active',
+      uploadedBy: 'Salman',
+      uploadedAt: '2026-05-06 08:10',
+    },
+    {
+      id: 'f3',
+      name: 'Old Budget Draft.xlsx',
+      type: 'sheet',
+      folderPath: 'Ridge Campaign/99_Archive',
+      driveUrl: 'https://drive.google.com/',
+      status: 'archived',
+      uploadedBy: 'Jin',
+      uploadedAt: '2026-04-29 18:00',
+    },
+  ],
+  c2: [
+    {
+      id: 'f4',
+      name: 'Store Launch Checklist.docx',
+      type: 'doc',
+      folderPath: 'North Retail/02_Work',
+      driveUrl: 'https://drive.google.com/',
+      status: 'active',
+      uploadedBy: 'Mina',
+      uploadedAt: '2026-05-03 12:10',
+    },
+    {
+      id: 'f5',
+      name: 'April Asset Set.zip',
+      type: 'archive',
+      folderPath: 'North Retail/99_Archive',
+      driveUrl: 'https://drive.google.com/',
+      status: 'archived',
+      uploadedBy: 'Salman',
+      uploadedAt: '2026-05-01 09:45',
+    },
+  ],
+  c3: [
+    {
+      id: 'f6',
+      name: 'Contract Final.pdf',
+      type: 'pdf',
+      folderPath: 'Aster Studio/01_Admin',
+      driveUrl: 'https://drive.google.com/',
+      status: 'active',
+      uploadedBy: 'Jin',
+      uploadedAt: '2026-04-11 13:15',
+    },
+  ],
+}
