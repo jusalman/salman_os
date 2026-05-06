@@ -1,4 +1,5 @@
 import type {
+  ClientSummary,
   ClientEvent,
   ClientFile,
   ClientLink,
@@ -14,6 +15,7 @@ import { clientLogsByClientId } from './mock/clientLogs'
 import { clientMoneyItemsByClientId } from './mock/clientMoney'
 import { clientRecords } from './mock/clientRecords'
 import { clientTasksByClientId } from './mock/clientTasks'
+import { buildSmartViews, type SmartViews } from '../domain/smartViews'
 
 function cloneItems<T>(items: T[]): T[] {
   return items.map((item) => ({ ...item }))
@@ -55,10 +57,34 @@ export function getClients(): ClientRecord[] {
   }))
 }
 
+export async function loadClients(): Promise<ClientRecord[]> {
+  return Promise.resolve(getClients())
+}
+
+export function getClientSummaries(): ClientSummary[] {
+  return clientRecords.map((client) => ({ ...client }))
+}
+
+export async function loadClientSummaries(): Promise<ClientSummary[]> {
+  return Promise.resolve(getClientSummaries())
+}
+
 export function getClientById(clientId: string): ClientRecord | undefined {
   return getClients().find((client) => client.id === clientId)
 }
 
+export async function loadClientById(clientId: string): Promise<ClientRecord | undefined> {
+  return Promise.resolve(getClientById(clientId))
+}
+
 export function getInitialClientId(): string {
   return clientRecords[0]?.id ?? ''
+}
+
+export function getSmartViews(): SmartViews {
+  return buildSmartViews(getClients())
+}
+
+export async function loadSmartViews(): Promise<SmartViews> {
+  return Promise.resolve(getSmartViews())
 }

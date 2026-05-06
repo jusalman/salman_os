@@ -63,6 +63,16 @@ export type OperationLog = {
   message: string
 }
 
+export type ClientSummary = {
+  id: string
+  name: string
+  status: ClientStatus
+  owner: string
+  driveRootUrl: string
+  memo: string
+  updatedAt: string
+}
+
 export type ClientRecord = {
   id: string
   name: string

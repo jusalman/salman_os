@@ -23,6 +23,10 @@
   box-shadow: 0 24px 80px rgba(22, 37, 33, 0.08);
 }
 
+.status-panel {
+  grid-template-columns: 1fr;
+}
+
 .intro {
   max-width: 54ch;
   font-size: 1.05rem;
@@ -58,11 +62,13 @@
 }
 
 .login-form button,
+.status-actions button,
 .client-chip {
   font: inherit;
 }
 
-.login-form button {
+.login-form button,
+.status-actions button {
   margin-top: 8px;
   border: none;
   border-radius: 14px;
@@ -74,9 +80,15 @@
 }
 
 .login-form button:hover,
+.status-actions button:hover,
 .client-chip:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 28px rgba(18, 71, 64, 0.14);
+}
+
+.status-actions {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .form-error {

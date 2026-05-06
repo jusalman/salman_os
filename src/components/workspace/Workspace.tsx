@@ -5,8 +5,8 @@ import {
   taskPriorityLabel,
   taskStatusLabel,
 } from '../../domain/labels'
-import { buildSmartViews } from '../../domain/smartViews'
-import type { ClientRecord } from '../../types'
+import type { SmartViews as SmartViewsData } from '../../domain/smartViews'
+import type { ClientRecord, ClientSummary } from '../../types'
 import { Panel } from '../common/Panel'
 import { ClientOverview } from './ClientOverview'
 import { ClientTabs } from './ClientTabs'
@@ -14,7 +14,9 @@ import { SmartViews } from './SmartViews'
 
 type WorkspaceProps = {
   viewerName: string
-  clients: ClientRecord[]
+  clients: ClientSummary[]
+  selectedClient: ClientRecord
+  smartViews: SmartViewsData
   selectedClientId: string
   onSelectClient: (clientId: string) => void
 }
@@ -22,12 +24,11 @@ type WorkspaceProps = {
 export function Workspace({
   viewerName,
   clients,
+  selectedClient,
+  smartViews,
   selectedClientId,
   onSelectClient,
 }: WorkspaceProps) {
-  const selectedClient = clients.find((client) => client.id === selectedClientId) ?? clients[0]
-  const smartViews = buildSmartViews(clients)
-
   return (
     <section className="workspace">
       <aside className="sidebar">
