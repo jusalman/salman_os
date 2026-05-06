@@ -237,6 +237,19 @@
   background: rgba(26, 131, 116, 0.1);
 }
 
+.client-chip-meta,
+.client-chip-flags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.client-chip-meta span,
+.client-chip-flags span {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
 .client-header {
   border-radius: 22px;
   padding: 22px;

@@ -16,6 +16,7 @@ import { clientMoneyItemsByClientId } from './mock/clientMoney'
 import { clientRecords } from './mock/clientRecords'
 import { clientTasksByClientId } from './mock/clientTasks'
 import { buildSmartViews, type SmartViews } from '../domain/smartViews'
+import { projectClientSummary } from './projections/clientSummary'
 
 function cloneItems<T>(items: T[]): T[] {
   return items.map((item) => ({ ...item }))
@@ -62,7 +63,16 @@ export async function loadClients(): Promise<ClientRecord[]> {
 }
 
 export function getClientSummaries(): ClientSummary[] {
-  return clientRecords.map((client) => ({ ...client }))
+  return clientRecords.map((client) =>
+    projectClientSummary(client, {
+      tasks: getClientTasks(client.id),
+      events: getClientEvents(client.id),
+      files: getClientFiles(client.id),
+      moneyItems: getClientMoneyItems(client.id),
+      links: getClientLinks(client.id),
+      logs: getClientLogs(client.id),
+    }),
+  )
 }
 
 export async function loadClientSummaries(): Promise<ClientSummary[]> {
@@ -82,6 +92,7 @@ export function getInitialClientId(): string {
 }
 
 export function getSmartViews(): SmartViews {
+  // Smart Operation Views remain a separate read model from the list summary projection.
   return buildSmartViews(getClients())
 }
 

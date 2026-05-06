@@ -19,6 +19,17 @@ export function ClientTabs({ clients, selectedClientId, onSelect }: ClientTabsPr
         >
           <strong>{client.name}</strong>
           <span>{clientStatusLabel[client.status]}</span>
+          <div className="client-chip-meta">
+            <span>{`Tasks ${client.openTaskCount}`}</span>
+            <span>{`Events ${client.upcomingEventCount}`}</span>
+            <span>{client.hasBizMoneyWarning ? 'Biz warning' : 'Biz clear'}</span>
+          </div>
+          <div className="client-chip-flags">
+            {client.hasDriveFolder ? <span>Drive</span> : null}
+            {client.hasLookerLink ? <span>Looker</span> : null}
+            {client.hasSheetLink ? <span>Sheet</span> : null}
+            {client.latestLogAt ? <span>{client.latestLogAt}</span> : null}
+          </div>
         </button>
       ))}
     </section>

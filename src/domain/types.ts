@@ -71,6 +71,13 @@ export type ClientSummary = {
   driveRootUrl: string
   memo: string
   updatedAt: string
+  openTaskCount: number
+  upcomingEventCount: number
+  hasBizMoneyWarning: boolean
+  latestLogAt: string | null
+  hasDriveFolder: boolean
+  hasLookerLink: boolean
+  hasSheetLink: boolean
 }
 
 export type ClientRecord = {
