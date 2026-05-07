@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { SmartViews } from '../domain/smartViews'
 import { smartOperationViewsRepository } from '../data/repositories/currentRepositories'
+import { getLoadErrorMessage } from './errors'
 
 export type UseSmartViewsResult = {
   smartViews: SmartViews | null
@@ -21,9 +22,11 @@ export function useSmartViews(): UseSmartViewsResult {
     try {
       const nextSmartViews = await smartOperationViewsRepository.getSmartOperationViews()
       setSmartViews(nextSmartViews)
-    } catch {
+    } catch (loadError) {
       setSmartViews(null)
-      setError('Failed to load SALMAN OS smart operation views.')
+      setError(
+        getLoadErrorMessage(loadError, 'Failed to load SALMAN OS smart operation views.'),
+      )
     } finally {
       setLoading(false)
     }
@@ -42,13 +45,15 @@ export function useSmartViews(): UseSmartViewsResult {
 
         setSmartViews(nextSmartViews)
         setError('')
-      } catch {
+      } catch (loadError) {
         if (!isActive) {
           return
         }
 
         setSmartViews(null)
-        setError('Failed to load SALMAN OS smart operation views.')
+        setError(
+          getLoadErrorMessage(loadError, 'Failed to load SALMAN OS smart operation views.'),
+        )
       } finally {
         if (isActive) {
           setLoading(false)

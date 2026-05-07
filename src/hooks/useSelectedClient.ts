@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ClientRecord } from '../types'
 import { clientDetailRepository } from '../data/repositories/currentRepositories'
+import { getLoadErrorMessage } from './errors'
 
 export type UseSelectedClientParams = {
   selectedClientId: string
@@ -45,9 +46,9 @@ export function useSelectedClient({
       }
 
       setSelectedClient(nextClient)
-    } catch {
+    } catch (loadError) {
       setSelectedClient(null)
-      setError('Failed to load selected client details.')
+      setError(getLoadErrorMessage(loadError, 'Failed to load selected client details.'))
     } finally {
       setLoading(false)
     }
@@ -85,13 +86,13 @@ export function useSelectedClient({
         }
 
         setSelectedClient(nextClient)
-      } catch {
+      } catch (loadError) {
         if (!isActive) {
           return
         }
 
         setSelectedClient(null)
-        setError('Failed to load selected client details.')
+        setError(getLoadErrorMessage(loadError, 'Failed to load selected client details.'))
       } finally {
         if (isActive) {
           setLoading(false)

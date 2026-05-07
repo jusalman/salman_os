@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ClientSummary } from '../types'
 import { clientListRepository } from '../data/repositories/currentRepositories'
+import { getLoadErrorMessage } from './errors'
 
 export type UseClientsResult = {
   clients: ClientSummary[]
@@ -21,9 +22,9 @@ export function useClients(): UseClientsResult {
     try {
       const nextClients = await clientListRepository.listClientSummaries()
       setClients(nextClients)
-    } catch {
+    } catch (loadError) {
       setClients([])
-      setError('Failed to load SALMAN OS client data.')
+      setError(getLoadErrorMessage(loadError, 'Failed to load SALMAN OS client data.'))
     } finally {
       setLoading(false)
     }
@@ -42,13 +43,13 @@ export function useClients(): UseClientsResult {
 
         setClients(nextClients)
         setError('')
-      } catch {
+      } catch (loadError) {
         if (!isActive) {
           return
         }
 
         setClients([])
-        setError('Failed to load SALMAN OS client data.')
+        setError(getLoadErrorMessage(loadError, 'Failed to load SALMAN OS client data.'))
       } finally {
         if (isActive) {
           setLoading(false)
