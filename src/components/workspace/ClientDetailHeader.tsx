@@ -1,11 +1,11 @@
 import { clientStatusLabel } from '../../domain/labels'
-import type { ClientRecord } from '../../types'
+import type { ClientDetailHeaderModel } from '../../types'
 
-type ClientOverviewProps = {
-  client: ClientRecord
+type ClientDetailHeaderProps = {
+  client: ClientDetailHeaderModel
 }
 
-export function ClientOverview({ client }: ClientOverviewProps) {
+export function ClientDetailHeader({ client }: ClientDetailHeaderProps) {
   return (
     <section className="client-header">
       <div>

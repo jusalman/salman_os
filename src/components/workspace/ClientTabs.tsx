@@ -1,8 +1,8 @@
 import { clientStatusLabel } from '../../domain/labels'
-import type { ClientSummary } from '../../types'
+import type { ClientListItem } from '../../types'
 
 type ClientTabsProps = {
-  clients: ClientSummary[]
+  clients: ClientListItem[]
   selectedClientId: string
   onSelect: (clientId: string) => void
 }

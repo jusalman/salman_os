@@ -6,16 +6,16 @@ import {
   taskStatusLabel,
 } from '../../domain/labels'
 import type { SmartViews as SmartViewsData } from '../../domain/smartViews'
-import type { ClientRecord, ClientSummary } from '../../types'
+import type { ClientListItem, SelectedClientDetailView } from '../../types'
 import { Panel } from '../common/Panel'
-import { ClientOverview } from './ClientOverview'
+import { ClientDetailHeader } from './ClientDetailHeader'
 import { ClientTabs } from './ClientTabs'
 import { SmartViews } from './SmartViews'
 
 type WorkspaceProps = {
   viewerName: string
-  clients: ClientSummary[]
-  selectedClient: ClientRecord
+  clients: ClientListItem[]
+  detailView: SelectedClientDetailView
   smartViews: SmartViewsData
   selectedClientId: string
   onSelectClient: (clientId: string) => void
@@ -24,7 +24,7 @@ type WorkspaceProps = {
 export function Workspace({
   viewerName,
   clients,
-  selectedClient,
+  detailView,
   smartViews,
   selectedClientId,
   onSelectClient,
@@ -61,12 +61,12 @@ export function Workspace({
           onSelect={onSelectClient}
         />
 
-        <ClientOverview client={selectedClient} />
+        <ClientDetailHeader client={detailView.header} />
 
         <section className="panel-grid">
           <Panel title="Files" subtitle="Source files from Google Drive">
             <div className="stack">
-              {selectedClient.files.map((file) => (
+              {detailView.files.map((file) => (
                 <article key={file.id} className="item-row">
                   <div>
                     <strong>{file.name}</strong>
@@ -87,7 +87,7 @@ export function Workspace({
 
           <Panel title="Tasks" subtitle="Operational work by client">
             <div className="stack">
-              {selectedClient.tasks.map((task) => (
+              {detailView.tasks.map((task) => (
                 <article key={task.id} className="item-row">
                   <div>
                     <strong>{task.title}</strong>
@@ -106,7 +106,7 @@ export function Workspace({
 
           <Panel title="Internal Schedule" subtitle="Supabase-based client schedule">
             <div className="stack">
-              {selectedClient.events.map((event) => (
+              {detailView.scheduleItems.map((event) => (
                 <article key={event.id} className="item-row">
                   <div>
                     <strong>{event.title}</strong>
@@ -114,7 +114,7 @@ export function Workspace({
                   </div>
                   <div className="item-meta">
                     <span>{event.eventDate}</span>
-                    <span>{`${event.startTime}-${event.endTime}`}</span>
+                    <span>{event.timeRange}</span>
                     <span>{event.owner}</span>
                     <span>{eventStatusLabel[event.status]}</span>
                   </div>
@@ -125,7 +125,7 @@ export function Workspace({
 
           <Panel title="Business Money" subtitle="Manual check status only">
             <div className="stack">
-              {selectedClient.moneyItems.map((item) => (
+              {detailView.moneyItems.map((item) => (
                 <article key={item.id} className="item-row">
                   <div>
                     <strong>{item.title}</strong>
@@ -146,7 +146,7 @@ export function Workspace({
 
           <Panel title="Links" subtitle="Operational shortcuts">
             <div className="stack compact">
-              {selectedClient.links.map((link) => (
+              {detailView.links.map((link) => (
                 <article key={link.id} className="item-row">
                   <div>
                     <strong>{link.title}</strong>
@@ -164,7 +164,7 @@ export function Workspace({
 
           <Panel title="Operation Logs" subtitle="Recent internal changes">
             <div className="stack compact">
-              {selectedClient.logs.map((log) => (
+              {detailView.logs.map((log) => (
                 <article key={log.id} className="item-row">
                   <div>
                     <strong>{log.message}</strong>

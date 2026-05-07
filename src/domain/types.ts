@@ -80,6 +80,19 @@ export type ClientSummary = {
   hasSheetLink: boolean
 }
 
+export type ClientListItem = {
+  id: string
+  name: string
+  status: ClientSummary['status']
+  openTaskCount: number
+  upcomingEventCount: number
+  hasBizMoneyWarning: boolean
+  latestLogAt: string | null
+  hasDriveFolder: boolean
+  hasLookerLink: boolean
+  hasSheetLink: boolean
+}
+
 export type ClientRecord = {
   id: string
   name: string
@@ -94,6 +107,81 @@ export type ClientRecord = {
   moneyItems: ClientMoneyItem[]
   links: ClientLink[]
   logs: OperationLog[]
+}
+
+export type ClientDetailHeaderModel = {
+  id: string
+  name: string
+  status: ClientRecord['status']
+  owner: string
+  driveRootUrl: string
+  memo: string
+  updatedAt: string
+}
+
+export type ClientFilePanelItem = {
+  id: string
+  name: string
+  folderPath: string
+  type: string
+  status: ClientFile['status']
+  uploadedBy: string
+  driveUrl: string
+}
+
+export type ClientTaskPanelItem = {
+  id: string
+  title: string
+  note: string
+  status: ClientTask['status']
+  priority: ClientTask['priority']
+  assignee: string
+  dueDate: string
+}
+
+export type ClientSchedulePanelItem = {
+  id: string
+  title: string
+  note: string
+  eventDate: string
+  timeRange: string
+  owner: string
+  status: ClientEvent['status']
+}
+
+export type ClientMoneyPanelItem = {
+  id: string
+  title: string
+  note: string
+  status: ClientMoneyItem['status']
+  lastCheckedAt: string | null
+  checkedBy: string | null
+  url: string
+}
+
+export type ClientLinkPanelItem = {
+  id: string
+  title: string
+  category: ClientLink['category']
+  url: string
+}
+
+export type ClientLogPanelItem = {
+  id: string
+  message: string
+  actor: string
+  action: string
+  createdAt: string
+}
+
+export type SelectedClientDetailView = {
+  header: ClientDetailHeaderModel
+  files: ClientFilePanelItem[]
+  tasks: ClientTaskPanelItem[]
+  scheduleItems: ClientSchedulePanelItem[]
+  moneyItems: ClientMoneyPanelItem[]
+  links: ClientLinkPanelItem[]
+  logs: ClientLogPanelItem[]
 }
 
 export type SmartViewItem = {

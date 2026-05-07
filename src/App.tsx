@@ -4,6 +4,8 @@ import './App.css'
 import { LoginView } from './components/login/LoginView'
 import { Workspace } from './components/workspace/Workspace'
 import { APP_PASSWORD } from './config/constants'
+import { projectClientListItem } from './data/projections/clientListItem'
+import { projectSelectedClientDetailView } from './data/projections/selectedClientDetailView'
 import { useClients } from './hooks/useClients'
 import { useSelectedClient } from './hooks/useSelectedClient'
 import { useSmartViews } from './hooks/useSmartViews'
@@ -21,6 +23,7 @@ function App() {
   const [viewerName, setViewerName] = useState('')
   const [error, setError] = useState('')
   const [selectedClientId, setSelectedClientId] = useState('')
+  const clientListItems = clients.map(projectClientListItem)
   const fallbackClientId = clients[0]?.id ?? ''
   const {
     selectedClient,
@@ -32,6 +35,9 @@ function App() {
     selectedClientId,
     fallbackClientId,
   })
+  const selectedClientDetailView = selectedClient
+    ? projectSelectedClientDetailView(selectedClient)
+    : null
 
   function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -110,11 +116,18 @@ function App() {
             actionLabel="Reload client"
             onAction={() => void reloadSelectedClient()}
           />
+        ) : !selectedClientDetailView ? (
+          <StatusView
+            title="Selected client unavailable"
+            message="SALMAN OS could not assemble a client detail view."
+            actionLabel="Reload client"
+            onAction={() => void reloadSelectedClient()}
+          />
         ) : (
         <Workspace
           viewerName={viewerName}
-          clients={clients}
-          selectedClient={selectedClient}
+          clients={clientListItems}
+          detailView={selectedClientDetailView}
           smartViews={smartViews}
           selectedClientId={resolvedClientId}
           onSelectClient={setSelectedClientId}
