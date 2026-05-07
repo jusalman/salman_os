@@ -135,6 +135,8 @@ v1에서는 비즈머니 자동 수집을 하지 않는다. 직원이 확인한 
 
 Before implementing a real Supabase read adapter, use `SUPABASE_READ_MAPPING.md` as the fixed mapping between current mock read models, repository contracts, and candidate Supabase tables. TASK-16 adds documentation only; no SQL migration or Supabase connection is implemented.
 
+Before writing SQL migrations, use `SUPABASE_NAMING_CONVENTIONS.md` as the source of truth for v1 table names, column names, enum names, and enum values. TASK-17 adds documentation only; no SQL migration or Supabase connection is implemented.
+
 ## MVP Notes
 
 - 외부 고객 포털용 테이블은 v1에서 만들지 않는다.

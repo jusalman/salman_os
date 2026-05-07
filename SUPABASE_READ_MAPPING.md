@@ -8,6 +8,8 @@ TASK-16 is documentation only. It does not connect to Supabase, does not install
 
 SALMAN OS v1 is an internal staff MVP. The active runtime data source remains `VITE_DATA_SOURCE=mock`. `VITE_DATA_SOURCE=supabase` remains a safe not implemented placeholder until a later task.
 
+For final v1 table, column, and enum names, use `SUPABASE_NAMING_CONVENTIONS.md`. If this read mapping shows older mock labels, the naming conventions document is the schema source of truth.
+
 ## Read Boundaries
 
 The app has three read repository contracts.
@@ -36,17 +38,17 @@ v1 read behavior must stay separate from future write behavior. Create, update, 
 
 ## Enum Alignment
 
-The Supabase adapter should map DB values into the current TypeScript read model without changing UI contracts.
+The Supabase adapter should map DB values into the repository read model without exposing raw DB rows to UI components. Final DB enum names and values are fixed in `SUPABASE_NAMING_CONVENTIONS.md`.
 
-| Read model type | Allowed values |
-| --- | --- |
-| `ClientStatus` | `active`, `attention`, `archived` |
-| `TaskStatus` | `doing`, `blocked`, `done`, `archived` |
-| `TaskPriority` | `high`, `normal`, `low` |
-| `EventStatus` | `scheduled`, `done`, `canceled` |
-| `FileStatus` | `active`, `archived` |
-| `MoneyStatus` | `check_needed`, `checked`, `issue` |
-| `ClientLink.category` | `drive`, `admin`, `report`, `external` |
+| Current read model type | Current mock values | Final DB enum |
+| --- | --- | --- |
+| `ClientStatus` | `active`, `attention`, `archived` | `client_status`: `pending`, `active`, `ended` |
+| `TaskStatus` | `doing`, `blocked`, `done`, `archived` | `task_status`: `todo`, `in_progress`, `done`, `blocked` |
+| `TaskPriority` | `high`, `normal`, `low` | `task_priority`: `low`, `medium`, `high`, `urgent` |
+| schedule grouping | current model has status only | `event_type`: `meeting`, `deadline`, `campaign`, `report`, `biz_money`, `creative`, `other` |
+| file grouping/archive | current model has status/type | `file_category`: `common`, `sa`, `da`, `report`, `contract`, `meeting_note`, `creative`, `archive`, `other` |
+| `MoneyStatus` | `check_needed`, `checked`, `issue` | `money_status`: `normal`, `warning`, `low`, `empty` |
+| `OperationLog.action` | display string | `log_action_type`: `create`, `update`, `archive`, `restore`, `view`, `link_open`, `login`, `memo` |
 
 If an existing schema uses older names such as `owner_name`, `memo`, or `file_name`, the adapter should translate them to the read model names shown below. Do not force UI components to know DB column names.
 
