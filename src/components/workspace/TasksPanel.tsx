@@ -1,0 +1,30 @@
+import { taskPriorityLabel, taskStatusLabel } from '../../domain/labels'
+import type { ClientTaskPanelItem } from '../../types'
+import { Panel } from '../common/Panel'
+
+type TasksPanelProps = {
+  tasks: ClientTaskPanelItem[]
+}
+
+export function TasksPanel({ tasks }: TasksPanelProps) {
+  return (
+    <Panel title="Tasks" subtitle="Operational work by client">
+      <div className="stack">
+        {tasks.map((task) => (
+          <article key={task.id} className="item-row">
+            <div>
+              <strong>{task.title}</strong>
+              <p>{task.note}</p>
+            </div>
+            <div className="item-meta">
+              <span>{taskStatusLabel[task.status]}</span>
+              <span>{taskPriorityLabel[task.priority]}</span>
+              <span>{task.assignee}</span>
+              <span>{task.dueDate}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Panel>
+  )
+}

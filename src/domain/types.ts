@@ -189,6 +189,11 @@ export type SelectedClientDetailView = {
   logs: ClientLogPanelItem[]
 }
 
+export type WorkspaceView = {
+  listView: ClientListView
+  detailView: SelectedClientDetailView
+}
+
 export type SmartViewItem = {
   clientName: string
   title: string

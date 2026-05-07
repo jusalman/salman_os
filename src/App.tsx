@@ -4,8 +4,7 @@ import './App.css'
 import { LoginView } from './components/login/LoginView'
 import { Workspace } from './components/workspace/Workspace'
 import { APP_PASSWORD } from './config/constants'
-import { projectClientListView } from './data/projections/clientListView'
-import { projectSelectedClientDetailView } from './data/projections/selectedClientDetailView'
+import { projectWorkspaceView } from './data/projections/workspaceView'
 import { useClients } from './hooks/useClients'
 import { useSelectedClient } from './hooks/useSelectedClient'
 import { useSmartViews } from './hooks/useSmartViews'
@@ -23,7 +22,6 @@ function App() {
   const [viewerName, setViewerName] = useState('')
   const [error, setError] = useState('')
   const [selectedClientId, setSelectedClientId] = useState('')
-  const clientListView = projectClientListView(clients)
   const fallbackClientId = clients[0]?.id ?? ''
   const {
     selectedClient,
@@ -35,9 +33,10 @@ function App() {
     selectedClientId,
     fallbackClientId,
   })
-  const selectedClientDetailView = selectedClient
-    ? projectSelectedClientDetailView(selectedClient)
-    : null
+  const workspaceView = projectWorkspaceView({
+    clients,
+    selectedClient,
+  })
 
   function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -116,18 +115,17 @@ function App() {
             actionLabel="Reload client"
             onAction={() => void reloadSelectedClient()}
           />
-        ) : !selectedClientDetailView ? (
+        ) : !workspaceView ? (
           <StatusView
             title="Selected client unavailable"
-            message="SALMAN OS could not assemble a client detail view."
+            message="SALMAN OS could not assemble a workspace view."
             actionLabel="Reload client"
             onAction={() => void reloadSelectedClient()}
           />
         ) : (
         <Workspace
           viewerName={viewerName}
-          listView={clientListView}
-          detailView={selectedClientDetailView}
+          workspaceView={workspaceView}
           smartViews={smartViews}
           selectedClientId={resolvedClientId}
           onSelectClient={setSelectedClientId}
