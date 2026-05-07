@@ -1,16 +1,16 @@
 import { clientStatusLabel } from '../../domain/labels'
-import type { ClientListItem } from '../../types'
+import type { ClientListView } from '../../types'
 
 type ClientTabsProps = {
-  clients: ClientListItem[]
+  listView: ClientListView
   selectedClientId: string
   onSelect: (clientId: string) => void
 }
 
-export function ClientTabs({ clients, selectedClientId, onSelect }: ClientTabsProps) {
+export function ClientTabs({ listView, selectedClientId, onSelect }: ClientTabsProps) {
   return (
     <section className="client-strip">
-      {clients.map((client) => (
+      {listView.items.map((client) => (
         <button
           key={client.id}
           type="button"

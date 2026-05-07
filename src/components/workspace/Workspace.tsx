@@ -6,7 +6,7 @@ import {
   taskStatusLabel,
 } from '../../domain/labels'
 import type { SmartViews as SmartViewsData } from '../../domain/smartViews'
-import type { ClientListItem, SelectedClientDetailView } from '../../types'
+import type { ClientListView, SelectedClientDetailView } from '../../types'
 import { Panel } from '../common/Panel'
 import { ClientDetailHeader } from './ClientDetailHeader'
 import { ClientTabs } from './ClientTabs'
@@ -14,7 +14,7 @@ import { SmartViews } from './SmartViews'
 
 type WorkspaceProps = {
   viewerName: string
-  clients: ClientListItem[]
+  listView: ClientListView
   detailView: SelectedClientDetailView
   smartViews: SmartViewsData
   selectedClientId: string
@@ -23,7 +23,7 @@ type WorkspaceProps = {
 
 export function Workspace({
   viewerName,
-  clients,
+  listView,
   detailView,
   smartViews,
   selectedClientId,
@@ -56,7 +56,7 @@ export function Workspace({
         </header>
 
         <ClientTabs
-          clients={clients}
+          listView={listView}
           selectedClientId={selectedClientId}
           onSelect={onSelectClient}
         />

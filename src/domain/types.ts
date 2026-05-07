@@ -93,6 +93,11 @@ export type ClientListItem = {
   hasSheetLink: boolean
 }
 
+export type ClientListView = {
+  items: ClientListItem[]
+  totalCount: number
+}
+
 export type ClientRecord = {
   id: string
   name: string

@@ -4,7 +4,7 @@ import './App.css'
 import { LoginView } from './components/login/LoginView'
 import { Workspace } from './components/workspace/Workspace'
 import { APP_PASSWORD } from './config/constants'
-import { projectClientListItem } from './data/projections/clientListItem'
+import { projectClientListView } from './data/projections/clientListView'
 import { projectSelectedClientDetailView } from './data/projections/selectedClientDetailView'
 import { useClients } from './hooks/useClients'
 import { useSelectedClient } from './hooks/useSelectedClient'
@@ -23,7 +23,7 @@ function App() {
   const [viewerName, setViewerName] = useState('')
   const [error, setError] = useState('')
   const [selectedClientId, setSelectedClientId] = useState('')
-  const clientListItems = clients.map(projectClientListItem)
+  const clientListView = projectClientListView(clients)
   const fallbackClientId = clients[0]?.id ?? ''
   const {
     selectedClient,
@@ -126,7 +126,7 @@ function App() {
         ) : (
         <Workspace
           viewerName={viewerName}
-          clients={clientListItems}
+          listView={clientListView}
           detailView={selectedClientDetailView}
           smartViews={smartViews}
           selectedClientId={resolvedClientId}
