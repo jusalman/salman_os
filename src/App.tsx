@@ -36,6 +36,7 @@ function App() {
   const workspaceView = projectWorkspaceView({
     clients,
     selectedClient,
+    smartViews,
   })
 
   function handleLogin(event: FormEvent<HTMLFormElement>) {
@@ -126,7 +127,6 @@ function App() {
         <Workspace
           viewerName={viewerName}
           workspaceView={workspaceView}
-          smartViews={smartViews}
           selectedClientId={resolvedClientId}
           onSelectClient={setSelectedClientId}
         />

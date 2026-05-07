@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { SmartViews } from '../domain/smartViews'
-import { loadSmartViews } from '../data/clientRepository'
+import { smartOperationViewsRepository } from '../data/repositories/currentRepositories'
 
 export type UseSmartViewsResult = {
   smartViews: SmartViews | null
@@ -19,7 +19,7 @@ export function useSmartViews(): UseSmartViewsResult {
     setError('')
 
     try {
-      const nextSmartViews = await loadSmartViews()
+      const nextSmartViews = await smartOperationViewsRepository.getSmartOperationViews()
       setSmartViews(nextSmartViews)
     } catch {
       setSmartViews(null)
@@ -34,7 +34,7 @@ export function useSmartViews(): UseSmartViewsResult {
 
     async function loadInitialSmartViews() {
       try {
-        const nextSmartViews = await loadSmartViews()
+        const nextSmartViews = await smartOperationViewsRepository.getSmartOperationViews()
 
         if (!isActive) {
           return

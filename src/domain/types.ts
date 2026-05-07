@@ -1,3 +1,5 @@
+import type { SmartViews as SmartViewsData } from './smartViews'
+
 export type ClientStatus = 'active' | 'attention' | 'archived'
 export type TaskStatus = 'doing' | 'blocked' | 'done' | 'archived'
 export type TaskPriority = 'high' | 'normal' | 'low'
@@ -179,14 +181,19 @@ export type ClientLogPanelItem = {
   createdAt: string
 }
 
-export type SelectedClientDetailView = {
-  header: ClientDetailHeaderModel
+export type SelectedClientDetailPanels = {
   files: ClientFilePanelItem[]
   tasks: ClientTaskPanelItem[]
-  scheduleItems: ClientSchedulePanelItem[]
-  moneyItems: ClientMoneyPanelItem[]
+  schedule: ClientSchedulePanelItem[]
+  money: ClientMoneyPanelItem[]
   links: ClientLinkPanelItem[]
   logs: ClientLogPanelItem[]
+  smartViews: SmartViewsData
+}
+
+export type SelectedClientDetailView = {
+  header: ClientDetailHeaderModel
+  panels: SelectedClientDetailPanels
 }
 
 export type WorkspaceView = {

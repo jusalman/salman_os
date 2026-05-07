@@ -1,4 +1,3 @@
-import type { SmartViews as SmartViewsData } from '../../domain/smartViews'
 import type { WorkspaceView } from '../../types'
 import { BusinessMoneyPanel } from './BusinessMoneyPanel'
 import { ClientDetailHeaderSection } from './ClientDetailHeaderSection'
@@ -13,7 +12,6 @@ import { TasksPanel } from './TasksPanel'
 type WorkspaceProps = {
   viewerName: string
   workspaceView: WorkspaceView
-  smartViews: SmartViewsData
   selectedClientId: string
   onSelectClient: (clientId: string) => void
 }
@@ -21,10 +19,20 @@ type WorkspaceProps = {
 export function Workspace({
   viewerName,
   workspaceView,
-  smartViews,
   selectedClientId,
   onSelectClient,
 }: WorkspaceProps) {
+  const { listView, detailView } = workspaceView
+  const { header, panels } = detailView
+  const panelSections = [
+    <FilesPanel key="files" files={panels.files} />,
+    <TasksPanel key="tasks" tasks={panels.tasks} />,
+    <InternalSchedulePanel key="schedule" scheduleItems={panels.schedule} />,
+    <BusinessMoneyPanel key="money" moneyItems={panels.money} />,
+    <LinksPanel key="links" links={panels.links} />,
+    <OperationLogsPanel key="logs" logs={panels.logs} />,
+  ]
+
   return (
     <section className="workspace">
       <aside className="sidebar">
@@ -35,7 +43,7 @@ export function Workspace({
             Signed in as <strong>{viewerName}</strong>
           </p>
         </div>
-        <SmartOperationViewsPanel data={smartViews} />
+        <SmartOperationViewsPanel data={panels.smartViews} />
       </aside>
 
       <div className="main-pane">
@@ -52,20 +60,15 @@ export function Workspace({
         </header>
 
         <ClientTabs
-          listView={workspaceView.listView}
+          listView={listView}
           selectedClientId={selectedClientId}
           onSelect={onSelectClient}
         />
 
-        <ClientDetailHeaderSection client={workspaceView.detailView.header} />
+        <ClientDetailHeaderSection client={header} />
 
         <section className="panel-grid">
-          <FilesPanel files={workspaceView.detailView.files} />
-          <TasksPanel tasks={workspaceView.detailView.tasks} />
-          <InternalSchedulePanel scheduleItems={workspaceView.detailView.scheduleItems} />
-          <BusinessMoneyPanel moneyItems={workspaceView.detailView.moneyItems} />
-          <LinksPanel links={workspaceView.detailView.links} />
-          <OperationLogsPanel logs={workspaceView.detailView.logs} />
+          {panelSections}
         </section>
       </div>
     </section>

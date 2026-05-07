@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ClientRecord } from '../types'
-import { loadClientById } from '../data/clientRepository'
+import { clientDetailRepository } from '../data/repositories/currentRepositories'
 
 export type UseSelectedClientParams = {
   selectedClientId: string
@@ -36,7 +36,7 @@ export function useSelectedClient({
     setError('')
 
     try {
-      const nextClient = await loadClientById(resolvedClientId)
+      const nextClient = await clientDetailRepository.getClientDetail(resolvedClientId)
 
       if (!nextClient) {
         setSelectedClient(null)
@@ -72,7 +72,7 @@ export function useSelectedClient({
       }
 
       try {
-        const nextClient = await loadClientById(resolvedClientId)
+        const nextClient = await clientDetailRepository.getClientDetail(resolvedClientId)
 
         if (!isActive) {
           return

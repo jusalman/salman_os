@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ClientSummary } from '../types'
-import { loadClientSummaries } from '../data/clientRepository'
+import { clientListRepository } from '../data/repositories/currentRepositories'
 
 export type UseClientsResult = {
   clients: ClientSummary[]
@@ -19,7 +19,7 @@ export function useClients(): UseClientsResult {
     setError('')
 
     try {
-      const nextClients = await loadClientSummaries()
+      const nextClients = await clientListRepository.listClientSummaries()
       setClients(nextClients)
     } catch {
       setClients([])
@@ -34,7 +34,7 @@ export function useClients(): UseClientsResult {
 
     async function loadInitialClients() {
       try {
-        const nextClients = await loadClientSummaries()
+        const nextClients = await clientListRepository.listClientSummaries()
 
         if (!isActive) {
           return

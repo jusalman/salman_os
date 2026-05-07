@@ -1,3 +1,4 @@
+import type { SmartViews as SmartViewsData } from '../../domain/smartViews'
 import type { ClientRecord, SelectedClientDetailView } from '../../types'
 import { projectClientDetailHeader } from './clientDetailHeader'
 import {
@@ -9,14 +10,20 @@ import {
   projectClientTaskPanelItems,
 } from './clientDetailPanels'
 
-export function projectSelectedClientDetailView(client: ClientRecord): SelectedClientDetailView {
+export function projectSelectedClientDetailView(
+  client: ClientRecord,
+  smartViews: SmartViewsData,
+): SelectedClientDetailView {
   return {
     header: projectClientDetailHeader(client),
-    files: projectClientFilePanelItems(client),
-    tasks: projectClientTaskPanelItems(client),
-    scheduleItems: projectClientSchedulePanelItems(client),
-    moneyItems: projectClientMoneyPanelItems(client),
-    links: projectClientLinkPanelItems(client),
-    logs: projectClientLogPanelItems(client),
+    panels: {
+      files: projectClientFilePanelItems(client),
+      tasks: projectClientTaskPanelItems(client),
+      schedule: projectClientSchedulePanelItems(client),
+      money: projectClientMoneyPanelItems(client),
+      links: projectClientLinkPanelItems(client),
+      logs: projectClientLogPanelItems(client),
+      smartViews,
+    },
   }
 }
