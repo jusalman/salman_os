@@ -2,9 +2,9 @@
 
 ## Current Status
 
-- Current task state: TASK-35 completed.
-- Current write phase: TASK-35 Supabase ClientListRepository adapter plan.
-- Next task: TASK-36 implement fake-reader-tested Supabase ClientListRepository behind the placeholder boundary.
+- Current task state: TASK-36 completed.
+- Current write phase: TASK-36 fake-reader-tested Supabase ClientListRepository.
+- Next task: TASK-37 plan safe activation path for Supabase ClientListRepository or mock summary parity.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
@@ -13,6 +13,7 @@
 - TASK-33 added pure Supabase mapper helpers and Node test coverage without activating the Supabase app data source.
 - TASK-34 fixed `upcomingEventCount` as scheduled events on/after the injected reference date and added pure ClientSummary row assembly tests.
 - TASK-35 planned the first Supabase ClientListRepository adapter boundary and kept runtime selection placeholder-only.
+- TASK-36 implemented the Supabase ClientListRepository behind the placeholder boundary with fake row-reader tests; runtime selection still uses the placeholder.
 - No real `.env` or `.env.local` file exists or should be created without explicit approval.
 - `@supabase/supabase-js` is installed for the browser client foundation.
 - No additional SQL should be executed without a separate approved TASK.
@@ -56,10 +57,11 @@
 - TASK-33: Implemented pure mapper helpers in `src/data/adapters/supabase/mappers.ts` and tests in `tests/supabase/mappers.test.ts`; `VITE_DATA_SOURCE=supabase` remains placeholder-only.
 - TASK-34: Documented ClientSummary assembly in `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md` and added pure assembly helpers/tests without connecting Supabase queries.
 - TASK-35: Documented the first Supabase ClientListRepository adapter plan in `docs/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md`; no code activation, env, SQL, or UI changes were made.
+- TASK-36: Added `src/data/adapters/supabase/clientRowsReader.ts`, `src/data/adapters/supabase/clientListRepository.ts`, and `tests/supabase/clientListRepository.test.ts`; `currentRepositories.ts` remains placeholder-selected for `VITE_DATA_SOURCE=supabase`.
 
 ## Next Work
 
-Implement the first Supabase `ClientListRepository` read adapter with fake row-reader tests, behind the placeholder boundary, without adding write workflows, changing UI behavior, or activating the real Supabase data source by default.
+Plan the next safe step: either activate the Supabase ClientListRepository behind an explicit approval gate, or first align mock `upcomingEventCount` with the Supabase summary rule.
 
 Use these documents first:
 
@@ -76,6 +78,7 @@ Use these documents first:
 Use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
 Use `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md` for ClientSummary row assembly rules.
 Use `docs/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md` for repository boundary, query row shapes, and TASK-36 test strategy.
+The implemented Supabase ClientListRepository is intentionally not exported through the central Supabase barrel to keep current placeholder imports from pulling it into the app bundle.
 The next phase should not create real `.env` values, execute additional SQL, add write workflows, switch the whole app to real data, or change UI behavior unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
 
@@ -102,7 +105,7 @@ Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PRO
 
 ```powershell
 git status
-node --test tests\supabase\mappers.test.ts tests\supabase\clientSummaryAssembler.test.ts
+node --test tests\supabase\mappers.test.ts tests\supabase\clientSummaryAssembler.test.ts tests\supabase\clientListRepository.test.ts
 npm.cmd run lint
 npm.cmd run build
 ```
@@ -112,7 +115,7 @@ npm.cmd run build
 Run verification after documentation or schema draft changes when feasible:
 
 ```powershell
-node --test tests\supabase\mappers.test.ts tests\supabase\clientSummaryAssembler.test.ts
+node --test tests\supabase\mappers.test.ts tests\supabase\clientSummaryAssembler.test.ts tests\supabase\clientListRepository.test.ts
 npm.cmd run lint
 npm.cmd run build
 ```
