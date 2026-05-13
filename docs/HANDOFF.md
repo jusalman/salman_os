@@ -2,12 +2,15 @@
 
 ## Current Status
 
-- Current task state: TASK-24 completed.
-- Current write phase: TASK-24 execution candidate SQL file creation.
-- Next task: review `docs/migrations/2026-05-13_initial_schema_candidate.sql` before any SQL execution, Supabase connection, or adapter work.
-- Supabase is not connected.
+- Current task state: TASK-27 completed.
+- Current write phase: TASK-27 SQL execution result documentation.
+- Next task: Supabase read adapter preparation planning.
+- Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
+- SQL Editor result: `Success. No rows returned`.
+- Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
+- The app is not connected to Supabase.
 - No real `.env` file exists or should be created for this phase.
-- No SQL should be executed.
+- No additional SQL should be executed without a separate approved TASK.
 - Development Harness remains active: plan first, get approval, keep diffs small, verify, then record outcomes in Handoff.
 
 ## Completed Work Summary
@@ -37,10 +40,13 @@
 - TASK-22: SQL draft refined as a migration-ready candidate with `event_status`, `client_events.status`, enum re-run notes, pgcrypto checks, and RLS/Auth execution guardrails.
 - TASK-23: Final SQL execution review plan completed without modifying SQL or connecting Supabase.
 - TASK-24: Execution candidate SQL file created at `docs/migrations/2026-05-13_initial_schema_candidate.sql` with duplicate_object enum guards and final execution review notes.
+- TASK-25: SQL execution approval plan documented manual execution, success checks, failure stop rules, and rollback/retry guidance.
+- TASK-26: User manually executed `docs/migrations/2026-05-13_initial_schema_candidate.sql` in Supabase SQL Editor and reported `Success. No rows returned`.
+- TASK-27: User confirmed the 8 core tables in Supabase Table Editor; execution result recorded in this handoff.
 
 ## Next Work
 
-Review `docs/migrations/2026-05-13_initial_schema_candidate.sql` before any SQL execution, Supabase connection, or adapter implementation. SQL Editor execution still requires explicit user approval.
+Plan Supabase read adapter preparation without connecting the app yet.
 
 Use these documents first:
 
@@ -53,7 +59,8 @@ Use these documents first:
 - `docs/SUPABASE_SCHEMA_DRAFT.sql`
 - `docs/migrations/2026-05-13_initial_schema_candidate.sql`
 
-The next phase should not connect to Supabase or execute SQL unless the user explicitly approves that later task.
+Before read adapter work, confirm enum existence, trigger/function creation, required columns, and whether seed/mock alignment data is needed.
+The next phase should not connect the app to Supabase, create `.env`, install packages, or execute additional SQL unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
 
 ## Prohibited Until Explicit Approval
