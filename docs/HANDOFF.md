@@ -2,9 +2,9 @@
 
 ## Current Status
 
-- Current task state: TASK-37 completed.
-- Current write phase: TASK-37 mock upcomingEventCount parity.
-- Next task: TASK-38 plan safe activation gate for Supabase ClientListRepository.
+- Current task state: TASK-38 completed.
+- Current write phase: TASK-38 Supabase activation gate plan.
+- Next task: TASK-39 implement activation gate tests or plan ClientDetail Supabase read adapter.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
@@ -15,6 +15,7 @@
 - TASK-35 planned the first Supabase ClientListRepository adapter boundary and kept runtime selection placeholder-only.
 - TASK-36 implemented the Supabase ClientListRepository behind the placeholder boundary with fake row-reader tests; runtime selection still uses the placeholder.
 - TASK-37 aligned mock `upcomingEventCount` with Supabase summary behavior: scheduled events on/after the reference date only.
+- TASK-38 documented the safe activation gate plan for Supabase ClientListRepository without changing runtime selection.
 - No real `.env` or `.env.local` file exists or should be created without explicit approval.
 - `@supabase/supabase-js` is installed for the browser client foundation.
 - No additional SQL should be executed without a separate approved TASK.
@@ -60,10 +61,11 @@
 - TASK-35: Documented the first Supabase ClientListRepository adapter plan in `docs/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md`; no code activation, env, SQL, or UI changes were made.
 - TASK-36: Added `src/data/adapters/supabase/clientRowsReader.ts`, `src/data/adapters/supabase/clientListRepository.ts`, and `tests/supabase/clientListRepository.test.ts`; `currentRepositories.ts` remains placeholder-selected for `VITE_DATA_SOURCE=supabase`.
 - TASK-37: Updated `src/data/projections/clientSummary.ts` to count only scheduled mock events on/after the reference date and added `tests/mock/clientSummaryProjection.test.ts`. Current demo counts do not change because existing scheduled mock events are all on/after `TODAY`.
+- TASK-38: Added `docs/TASK_38_SUPABASE_ACTIVATION_GATE_PLAN.md`; no env, SQL, runtime selection, or UI changes were made.
 
 ## Next Work
 
-Plan the safe activation gate for Supabase ClientListRepository while keeping the app mock-first until explicit approval.
+Implement the activation gate tests or plan the ClientDetail Supabase read adapter while keeping the app mock-first until explicit approval.
 
 Use these documents first:
 
@@ -78,9 +80,11 @@ Use these documents first:
 
 `upcomingEventCount` is now defined as `scheduled` events whose `event_date` is on/after the injected SALMAN OS reference date.
 Mock and Supabase summary behavior now use the same upcoming event count rule. Existing demo counts remain unchanged with the current mock dates.
+Supabase ClientList activation should require an explicit gate such as `VITE_SUPABASE_READ_ACTIVATION=client_list`; `VITE_DATA_SOURCE=supabase` alone should not activate real reads.
 Use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
 Use `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md` for ClientSummary row assembly rules.
 Use `docs/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md` for repository boundary, query row shapes, and TASK-36 test strategy.
+Use `docs/TASK_38_SUPABASE_ACTIVATION_GATE_PLAN.md` before changing `currentRepositories.ts`.
 The implemented Supabase ClientListRepository is intentionally not exported through the central Supabase barrel to keep current placeholder imports from pulling it into the app bundle.
 The next phase should not create real `.env` values, execute additional SQL, add write workflows, switch the whole app to real data, or change UI behavior unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
