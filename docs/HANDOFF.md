@@ -2,14 +2,16 @@
 
 ## Current Status
 
-- Current task state: TASK-27 completed.
-- Current write phase: TASK-27 SQL execution result documentation.
-- Next task: Supabase read adapter preparation planning.
+- Current task state: TASK-32 completed.
+- Current write phase: TASK-32 Supabase read adapter mapping plan.
+- Next task: TASK-33 pure Supabase read mapper helpers and tests, without activating real app data.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
-- The app is not connected to Supabase.
-- No real `.env` file exists or should be created for this phase.
+- The app has a Supabase browser client foundation, but runtime still defaults to mock data.
+- TASK-32 documented DB enum to UI read model mapping and ClientSummary adapter planning.
+- No real `.env` or `.env.local` file exists or should be created without explicit approval.
+- `@supabase/supabase-js` is installed for the browser client foundation.
 - No additional SQL should be executed without a separate approved TASK.
 - Development Harness remains active: plan first, get approval, keep diffs small, verify, then record outcomes in Handoff.
 
@@ -43,10 +45,15 @@
 - TASK-25: SQL execution approval plan documented manual execution, success checks, failure stop rules, and rollback/retry guidance.
 - TASK-26: User manually executed `docs/migrations/2026-05-13_initial_schema_candidate.sql` in Supabase SQL Editor and reported `Success. No rows returned`.
 - TASK-27: User confirmed the 8 core tables in Supabase Table Editor; execution result recorded in this handoff.
+- TASK-28: Supabase read adapter preparation plan defined schema verification checks before app connection.
+- TASK-29: Schema verification guide provided read-only SQL checks for tables, columns, enums, FK, indexes, triggers, and functions.
+- TASK-30: Schema verification results reviewed; read adapter prerequisites were acceptable with mapping conversion still required.
+- TASK-31: Installed `@supabase/supabase-js`, added browser client foundation, and added a read-only `clients` table adapter draft without switching the app from mock data.
+- TASK-32: Planned Supabase read adapter mapping in `docs/SUPABASE_READ_ADAPTER_MAPPING.md` and `docs/TASK_32_READ_ADAPTER_PLAN.md`; no code, env, SQL, or real data activation changes were made.
 
 ## Next Work
 
-Plan Supabase read adapter preparation without connecting the app yet.
+Implement pure Supabase read mapper helpers and tests without adding write workflows, changing UI behavior, or activating the real Supabase data source.
 
 Use these documents first:
 
@@ -59,8 +66,8 @@ Use these documents first:
 - `docs/SUPABASE_SCHEMA_DRAFT.sql`
 - `docs/migrations/2026-05-13_initial_schema_candidate.sql`
 
-Before read adapter work, confirm enum existence, trigger/function creation, required columns, and whether seed/mock alignment data is needed.
-The next phase should not connect the app to Supabase, create `.env`, install packages, or execute additional SQL unless the user explicitly approves that later task.
+Before active read adapter work, use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
+The next phase should not create real `.env` values, execute additional SQL, add write workflows, switch the whole app to real data, or change UI behavior unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
 
 ## Prohibited Until Explicit Approval
