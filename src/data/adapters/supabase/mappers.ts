@@ -169,11 +169,29 @@ export function hasBizMoneyWarningFromDb(status: DbMoneyStatus): boolean {
 }
 
 export function isScheduledEventStatusForSummary(status: DbEventStatus): boolean {
-  // TODO TASK-34: Decide whether upcomingEventCount means all scheduled events
-  // or only scheduled events on/after the SALMAN OS current date.
   return status === 'scheduled'
+}
+
+export function isUpcomingScheduledEventForSummary({
+  status,
+  eventDate,
+  referenceDate,
+}: {
+  status: DbEventStatus
+  eventDate: string
+  referenceDate: string
+}): boolean {
+  if (!isScheduledEventStatusForSummary(status)) {
+    return false
+  }
+
+  return toDateKey(eventDate) >= toDateKey(referenceDate)
 }
 
 function failUnknownDbValue(enumName: string, value: never): never {
   throw new Error(`Unknown SALMAN OS Supabase ${enumName} value: ${String(value)}`)
+}
+
+function toDateKey(value: string): string {
+  return value.slice(0, 10)
 }

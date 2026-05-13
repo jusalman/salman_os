@@ -2,15 +2,16 @@
 
 ## Current Status
 
-- Current task state: TASK-33 completed.
-- Current write phase: TASK-33 pure Supabase read mapper helpers and tests.
-- Next task: TASK-34 decide ClientSummary count/date policy and plan first read adapter assembly.
+- Current task state: TASK-34 completed.
+- Current write phase: TASK-34 ClientSummary row assembly plan and pure assembler.
+- Next task: TASK-35 plan first Supabase ClientListRepository read adapter behind the placeholder boundary.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
 - The app has a Supabase browser client foundation, but runtime still defaults to mock data.
 - TASK-32 documented DB enum to UI read model mapping and ClientSummary adapter planning.
 - TASK-33 added pure Supabase mapper helpers and Node test coverage without activating the Supabase app data source.
+- TASK-34 fixed `upcomingEventCount` as scheduled events on/after the injected reference date and added pure ClientSummary row assembly tests.
 - No real `.env` or `.env.local` file exists or should be created without explicit approval.
 - `@supabase/supabase-js` is installed for the browser client foundation.
 - No additional SQL should be executed without a separate approved TASK.
@@ -52,10 +53,11 @@
 - TASK-31: Installed `@supabase/supabase-js`, added browser client foundation, and added a read-only `clients` table adapter draft without switching the app from mock data.
 - TASK-32: Planned Supabase read adapter mapping in `docs/SUPABASE_READ_ADAPTER_MAPPING.md` and `docs/TASK_32_READ_ADAPTER_PLAN.md`; no code, env, SQL, or real data activation changes were made.
 - TASK-33: Implemented pure mapper helpers in `src/data/adapters/supabase/mappers.ts` and tests in `tests/supabase/mappers.test.ts`; `VITE_DATA_SOURCE=supabase` remains placeholder-only.
+- TASK-34: Documented ClientSummary assembly in `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md` and added pure assembly helpers/tests without connecting Supabase queries.
 
 ## Next Work
 
-Decide ClientSummary count/date policy and plan the first read adapter assembly without adding write workflows, changing UI behavior, or activating the real Supabase data source by default.
+Plan the first Supabase `ClientListRepository` read adapter behind the placeholder boundary without adding write workflows, changing UI behavior, or activating the real Supabase data source by default.
 
 Use these documents first:
 
@@ -68,8 +70,9 @@ Use these documents first:
 - `docs/SUPABASE_SCHEMA_DRAFT.sql`
 - `docs/migrations/2026-05-13_initial_schema_candidate.sql`
 
-Before active read adapter work, confirm whether `upcomingEventCount` means all `scheduled` events or only scheduled events on/after the SALMAN OS current date.
+`upcomingEventCount` is now defined as `scheduled` events whose `event_date` is on/after the injected SALMAN OS reference date.
 Use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
+Use `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md` for ClientSummary row assembly rules.
 The next phase should not create real `.env` values, execute additional SQL, add write workflows, switch the whole app to real data, or change UI behavior unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
 
@@ -96,7 +99,7 @@ Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PRO
 
 ```powershell
 git status
-node --test tests\supabase\mappers.test.ts
+node --test tests\supabase\mappers.test.ts tests\supabase\clientSummaryAssembler.test.ts
 npm.cmd run lint
 npm.cmd run build
 ```
@@ -106,7 +109,7 @@ npm.cmd run build
 Run verification after documentation or schema draft changes when feasible:
 
 ```powershell
-node --test tests\supabase\mappers.test.ts
+node --test tests\supabase\mappers.test.ts tests\supabase\clientSummaryAssembler.test.ts
 npm.cmd run lint
 npm.cmd run build
 ```

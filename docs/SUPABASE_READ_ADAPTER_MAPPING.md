@@ -133,7 +133,7 @@ Lossy mappings that should be revisited after the first adapter works:
 | `memo` | `clients.memo` | Null maps to empty string. |
 | `updatedAt` | `clients.updated_at` | Return display-safe timestamp string. |
 | `openTaskCount` | `client_tasks.status` | Count `todo`, `in_progress`, `blocked`. |
-| `upcomingEventCount` | `client_events.status`, `client_events.event_date` | Count `scheduled`; date filtering can remain a later refinement unless UI requires only future items. |
+| `upcomingEventCount` | `client_events.status`, `client_events.event_date` | Count `scheduled` rows whose `event_date` is today or later; inject the reference date for tests. |
 | `hasBizMoneyWarning` | `client_money_items.status` | True when any status is not `normal`. |
 | `latestLogAt` | `operation_logs.created_at` | Latest log timestamp per client, newest first. |
 | `hasDriveFolder` | `clients.drive_root_url`, `client_files.drive_folder_path` | True if root URL or any non-empty folder path exists. |

@@ -5,6 +5,7 @@ import {
   hasBizMoneyWarningFromDb,
   isOpenTaskStatusForSummary,
   isScheduledEventStatusForSummary,
+  isUpcomingScheduledEventForSummary,
   mapClientStatusFromDb,
   mapEventStatusFromDb,
   mapFileStatusFromDb,
@@ -49,11 +50,48 @@ test('maps event_status values and excludes archived schedule rows', () => {
   assert.equal(shouldIncludeEventRow('archived'), false)
 })
 
-test('keeps upcoming event count date policy unresolved', () => {
+test('tracks DB event statuses that can count as upcoming summary schedule', () => {
   assert.equal(isScheduledEventStatusForSummary('scheduled'), true)
   assert.equal(isScheduledEventStatusForSummary('done'), false)
   assert.equal(isScheduledEventStatusForSummary('canceled'), false)
   assert.equal(isScheduledEventStatusForSummary('archived'), false)
+})
+
+test('counts upcoming scheduled events on or after the injected reference date', () => {
+  const referenceDate = '2026-05-13'
+
+  assert.equal(
+    isUpcomingScheduledEventForSummary({
+      status: 'scheduled',
+      eventDate: '2026-05-13',
+      referenceDate,
+    }),
+    true,
+  )
+  assert.equal(
+    isUpcomingScheduledEventForSummary({
+      status: 'scheduled',
+      eventDate: '2026-05-14',
+      referenceDate,
+    }),
+    true,
+  )
+  assert.equal(
+    isUpcomingScheduledEventForSummary({
+      status: 'scheduled',
+      eventDate: '2026-05-12',
+      referenceDate,
+    }),
+    false,
+  )
+  assert.equal(
+    isUpcomingScheduledEventForSummary({
+      status: 'archived',
+      eventDate: '2026-05-14',
+      referenceDate,
+    }),
+    false,
+  )
 })
 
 test('derives file status from archive category or archived timestamp', () => {

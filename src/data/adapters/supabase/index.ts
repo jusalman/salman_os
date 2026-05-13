@@ -5,10 +5,23 @@ export {
 } from './supabaseClient'
 export { listClientRows } from './clientRowsReadAdapter'
 export type { ClientRow } from './clientRowsReadAdapter'
+export { assembleClientSummaryFromRows } from './clientSummaryAssembler'
+export type {
+  ClientSummaryAssemblyInput,
+  ClientSummaryClientRow,
+  ClientSummaryEventRow,
+  ClientSummaryFileRow,
+  ClientSummaryLinkRow,
+  ClientSummaryLogRow,
+  ClientSummaryMemberRow,
+  ClientSummaryMoneyRow,
+  ClientSummaryTaskRow,
+} from './clientSummaryAssembler'
 export {
   hasBizMoneyWarningFromDb,
   isOpenTaskStatusForSummary,
   isScheduledEventStatusForSummary,
+  isUpcomingScheduledEventForSummary,
   mapClientLinkCategoryFromDb,
   mapClientStatusFromDb,
   mapEventStatusFromDb,
