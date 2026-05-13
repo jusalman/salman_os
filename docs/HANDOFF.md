@@ -2,14 +2,15 @@
 
 ## Current Status
 
-- Current task state: TASK-32 completed.
-- Current write phase: TASK-32 Supabase read adapter mapping plan.
-- Next task: TASK-33 pure Supabase read mapper helpers and tests, without activating real app data.
+- Current task state: TASK-33 completed.
+- Current write phase: TASK-33 pure Supabase read mapper helpers and tests.
+- Next task: TASK-34 decide ClientSummary count/date policy and plan first read adapter assembly.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
 - The app has a Supabase browser client foundation, but runtime still defaults to mock data.
 - TASK-32 documented DB enum to UI read model mapping and ClientSummary adapter planning.
+- TASK-33 added pure Supabase mapper helpers and Node test coverage without activating the Supabase app data source.
 - No real `.env` or `.env.local` file exists or should be created without explicit approval.
 - `@supabase/supabase-js` is installed for the browser client foundation.
 - No additional SQL should be executed without a separate approved TASK.
@@ -50,10 +51,11 @@
 - TASK-30: Schema verification results reviewed; read adapter prerequisites were acceptable with mapping conversion still required.
 - TASK-31: Installed `@supabase/supabase-js`, added browser client foundation, and added a read-only `clients` table adapter draft without switching the app from mock data.
 - TASK-32: Planned Supabase read adapter mapping in `docs/SUPABASE_READ_ADAPTER_MAPPING.md` and `docs/TASK_32_READ_ADAPTER_PLAN.md`; no code, env, SQL, or real data activation changes were made.
+- TASK-33: Implemented pure mapper helpers in `src/data/adapters/supabase/mappers.ts` and tests in `tests/supabase/mappers.test.ts`; `VITE_DATA_SOURCE=supabase` remains placeholder-only.
 
 ## Next Work
 
-Implement pure Supabase read mapper helpers and tests without adding write workflows, changing UI behavior, or activating the real Supabase data source.
+Decide ClientSummary count/date policy and plan the first read adapter assembly without adding write workflows, changing UI behavior, or activating the real Supabase data source by default.
 
 Use these documents first:
 
@@ -66,7 +68,8 @@ Use these documents first:
 - `docs/SUPABASE_SCHEMA_DRAFT.sql`
 - `docs/migrations/2026-05-13_initial_schema_candidate.sql`
 
-Before active read adapter work, use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
+Before active read adapter work, confirm whether `upcomingEventCount` means all `scheduled` events or only scheduled events on/after the SALMAN OS current date.
+Use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
 The next phase should not create real `.env` values, execute additional SQL, add write workflows, switch the whole app to real data, or change UI behavior unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
 
@@ -93,6 +96,7 @@ Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PRO
 
 ```powershell
 git status
+node --test tests\supabase\mappers.test.ts
 npm.cmd run lint
 npm.cmd run build
 ```
@@ -102,6 +106,7 @@ npm.cmd run build
 Run verification after documentation or schema draft changes when feasible:
 
 ```powershell
+node --test tests\supabase\mappers.test.ts
 npm.cmd run lint
 npm.cmd run build
 ```
