@@ -2,9 +2,9 @@
 
 ## Current Status
 
-- Current task state: TASK-22 completed.
-- Current write phase: TASK-22 migration-ready schema draft candidate cleanup.
-- Next task: review the migration-ready candidate before any SQL execution, Supabase connection, or adapter work.
+- Current task state: TASK-24 completed.
+- Current write phase: TASK-24 execution candidate SQL file creation.
+- Next task: review `docs/migrations/2026-05-13_initial_schema_candidate.sql` before any SQL execution, Supabase connection, or adapter work.
 - Supabase is not connected.
 - No real `.env` file exists or should be created for this phase.
 - No SQL should be executed.
@@ -35,10 +35,12 @@
 - TASK-20: SQL draft revised with operation log access metadata, client file type metadata, clearer archive/restore notes, and SQL execution review TODOs.
 - TASK-21: Migration readiness plan completed; remaining decisions identified before SQL execution.
 - TASK-22: SQL draft refined as a migration-ready candidate with `event_status`, `client_events.status`, enum re-run notes, pgcrypto checks, and RLS/Auth execution guardrails.
+- TASK-23: Final SQL execution review plan completed without modifying SQL or connecting Supabase.
+- TASK-24: Execution candidate SQL file created at `docs/migrations/2026-05-13_initial_schema_candidate.sql` with duplicate_object enum guards and final execution review notes.
 
 ## Next Work
 
-Review the migration-ready candidate in `docs/SUPABASE_SCHEMA_DRAFT.sql` before any SQL execution, Supabase connection, or adapter implementation.
+Review `docs/migrations/2026-05-13_initial_schema_candidate.sql` before any SQL execution, Supabase connection, or adapter implementation. SQL Editor execution still requires explicit user approval.
 
 Use these documents first:
 
@@ -49,6 +51,7 @@ Use these documents first:
 - `AGENTS.md`
 - `docs/CODEX_OPERATING_PROTOCOL.md`
 - `docs/SUPABASE_SCHEMA_DRAFT.sql`
+- `docs/migrations/2026-05-13_initial_schema_candidate.sql`
 
 The next phase should not connect to Supabase or execute SQL unless the user explicitly approves that later task.
 Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
