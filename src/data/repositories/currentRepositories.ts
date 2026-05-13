@@ -8,17 +8,8 @@ import {
   clientListSupabasePlaceholderRepository,
   smartOperationViewsSupabasePlaceholderRepository,
 } from '../adapters/supabase'
-import type { ClientDetailRepository } from './clientDetailRepository'
 import type { ClientListRepository } from './clientListRepository'
-import type { SmartOperationViewsRepository } from './smartOperationViewsRepository'
-
-type DataSource = 'mock' | 'supabase'
-
-type RepositorySet = {
-  clientListRepository: ClientListRepository
-  clientDetailRepository: ClientDetailRepository
-  smartOperationViewsRepository: SmartOperationViewsRepository
-}
+import { selectRepositories, type RepositorySet } from './repositorySelection'
 
 const mockRepositories: RepositorySet = {
   clientListRepository: clientListMockRepository,
@@ -32,30 +23,47 @@ const supabasePlaceholderRepositories: RepositorySet = {
   smartOperationViewsRepository: smartOperationViewsSupabasePlaceholderRepository,
 }
 
-function resolveDataSource(value: unknown): DataSource {
-  if (value === 'supabase') {
-    return 'supabase'
-  }
-
-  if (value === 'mock' || !value) {
-    return 'mock'
-  }
-
-  // Invalid VITE_DATA_SOURCE values fall back to mock to keep SALMAN OS v1 local-safe.
-  return 'mock'
-}
-
-function selectRepositories(dataSource: DataSource): RepositorySet {
-  if (dataSource === 'supabase') {
-    return supabasePlaceholderRepositories
-  }
-
-  return mockRepositories
+const supabaseClientListRepositories: RepositorySet = {
+  clientListRepository: createLazySupabaseClientListRepository(),
+  clientDetailRepository: clientDetailSupabasePlaceholderRepository,
+  smartOperationViewsRepository: smartOperationViewsSupabasePlaceholderRepository,
 }
 
 const currentRepositories = selectRepositories(
-  resolveDataSource(import.meta.env.VITE_DATA_SOURCE),
+  {
+    dataSourceValue: readFrontendEnv('VITE_DATA_SOURCE'),
+    supabaseReadActivationValue: readFrontendEnv('VITE_SUPABASE_READ_ACTIVATION'),
+    hasSupabaseBrowserConfig: hasFrontendSupabaseBrowserConfig(),
+  },
+  {
+    mockRepositories,
+    supabasePlaceholderRepositories,
+    supabaseClientListRepositories,
+  },
 )
+
+function readFrontendEnv(name: 'VITE_DATA_SOURCE' | 'VITE_SUPABASE_READ_ACTIVATION'): string {
+  return import.meta.env[name]?.trim() ?? ''
+}
+
+function hasFrontendSupabaseBrowserConfig(): boolean {
+  return (
+    import.meta.env.VITE_SUPABASE_URL?.trim().length > 0 &&
+    import.meta.env.VITE_SUPABASE_ANON_KEY?.trim().length > 0
+  )
+}
+
+function createLazySupabaseClientListRepository(): ClientListRepository {
+  return {
+    async listClientSummaries() {
+      const { clientListSupabaseReadRepository } = await import(
+        '../adapters/supabase/clientListRepository'
+      )
+
+      return clientListSupabaseReadRepository.listClientSummaries()
+    },
+  }
+}
 
 export const {
   clientListRepository,
