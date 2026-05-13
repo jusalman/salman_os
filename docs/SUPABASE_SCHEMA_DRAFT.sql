@@ -1,5 +1,5 @@
 -- SALMAN OS Supabase schema draft
--- TASK-18 review draft only.
+-- TASK-18 review draft, revised in TASK-20.
 --
 -- Do not execute this file during TASK-18.
 -- Do not connect to Supabase during TASK-18.
@@ -107,6 +107,7 @@ create table client_files (
   client_id uuid not null references clients(id),
   file_name text not null,
   file_category file_category not null default 'common',
+  file_type text not null default 'other',
   drive_url text not null,
   drive_folder_path text,
   uploaded_by_name text not null,
@@ -118,9 +119,11 @@ create table client_files (
 comment on table client_files is
   'Google Drive original file metadata and original URLs only. File contents remain in Google Drive.';
 comment on column client_files.file_category is
-  'Use archive category with archived_at for 99_Archive policy. Permanent deletion is outside v1.';
+  'Operational file grouping. Use archive category with archived_at for 99_Archive policy.';
+comment on column client_files.file_type is
+  'Display/file metadata type from Google Drive context, for example doc, sheet, slide, pdf, image, or other. This is metadata only.';
 comment on column client_files.archived_at is
-  'Set when a file is archived according to the 99_Archive policy. Restore behavior belongs to a later write workflow.';
+  'Set when a file is archived according to the 99_Archive policy. Permanent deletion is outside v1.';
 
 create table client_tasks (
   id uuid primary key default gen_random_uuid(),
@@ -189,6 +192,8 @@ create table operation_logs (
   id uuid primary key default gen_random_uuid(),
   client_id uuid not null references clients(id),
   actor_name text not null,
+  ip_address inet,
+  user_agent text,
   action_type log_action_type not null,
   target_table text,
   target_id uuid,
@@ -197,7 +202,25 @@ create table operation_logs (
 );
 
 comment on table operation_logs is
-  'Append-only internal operation history. Archive and restore actions should be recorded here.';
+  'Append-only internal operation history. Archive, restore, login, and other staff actions should be recorded here.';
+comment on column operation_logs.ip_address is
+  'Nullable connection metadata for login/access logs. Privacy/security policy must be reviewed before production use.';
+comment on column operation_logs.user_agent is
+  'Nullable browser/client metadata for login/access logs. Privacy/security policy must be reviewed before production use.';
+
+-- ---------------------------------------------------------------------------
+-- Archive / restore policy notes
+-- ---------------------------------------------------------------------------
+
+-- SALMAN OS v1 does not permanently delete operational files by default.
+-- Archived files should be represented in client_files with file_category='archive'
+-- and/or archived_at set, while the source file is expected to be moved to a
+-- Google Drive 99_Archive location by a separate adapter/write workflow.
+--
+-- This schema draft stores archive state and operation_logs history only.
+-- Actual Google Drive move/delete behavior is outside this SQL draft and must
+-- be handled in a later approved TASK. Restore behavior should likewise be a
+-- separate write workflow and recorded with operation_logs.action_type='restore'.
 
 -- ---------------------------------------------------------------------------
 -- updated_at triggers
@@ -258,6 +281,7 @@ create index idx_client_links_category on client_links(client_id, category);
 
 create index idx_operation_logs_client_id on operation_logs(client_id);
 create index idx_operation_logs_created_at on operation_logs(client_id, created_at desc);
+create index idx_operation_logs_action_type on operation_logs(client_id, action_type, created_at desc);
 create index idx_operation_logs_target on operation_logs(target_table, target_id);
 
 -- ---------------------------------------------------------------------------
@@ -279,3 +303,19 @@ create index idx_operation_logs_target on operation_logs(target_table, target_id
 -- clients has no client_id because it is the client master table.
 -- Future Auth/RLS work must be handled in a separate TASK after the v1 read
 -- adapter and write workflow boundaries are approved.
+
+-- ---------------------------------------------------------------------------
+-- SQL execution review TODO
+-- ---------------------------------------------------------------------------
+
+-- Before this draft is promoted to an executable migration, confirm:
+--
+-- - Whether pgcrypto/gen_random_uuid() is available in the target Supabase project.
+-- - The enum/type re-run strategy, because create type has no if not exists here.
+-- - Whether client_events needs a status column later for scheduled/done/canceled
+--   reads, or whether v1 will derive visibility from event_date and event_type.
+-- - The privacy/security policy for storing operation_logs.ip_address and
+--   operation_logs.user_agent.
+-- - The boundary between client_files.file_category as operational grouping and
+--   client_files.file_type as display/file metadata.
+-- - The separate TASK scope for Auth/RLS design and policy SQL.
