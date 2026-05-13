@@ -2,13 +2,13 @@
 
 ## Current Status
 
-- Current task state: TASK-17 completed.
-- Current write phase: TASK-17.6 development harness documentation.
-- Next task: TASK-18 Supabase schema SQL draft.
+- Current task state: TASK-18 completed.
+- Current write phase: TASK-18 Supabase schema SQL draft documentation.
+- Next task: review the TASK-18 SQL draft before any migration, connection, or adapter work.
 - Supabase is not connected.
 - No real `.env` file exists or should be created for this phase.
 - No SQL should be executed.
-- Development Harness applies before TASK-18: plan first, get approval, keep diffs small, verify, then record outcomes in Handoff.
+- Development Harness remains active: plan first, get approval, keep diffs small, verify, then record outcomes in Handoff.
 
 ## Completed Work Summary
 
@@ -30,10 +30,11 @@
 - TASK-15: External customer portal excluded from v1.
 - TASK-16: Supabase read adapter preparation documented without real connection.
 - TASK-17: Supabase naming conventions and read mapping documented as preparation for SQL drafting.
+- TASK-18: Review-only Supabase schema SQL draft created at `docs/SUPABASE_SCHEMA_DRAFT.sql`.
 
 ## Next Work
 
-TASK-18 should create a Supabase schema SQL draft from the existing documentation.
+Review `docs/SUPABASE_SCHEMA_DRAFT.sql` before creating any migration, connecting Supabase, or implementing an adapter.
 
 Use these documents first:
 
@@ -43,9 +44,10 @@ Use these documents first:
 - `SUPABASE_READ_MAPPING.md`
 - `AGENTS.md`
 - `docs/CODEX_OPERATING_PROTOCOL.md`
+- `docs/SUPABASE_SCHEMA_DRAFT.sql`
 
-TASK-18 should not connect to Supabase or execute SQL. It should produce a reviewable draft only.
-TASK-18 should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before any draft changes begin.
+The next phase should not connect to Supabase or execute SQL unless the user explicitly approves that later task.
+Any follow-up should follow the Development Harness in `docs/CODEX_OPERATING_PROTOCOL.md` before changes begin.
 
 ## Prohibited Until Explicit Approval
 
