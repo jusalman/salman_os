@@ -2,9 +2,9 @@
 
 ## Current Status
 
-- Current task state: TASK-20 completed.
-- Current write phase: TASK-20 Supabase schema SQL draft review fixes.
-- Next task: review the revised SQL draft before any migration, connection, or adapter work.
+- Current task state: TASK-22 completed.
+- Current write phase: TASK-22 migration-ready schema draft candidate cleanup.
+- Next task: review the migration-ready candidate before any SQL execution, Supabase connection, or adapter work.
 - Supabase is not connected.
 - No real `.env` file exists or should be created for this phase.
 - No SQL should be executed.
@@ -33,10 +33,12 @@
 - TASK-18: Review-only Supabase schema SQL draft created at `docs/SUPABASE_SCHEMA_DRAFT.sql`.
 - TASK-19: SQL draft reviewed against schema, naming conventions, and read mapping without execution.
 - TASK-20: SQL draft revised with operation log access metadata, client file type metadata, clearer archive/restore notes, and SQL execution review TODOs.
+- TASK-21: Migration readiness plan completed; remaining decisions identified before SQL execution.
+- TASK-22: SQL draft refined as a migration-ready candidate with `event_status`, `client_events.status`, enum re-run notes, pgcrypto checks, and RLS/Auth execution guardrails.
 
 ## Next Work
 
-Review the revised `docs/SUPABASE_SCHEMA_DRAFT.sql` before creating any migration, connecting Supabase, or implementing an adapter.
+Review the migration-ready candidate in `docs/SUPABASE_SCHEMA_DRAFT.sql` before any SQL execution, Supabase connection, or adapter implementation.
 
 Use these documents first:
 

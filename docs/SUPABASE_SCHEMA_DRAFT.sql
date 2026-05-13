@@ -1,25 +1,34 @@
 -- SALMAN OS Supabase schema draft
--- TASK-18 review draft, revised in TASK-20.
+-- TASK-18 review draft, revised in TASK-20 and TASK-22.
 --
--- Do not execute this file during TASK-18.
--- Do not connect to Supabase during TASK-18.
+-- Migration-ready candidate document only.
+-- Do not execute this file until a separate SQL execution TASK is approved.
+-- Do not connect to Supabase while editing this draft.
 -- Do not create a real .env file or enter real URL/key values.
 -- SALMAN OS v1 is read-first; write workflows are separate future TASKs.
 -- RLS/Auth are not implemented in v1. RLS policy SQL is intentionally omitted.
 
--- UUID generation for draft schema review.
+-- UUID generation candidate.
 -- Supabase/Postgres commonly supports gen_random_uuid() through pgcrypto.
+-- Confirm pgcrypto availability in the target Supabase project before execution.
 create extension if not exists pgcrypto;
 
 -- ---------------------------------------------------------------------------
 -- Enums
 -- Source of truth: SUPABASE_NAMING_CONVENTIONS.md
+--
+-- Migration note:
+-- PostgreSQL create type statements are not idempotent. Re-running this draft
+-- after enum types already exist will fail unless the final migration wraps type
+-- creation in a duplicate_object-safe block or is guaranteed to run exactly once
+-- against a clean schema.
 -- ---------------------------------------------------------------------------
 
 create type client_status as enum ('pending', 'active', 'ended');
 create type service_type as enum ('sa', 'da', 'sa_da');
 create type task_status as enum ('todo', 'in_progress', 'done', 'blocked');
 create type task_priority as enum ('low', 'medium', 'high', 'urgent');
+create type event_status as enum ('scheduled', 'done', 'canceled', 'archived');
 create type event_type as enum (
   'meeting',
   'deadline',
@@ -146,6 +155,7 @@ create table client_events (
   id uuid primary key default gen_random_uuid(),
   client_id uuid not null references clients(id),
   title text not null,
+  status event_status not null default 'scheduled',
   event_type event_type not null default 'other',
   event_date date not null,
   start_time time,
@@ -158,6 +168,8 @@ create table client_events (
 
 comment on table client_events is
   'Supabase-backed internal schedule data. This is not Google Calendar integration and does not create customer Google Calendars.';
+comment on column client_events.status is
+  'Internal schedule state for read filters such as upcoming, done, canceled, and archived. This is not Google Calendar status.';
 
 create table client_money_items (
   id uuid primary key default gen_random_uuid(),
@@ -271,7 +283,7 @@ create index idx_client_tasks_status_priority on client_tasks(client_id, status,
 create index idx_client_tasks_due_date on client_tasks(client_id, due_date);
 
 create index idx_client_events_client_id on client_events(client_id);
-create index idx_client_events_date_type on client_events(client_id, event_date, event_type);
+create index idx_client_events_date_status_type on client_events(client_id, event_date, status, event_type);
 
 create index idx_client_money_items_client_id on client_money_items(client_id);
 create index idx_client_money_items_status on client_money_items(client_id, status);
@@ -302,7 +314,8 @@ create index idx_operation_logs_target on operation_logs(target_table, target_id
 --
 -- clients has no client_id because it is the client master table.
 -- Future Auth/RLS work must be handled in a separate TASK after the v1 read
--- adapter and write workflow boundaries are approved.
+-- adapter and write workflow boundaries are approved. Do not add RLS policy SQL
+-- to this v1 migration candidate without a separate plan and approval.
 
 -- ---------------------------------------------------------------------------
 -- SQL execution review TODO
@@ -311,11 +324,14 @@ create index idx_operation_logs_target on operation_logs(target_table, target_id
 -- Before this draft is promoted to an executable migration, confirm:
 --
 -- - Whether pgcrypto/gen_random_uuid() is available in the target Supabase project.
+--   If not, choose an approved UUID strategy before executing this schema.
 -- - The enum/type re-run strategy, because create type has no if not exists here.
--- - Whether client_events needs a status column later for scheduled/done/canceled
---   reads, or whether v1 will derive visibility from event_date and event_type.
+--   Options include one-time clean-schema execution or duplicate_object-safe
+--   wrapper blocks in the final migration.
+-- - client_events.status is included for scheduled/done/canceled/archived reads;
+--   confirm these values before execution.
 -- - The privacy/security policy for storing operation_logs.ip_address and
---   operation_logs.user_agent.
+--   operation_logs.user_agent before operational collection is enabled.
 -- - The boundary between client_files.file_category as operational grouping and
 --   client_files.file_type as display/file metadata.
 -- - The separate TASK scope for Auth/RLS design and policy SQL.
