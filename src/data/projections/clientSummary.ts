@@ -7,6 +7,7 @@ import type {
   ClientTask,
   OperationLog,
 } from '../../types'
+import { TODAY } from '../../config/constants.ts'
 
 type ClientSummarySource = {
   id: string
@@ -27,14 +28,21 @@ type ClientSummaryCollections = {
   logs: OperationLog[]
 }
 
+type ClientSummaryProjectionOptions = {
+  referenceDate?: string
+}
+
 export function projectClientSummary(
   client: ClientSummarySource,
   collections: ClientSummaryCollections,
+  { referenceDate = TODAY }: ClientSummaryProjectionOptions = {},
 ): ClientSummary {
   const openTaskCount = collections.tasks.filter(
     (task) => task.status === 'doing' || task.status === 'blocked',
   ).length
-  const upcomingEventCount = collections.events.filter((event) => event.status === 'scheduled').length
+  const upcomingEventCount = collections.events.filter((event) =>
+    isUpcomingScheduledEvent(event, referenceDate),
+  ).length
   const hasBizMoneyWarning = collections.moneyItems.some((item) => item.status !== 'checked')
   const latestLogAt = collections.logs[0]?.createdAt ?? null
   const hasDriveFolder =
@@ -61,4 +69,12 @@ export function projectClientSummary(
     hasLookerLink,
     hasSheetLink,
   }
+}
+
+function isUpcomingScheduledEvent(event: ClientEvent, referenceDate: string): boolean {
+  return event.status === 'scheduled' && toDateKey(event.eventDate) >= toDateKey(referenceDate)
+}
+
+function toDateKey(value: string): string {
+  return value.slice(0, 10)
 }
