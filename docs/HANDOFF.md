@@ -13,6 +13,7 @@
 - Current task state: TASK-50 documented the ClientList adapter migration plan from base-table reads to the formal RPC read surface without changing runtime behavior.
 - Current task state: TASK-51 added ClientList RPC row typing, mapper, fake reader boundary, and unit tests without activating the RPC runtime path.
 - Current task state: TASK-52 wired the ClientList RPC repository behind the existing activation gate while keeping mock as default and Detail/SmartViews as placeholders.
+- Current task state: TASK-53 prepared the executable manual SQL for `public.get_client_list_summaries_v1()` to support the activated ClientList RPC path.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -95,6 +96,7 @@
 - TASK-50: Added `docs/TASK_50_CLIENT_LIST_RPC_ADAPTER_PLAN.md`. Decision: for the production path, replace base-table ClientList aggregation with an RPC reader plus an RPC-specific summary mapper; keep the existing assembler/tests as the base-table regression path until a later approved code migration task.
 - TASK-51: Added ClientList RPC row typing, `mapClientSummaryFromRpcRow`, a fake/testable RPC reader boundary, and RPC repository unit tests. The current runtime selector and live app read path remain unchanged; RPC activation is still deferred to a later approved task.
 - TASK-52: Updated the activated Supabase ClientList runtime path to lazy-load the RPC repository instead of the base-table repository. Default mock behavior remains unchanged, and ClientDetail/SmartViews remain strict placeholders behind the same activation gate.
+- TASK-53: Added `docs/TASK_53_CLIENT_LIST_RPC_SQL.md` with the executable manual SQL for `public.get_client_list_summaries_v1()` and safe anon execute grants. No SQL was executed, and runtime behavior was not changed in this task.
 
 ## Next Work
 
