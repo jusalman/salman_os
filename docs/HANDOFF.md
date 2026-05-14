@@ -4,6 +4,10 @@
 
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
 - Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
+- Current task state: TASK-46 prepared review-only minimal ClientList seed SQL for one test client.
+- Current task state: TASK-47 re-ran ClientList smoke test; live Supabase read still returned empty and did not show `테스트 고객사`.
+- Current task state: TASK-47 retry re-ran ClientList smoke test after manual seed insert; live Supabase read still returned empty and did not show `테스트 고객사`.
+- Current task state: TASK-47 retry re-ran ClientList smoke test after the anon read policy fix; live Supabase read loaded 1 client and returned `테스트 고객사`.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -77,6 +81,10 @@
 - TASK-44: Replaced the green/mint login and empty-state styling with a neutral Salman-style palette, updated login input/button focus states, and localized the empty ClientList state copy without changing auth or Supabase logic.
 - TASK-44 design pass: Applied a premium DESIGN.md-inspired neutral theme to the login and empty ClientList screens, restored clean Korean copy, and kept password masking plus existing auth/Supabase behavior unchanged.
 - TASK-45: Added `supabase/.temp/` to `.gitignore` and removed tracked Supabase CLI temp files from the git index only. No schema, migration, `.env.local`, app logic, or DB changes were made.
+- TASK-46: Added `docs/TASK_46_CLIENT_SEED_SQL.md` with one review-only `clients` insert for `테스트 고객사`. No SQL was executed, and no schema, app logic, or `.env.local` changes were made.
+- TASK-47: Re-ran the approved ClientList-only live Supabase read smoke path after the user's manual seed step. Result remained `empty`, `테스트 고객사` did not appear, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders by repository selection.
+- TASK-47 retry: Re-ran the same approved ClientList-only live Supabase read smoke path after the user's additional manual insert confirmation. Result still remained `empty`, `테스트 고객사` still did not appear, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders by repository selection.
+- TASK-47 retry after anon read policy fix: Re-ran the same approved ClientList-only live Supabase read smoke path after the user added the temporary `smoke_test_read_test_client_only` policy. Result changed to `loaded` with 1 live client row, `테스트 고객사` was returned by the ClientList query, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders by repository selection. The current RLS policy is temporary smoke-test-only and should not be treated as final production policy.
 
 ## Next Work
 
