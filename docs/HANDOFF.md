@@ -2,9 +2,9 @@
 
 ## Current Status
 
-- Current task state: TASK-40 completed.
-- Current write phase: TASK-40 ClientList activation smoke test plan.
-- Next task: TASK-41 approved ClientList activation smoke test execution or ClientDetail Supabase read adapter planning.
+- Current task state: TASK-42 final check completed with ClientList smoke result `empty`.
+- Current write phase: TASK-42 closed.
+- Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
@@ -18,7 +18,9 @@
 - TASK-38 documented the safe activation gate plan for Supabase ClientListRepository without changing runtime selection.
 - TASK-39 implemented activation gate selection tests and runtime gate wiring while keeping mock as the default data source.
 - TASK-40 documented the approved ClientList activation smoke test procedure with strict placeholder UX and rollback rules.
-- No real `.env` or `.env.local` file exists or should be created without explicit approval.
+- TASK-41 pre-check assumptions are outdated: `.env.local` now exists locally and is ignored by git.
+- TASK-42 runtime retry diagnostics confirmed `.env.local` loads in a fresh Vite-style env context, `VITE_SUPABASE_READ_ACTIVATION` matches `client_list`, and the live `clients` read now returns successfully with an empty result. There was no silent mock fallback. ClientDetail and SmartViews remain strict placeholders by code path.
+- No real `.env` value should be committed. `.env.local` remains local-only.
 - `@supabase/supabase-js` is installed for the browser client foundation.
 - No additional SQL should be executed without a separate approved TASK.
 - Development Harness remains active: plan first, get approval, keep diffs small, verify, then record outcomes in Handoff.
@@ -66,10 +68,14 @@
 - TASK-38: Added `docs/TASK_38_SUPABASE_ACTIVATION_GATE_PLAN.md`; no env, SQL, runtime selection, or UI changes were made.
 - TASK-39: Added `src/data/repositories/repositorySelection.ts` and `tests/supabase/activationGate.test.ts`; updated `currentRepositories.ts` so Supabase ClientList can be selected only with explicit `VITE_SUPABASE_READ_ACTIVATION=client_list` and valid browser config. Default and invalid values still resolve to mock, and Detail/SmartViews remain placeholders for Supabase activation.
 - TASK-40: Added `docs/TASK_40_CLIENT_LIST_ACTIVATION_SMOKE_TEST_PLAN.md`; no env, SQL, activation, UI, ClientDetail, or SmartViews changes were made.
+- TASK-41: Smoke test pre-check confirmed `.gitignore` excludes `.env.local`, local env keys exist, and the activation gate value must be `client_list`.
+- TASK-42: Updated `.env.example` with the safe `VITE_SUPABASE_READ_ACTIVATION=off` placeholder and ran one narrow ClientList smoke attempt. Initial result: `error` because the local-only `VITE_SUPABASE_URL` format was invalid.
+- TASK-42 retry: Re-ran a narrow ClientList activation diagnostic with fresh Vite env loading. Retry result: `empty`; the live `clients` read succeeds, activation is `client_list`, and frontend Supabase config is present. The remaining blocker is the app/runtime smoke session still using stale client env or a stale dev server process when it shows `fetch failed`. No secrets were printed, no SQL was run, no silent mock fallback occurred, and no code path beyond ClientList activation was enabled.
+- TASK-42 final check: Re-ran the approved ClientList smoke test after the full Vite dev server restart. Final result: `empty`. No silent mock fallback occurred, and ClientDetail/SmartViews remain strict placeholders by code path.
 
 ## Next Work
 
-Run an explicitly approved ClientList activation smoke test or plan the ClientDetail Supabase read adapter while keeping the app mock-first by default.
+Wait for the next approved task.
 
 Use these documents first:
 
@@ -87,6 +93,8 @@ Mock and Supabase summary behavior now use the same upcoming event count rule. E
 Supabase ClientList activation should require an explicit gate such as `VITE_SUPABASE_READ_ACTIVATION=client_list`; `VITE_DATA_SOURCE=supabase` alone should not activate real reads.
 TASK-39 implemented that gate. ClientList real read is lazy-loaded only when `VITE_DATA_SOURCE=supabase`, `VITE_SUPABASE_READ_ACTIVATION=client_list`, and frontend Supabase config are all present.
 TASK-40 defines the smoke test as ClientList-only. ClientDetail and SmartViews remain strict placeholders and may surface placeholder errors after list load.
+For the current code, the activation value must be `VITE_SUPABASE_READ_ACTIVATION=client_list`. The value `on` is treated as activation off.
+The current smoke blocker is the stale app/runtime session showing `fetch failed` even though a fresh Vite-style ClientList diagnostic now returns an empty live result.
 Use `docs/SUPABASE_READ_ADAPTER_MAPPING.md` for DB enum to UI model conversion and `docs/TASK_32_READ_ADAPTER_PLAN.md` for the implementation/test sequence.
 Use `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md` for ClientSummary row assembly rules.
 Use `docs/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md` for repository boundary, query row shapes, and TASK-36 test strategy.
