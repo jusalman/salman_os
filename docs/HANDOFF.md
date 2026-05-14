@@ -3,6 +3,7 @@
 ## Current Status
 
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
+- Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -75,6 +76,7 @@
 - TASK-43: Localized the login screen to Korean, removed visible default password/name placeholders, kept password masking, and removed the extra login explanation notes without changing authentication logic.
 - TASK-44: Replaced the green/mint login and empty-state styling with a neutral Salman-style palette, updated login input/button focus states, and localized the empty ClientList state copy without changing auth or Supabase logic.
 - TASK-44 design pass: Applied a premium DESIGN.md-inspired neutral theme to the login and empty ClientList screens, restored clean Korean copy, and kept password masking plus existing auth/Supabase behavior unchanged.
+- TASK-45: Added `supabase/.temp/` to `.gitignore` and removed tracked Supabase CLI temp files from the git index only. No schema, migration, `.env.local`, app logic, or DB changes were made.
 
 ## Next Work
 
