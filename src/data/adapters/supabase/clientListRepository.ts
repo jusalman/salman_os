@@ -1,6 +1,11 @@
 import { TODAY } from '../../../config/constants.ts'
 import type { ClientListRepository } from '../../repositories/clientListRepository.ts'
 import {
+  mapClientSummaryFromRpcRow,
+  supabaseClientListRpcReader,
+  type ClientListRpcReader,
+} from './clientRowsReadAdapter.ts'
+import {
   assembleClientSummaryFromRows,
   type ClientSummaryEventRow,
   type ClientSummaryFileRow,
@@ -27,6 +32,10 @@ type ClientOwnedSummaryRow =
 export type ClientListSupabaseRepositoryOptions = {
   rowsReader?: ClientSummaryRowsReader
   getReferenceDate?: () => string
+}
+
+export type ClientListSupabaseRpcRepositoryOptions = {
+  rpcReader?: ClientListRpcReader
 }
 
 export function createClientListSupabaseRepository({
@@ -78,6 +87,19 @@ export function createClientListSupabaseRepository({
 }
 
 export const clientListSupabaseReadRepository = createClientListSupabaseRepository()
+
+export function createClientListSupabaseRpcRepository({
+  rpcReader = supabaseClientListRpcReader,
+}: ClientListSupabaseRpcRepositoryOptions = {}): ClientListRepository {
+  return {
+    async listClientSummaries() {
+      const rows = await rpcReader.listClientSummaries()
+      return rows.map(mapClientSummaryFromRpcRow)
+    },
+  }
+}
+
+export const clientListSupabaseRpcReadRepository = createClientListSupabaseRpcRepository()
 
 function groupRowsByClientId<T extends ClientOwnedSummaryRow>(rows: T[]): Map<string, T[]> {
   return rows.reduce((rowsByClientId, row) => {

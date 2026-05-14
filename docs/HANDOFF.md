@@ -11,6 +11,8 @@
 - Current task state: TASK-48 documented the formal v1 Supabase read RLS direction and kept the current smoke-test policy temporary-only.
 - Current task state: TASK-49 specified the production ClientList read surface as a formal RPC, not a direct base-table or view read.
 - Current task state: TASK-50 documented the ClientList adapter migration plan from base-table reads to the formal RPC read surface without changing runtime behavior.
+- Current task state: TASK-51 added ClientList RPC row typing, mapper, fake reader boundary, and unit tests without activating the RPC runtime path.
+- Current task state: TASK-52 wired the ClientList RPC repository behind the existing activation gate while keeping mock as default and Detail/SmartViews as placeholders.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -91,6 +93,8 @@
 - TASK-48: Added `docs/TASK_48_RLS_READ_POLICY_PLAN.md`. Recommendation: keep `smoke_test_read_test_client_only` as local/dev temporary-only, do not open production anon full read on base tables, and design a narrower formal ClientList-only production read surface before any wider rollout.
 - TASK-49: Added `docs/TASK_49_CLIENT_LIST_READ_SURFACE_SPEC.md`. Decision: use `public.get_client_list_summaries_v1()` as the formal production ClientList read surface, keep anon direct reads off the base tables, and include draft SQL to remove the temporary smoke-test policy.
 - TASK-50: Added `docs/TASK_50_CLIENT_LIST_RPC_ADAPTER_PLAN.md`. Decision: for the production path, replace base-table ClientList aggregation with an RPC reader plus an RPC-specific summary mapper; keep the existing assembler/tests as the base-table regression path until a later approved code migration task.
+- TASK-51: Added ClientList RPC row typing, `mapClientSummaryFromRpcRow`, a fake/testable RPC reader boundary, and RPC repository unit tests. The current runtime selector and live app read path remain unchanged; RPC activation is still deferred to a later approved task.
+- TASK-52: Updated the activated Supabase ClientList runtime path to lazy-load the RPC repository instead of the base-table repository. Default mock behavior remains unchanged, and ClientDetail/SmartViews remain strict placeholders behind the same activation gate.
 
 ## Next Work
 

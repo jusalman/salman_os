@@ -69,7 +69,7 @@ test('keeps Supabase placeholders when data source is Supabase but activation is
   )
 })
 
-test('selects only ClientList Supabase repository with explicit activation and config', () => {
+test('selects only ClientList Supabase RPC repository with explicit activation and config', () => {
   assert.equal(resolveSupabaseReadActivation('client_list'), 'client_list')
 
   const repositories = selectRepositories(
@@ -136,7 +136,7 @@ test('does not silently fall back to mock when activated ClientList repository f
 const repositoryMarkers = {
   mock: createRepositorySet('mock'),
   supabasePlaceholder: createRepositorySet('supabase-placeholder'),
-  supabaseClientList: createRepositorySet('supabase-client-list'),
+  supabaseClientList: createRepositorySet('supabase-client-list-rpc'),
 }
 
 function createRepositorySets({

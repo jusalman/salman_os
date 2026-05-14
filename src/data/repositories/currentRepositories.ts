@@ -56,11 +56,11 @@ function hasFrontendSupabaseBrowserConfig(): boolean {
 function createLazySupabaseClientListRepository(): ClientListRepository {
   return {
     async listClientSummaries() {
-      const { clientListSupabaseReadRepository } = await import(
+      const { clientListSupabaseRpcReadRepository } = await import(
         '../adapters/supabase/clientListRepository'
       )
 
-      return clientListSupabaseReadRepository.listClientSummaries()
+      return clientListSupabaseRpcReadRepository.listClientSummaries()
     },
   }
 }
