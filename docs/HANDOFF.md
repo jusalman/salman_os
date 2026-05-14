@@ -8,6 +8,7 @@
 - Current task state: TASK-47 re-ran ClientList smoke test; live Supabase read still returned empty and did not show `테스트 고객사`.
 - Current task state: TASK-47 retry re-ran ClientList smoke test after manual seed insert; live Supabase read still returned empty and did not show `테스트 고객사`.
 - Current task state: TASK-47 retry re-ran ClientList smoke test after the anon read policy fix; live Supabase read loaded 1 client and returned `테스트 고객사`.
+- Current task state: TASK-48 documented the formal v1 Supabase read RLS direction and kept the current smoke-test policy temporary-only.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -85,6 +86,7 @@
 - TASK-47: Re-ran the approved ClientList-only live Supabase read smoke path after the user's manual seed step. Result remained `empty`, `테스트 고객사` did not appear, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders by repository selection.
 - TASK-47 retry: Re-ran the same approved ClientList-only live Supabase read smoke path after the user's additional manual insert confirmation. Result still remained `empty`, `테스트 고객사` still did not appear, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders by repository selection.
 - TASK-47 retry after anon read policy fix: Re-ran the same approved ClientList-only live Supabase read smoke path after the user added the temporary `smoke_test_read_test_client_only` policy. Result changed to `loaded` with 1 live client row, `테스트 고객사` was returned by the ClientList query, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders by repository selection. The current RLS policy is temporary smoke-test-only and should not be treated as final production policy.
+- TASK-48: Added `docs/TASK_48_RLS_READ_POLICY_PLAN.md`. Recommendation: keep `smoke_test_read_test_client_only` as local/dev temporary-only, do not open production anon full read on base tables, and design a narrower formal ClientList-only production read surface before any wider rollout.
 
 ## Next Work
 
