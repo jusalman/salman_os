@@ -21,42 +21,35 @@ export function LoginView({
     <section className="login-view">
       <div className="login-panel">
         <div>
-          <p className="eyebrow">SALMAN OS / Internal MVP</p>
-          <h1>Client operation center</h1>
+          <p className="eyebrow">SALMAN OS / 사내 운영센터</p>
+          <h1>고객사 운영센터</h1>
           <p className="intro">
-            SALMAN OS is not a replacement for Google Sheets, Google Drive, or Google Calendar.
-            It connects client files, tasks, schedules, business money checks, links, and logs in
-            one internal screen.
+            고객사 파일, 업무, 일정, 비즈머니, 링크, 운영 로그를 한 화면에서 확인하는 사내
+            운영센터입니다.
           </p>
         </div>
 
         <form className="login-form" onSubmit={onSubmit}>
           <label>
-            <span>Common password</span>
+            <span>공용 비밀번호</span>
             <input
               type="password"
               value={password}
               onChange={(event) => onPasswordChange(event.target.value)}
-              placeholder="salman1!"
+              placeholder="공용 비밀번호 입력"
             />
           </label>
           <label>
-            <span>Your name</span>
+            <span>이름</span>
             <input
               type="text"
               value={staffName}
               onChange={(event) => onStaffNameChange(event.target.value)}
-              placeholder="Salman"
+              placeholder="이름 입력"
             />
           </label>
           {error ? <p className="form-error">{error}</p> : null}
-          <button type="submit">Enter SALMAN OS</button>
-
-          <div className="login-notes">
-            <p>v1 access: common password + staff name</p>
-            <p>v1 calendar: internal schedule only, no Google Calendar sync</p>
-            <p>File deletion policy: archive to `99_Archive`, never permanent delete</p>
-          </div>
+          <button type="submit">SALMAN OS 입장</button>
         </form>
       </div>
     </section>

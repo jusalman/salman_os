@@ -43,12 +43,12 @@ function App() {
     event.preventDefault()
 
     if (password !== APP_PASSWORD) {
-      setError('Common password does not match `salman1!`.')
+      setError('공용 비밀번호가 일치하지 않습니다.')
       return
     }
 
     if (!staffName.trim()) {
-      setError('Enter your name to continue.')
+      setError('이름을 입력해 주세요.')
       return
     }
 
@@ -68,14 +68,14 @@ function App() {
           <StatusView
             title="Client data unavailable"
             message={loadError}
-            actionLabel="Reload data"
+            actionLabel="데이터 다시 불러오기"
             onAction={() => void reload()}
           />
         ) : clients.length === 0 ? (
           <StatusView
-            title="No clients found"
-            message="SALMAN OS has no client records to display yet."
-            actionLabel="Reload data"
+            title="등록된 고객사가 없습니다"
+            message="아직 표시할 고객사 데이터가 없습니다."
+            actionLabel="데이터 다시 불러오기"
             onAction={() => void reload()}
           />
         ) : smartViewsLoading ? (
@@ -124,12 +124,12 @@ function App() {
             onAction={() => void reloadSelectedClient()}
           />
         ) : (
-        <Workspace
-          viewerName={viewerName}
-          workspaceView={workspaceView}
-          selectedClientId={resolvedClientId}
-          onSelectClient={setSelectedClientId}
-        />
+          <Workspace
+            viewerName={viewerName}
+            workspaceView={workspaceView}
+            selectedClientId={resolvedClientId}
+            onSelectClient={setSelectedClientId}
+          />
         )
       ) : (
         <LoginView
@@ -157,7 +157,7 @@ function StatusView({ title, message, actionLabel, onAction }: StatusViewProps) 
     <section className="login-view">
       <div className="login-panel status-panel">
         <div>
-          <p className="eyebrow">SALMAN OS / Internal MVP</p>
+          <p className="eyebrow">SALMAN OS / 사내 운영센터</p>
           <h1>{title}</h1>
           <p className="intro">{message}</p>
         </div>

@@ -6,22 +6,21 @@
     sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #18312d;
-  background:
-    linear-gradient(180deg, #f4f7f2 0%, #eef3ef 100%);
+  color: #18181a;
+  background: #f5f3ef;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --ink: #18312d;
-  --muted: #5a6c68;
-  --line: rgba(69, 95, 88, 0.18);
-  --line-soft: rgba(69, 95, 88, 0.12);
-  --accent: #1a8374;
-  --accent-strong: #0d665b;
-  --tag: rgba(26, 131, 116, 0.1);
-  --alert: #b14e21;
+  --ink: #18181a;
+  --muted: #6c6862;
+  --line: rgba(28, 28, 30, 0.12);
+  --line-soft: rgba(28, 28, 30, 0.08);
+  --accent: #1f1f21;
+  --accent-strong: #121214;
+  --tag: rgba(31, 31, 33, 0.08);
+  --alert: #9f4d35;
 }
 
 * {
@@ -36,6 +35,8 @@ body,
 
 body {
   margin: 0;
+  background: #f5f3ef;
+  color: var(--ink);
 }
 
 button,
@@ -61,8 +62,9 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(2.4rem, 4vw, 4.6rem);
+  font-size: clamp(2.5rem, 4vw, 4.9rem);
   margin-bottom: 12px;
+  letter-spacing: -0.04em;
 }
 
 h2 {

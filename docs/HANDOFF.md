@@ -2,8 +2,8 @@
 
 ## Current Status
 
-- Current task state: TASK-42 final check completed with ClientList smoke result `empty`.
-- Current write phase: TASK-42 closed.
+- Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
+- Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
@@ -72,6 +72,9 @@
 - TASK-42: Updated `.env.example` with the safe `VITE_SUPABASE_READ_ACTIVATION=off` placeholder and ran one narrow ClientList smoke attempt. Initial result: `error` because the local-only `VITE_SUPABASE_URL` format was invalid.
 - TASK-42 retry: Re-ran a narrow ClientList activation diagnostic with fresh Vite env loading. Retry result: `empty`; the live `clients` read succeeds, activation is `client_list`, and frontend Supabase config is present. The remaining blocker is the app/runtime smoke session still using stale client env or a stale dev server process when it shows `fetch failed`. No secrets were printed, no SQL was run, no silent mock fallback occurred, and no code path beyond ClientList activation was enabled.
 - TASK-42 final check: Re-ran the approved ClientList smoke test after the full Vite dev server restart. Final result: `empty`. No silent mock fallback occurred, and ClientDetail/SmartViews remain strict placeholders by code path.
+- TASK-43: Localized the login screen to Korean, removed visible default password/name placeholders, kept password masking, and removed the extra login explanation notes without changing authentication logic.
+- TASK-44: Replaced the green/mint login and empty-state styling with a neutral Salman-style palette, updated login input/button focus states, and localized the empty ClientList state copy without changing auth or Supabase logic.
+- TASK-44 design pass: Applied a premium DESIGN.md-inspired neutral theme to the login and empty ClientList screens, restored clean Korean copy, and kept password masking plus existing auth/Supabase behavior unchanged.
 
 ## Next Work
 

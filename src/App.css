@@ -13,14 +13,14 @@
   width: min(960px, 100%);
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 28px;
-  padding: 32px;
+  gap: 24px;
+  padding: 24px;
   border: 1px solid var(--line);
-  border-radius: 24px;
-  background:
-    radial-gradient(circle at top left, rgba(26, 131, 116, 0.18), transparent 30%),
-    linear-gradient(180deg, rgba(247, 248, 245, 0.92), rgba(239, 243, 240, 0.96));
-  box-shadow: 0 24px 80px rgba(22, 37, 33, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 18px 40px rgba(24, 24, 26, 0.06);
 }
 
 .status-panel {
@@ -29,7 +29,8 @@
 
 .intro {
   max-width: 54ch;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
+  color: var(--muted);
 }
 
 .login-form {
@@ -45,20 +46,27 @@
 
 .login-form span {
   font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   color: var(--muted);
 }
 
 .login-form input {
   width: 100%;
   box-sizing: border-box;
-  padding: 14px 16px;
-  border-radius: 14px;
+  padding: 12px 14px;
+  border-radius: 8px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.94);
   font: inherit;
   color: var(--ink);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: rgba(31, 31, 33, 0.24);
+  box-shadow: 0 0 0 3px rgba(31, 31, 33, 0.06);
+  background: rgba(255, 255, 255, 0.98);
 }
 
 .login-form button,
@@ -69,21 +77,26 @@
 
 .login-form button,
 .status-actions button {
-  margin-top: 8px;
-  border: none;
-  border-radius: 14px;
-  padding: 15px 18px;
+  margin-top: 6px;
+  border: 1px solid rgba(18, 18, 20, 0.9);
+  border-radius: 8px;
+  padding: 12px 14px;
   background: var(--accent);
   color: white;
   cursor: pointer;
-  transition: transform 150ms ease, box-shadow 150ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
 }
 
 .login-form button:hover,
 .status-actions button:hover,
 .client-chip:hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 28px rgba(18, 71, 64, 0.14);
+  box-shadow: 0 10px 18px rgba(24, 24, 26, 0.1);
+}
+
+.login-form button:hover,
+.status-actions button:hover {
+  background: #2c2c2f;
 }
 
 .status-actions {
@@ -94,6 +107,7 @@
 .form-error {
   color: var(--alert);
   margin: 0;
+  font-size: 0.92rem;
 }
 
 .login-notes {
@@ -121,7 +135,7 @@
   padding: 28px 22px;
   border-right: 1px solid var(--line);
   background:
-    linear-gradient(180deg, rgba(240, 246, 243, 0.96), rgba(231, 239, 235, 0.92)),
+    linear-gradient(180deg, rgba(247, 244, 239, 0.96), rgba(241, 237, 232, 0.92)),
     white;
 }
 
@@ -130,7 +144,7 @@
 .client-header,
 .panel {
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .brand-block {
@@ -228,13 +242,13 @@
   display: grid;
   gap: 6px;
   text-align: left;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.92);
   cursor: pointer;
 }
 
 .client-chip.active {
-  border-color: rgba(26, 131, 116, 0.38);
-  background: rgba(26, 131, 116, 0.1);
+  border-color: rgba(31, 31, 33, 0.26);
+  background: rgba(31, 31, 33, 0.06);
 }
 
 .client-chip-meta,
@@ -340,23 +354,22 @@
 }
 
 .pill.active {
-  background: rgba(26, 131, 116, 0.12);
+  background: rgba(31, 31, 33, 0.08);
 }
 
 .pill.attention {
-  background: rgba(191, 93, 44, 0.14);
+  background: rgba(159, 77, 53, 0.12);
 }
 
 .pill.archived {
-  background: rgba(88, 100, 97, 0.18);
+  background: rgba(108, 104, 98, 0.14);
 }
 
 .eyebrow {
   margin: 0 0 8px;
   color: var(--muted);
   font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
 }
 
 @media (max-width: 1120px) {
