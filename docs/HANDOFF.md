@@ -14,6 +14,8 @@
 - Current task state: TASK-51 added ClientList RPC row typing, mapper, fake reader boundary, and unit tests without activating the RPC runtime path.
 - Current task state: TASK-52 wired the ClientList RPC repository behind the existing activation gate while keeping mock as default and Detail/SmartViews as placeholders.
 - Current task state: TASK-53 prepared the executable manual SQL for `public.get_client_list_summaries_v1()` to support the activated ClientList RPC path.
+- Current task state: TASK-54 re-ran the ClientList RPC smoke test; the RPC path failed because `public.get_client_list_summaries_v1()` was not found in the PostgREST schema cache.
+- Current task state: TASK-54 retry re-ran the ClientList RPC smoke test after schema cache reload; the RPC path loaded 1 row and returned `테스트 고객사`.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -97,6 +99,8 @@
 - TASK-51: Added ClientList RPC row typing, `mapClientSummaryFromRpcRow`, a fake/testable RPC reader boundary, and RPC repository unit tests. The current runtime selector and live app read path remain unchanged; RPC activation is still deferred to a later approved task.
 - TASK-52: Updated the activated Supabase ClientList runtime path to lazy-load the RPC repository instead of the base-table repository. Default mock behavior remains unchanged, and ClientDetail/SmartViews remain strict placeholders behind the same activation gate.
 - TASK-53: Added `docs/TASK_53_CLIENT_LIST_RPC_SQL.md` with the executable manual SQL for `public.get_client_list_summaries_v1()` and safe anon execute grants. No SQL was executed, and runtime behavior was not changed in this task.
+- TASK-54: Re-ran the ClientList RPC smoke path after the user's manual SQL step. Result: RPC error `PGRST202` because `public.get_client_list_summaries_v1()` was not found in the schema cache; `테스트 고객사` could not be confirmed through RPC, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders.
+- TASK-54 retry: Re-ran the ClientList RPC smoke path after the user's schema cache reload. Result changed to `loaded` with 1 RPC row, `테스트 고객사` was returned through the RPC path, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders.
 
 ## Next Work
 
