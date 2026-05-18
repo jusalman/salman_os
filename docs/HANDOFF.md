@@ -22,6 +22,7 @@
 - Current task state: TASK-58 polished visible Korean UI copy for login, ClientList, workspace headers, and core panels without changing Supabase/RLS/RPC behavior.
 - Current task state: TASK-59 planned the Ads module v1 scope and data flow without implementing Ads UI, Google Sheets integration, SQL, or Supabase/RLS/RPC changes.
 - Current task state: TASK-60 planned the Ads module screen structure, navigation placement, tab placeholders, and implementation order without implementing Ads UI.
+- Current task state: TASK-61 added the `광고 운영` top-level workspace placeholder UI with five Ads v1 tabs and no Google Sheets, audit, report, Supabase, RLS, or RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -117,6 +118,8 @@
 - TASK-59: Added `docs/TASK_59_ADS_MODULE_SCOPE_AND_DATA_FLOW.md`. Decision: `salman-naver-report-auto` remains the Naver Ads data collection engine, client Google Sheets remain the raw data store, and SALMAN OS Ads is the visualization/audit/action/report draft layer. Ads v1 tabs are 전체 광고 현황, 고객사별 광고 상세, AI 광고 감사, 담당자 액션리스트, 고객사 리포트 초안. Exclusions: no bid changes, campaign edits, auto budget movement, GEO, or RAG integration yet.
 
 - TASK-60: Added `docs/TASK_60_ADS_SCREEN_STRUCTURE_PLAN.md`. Decision: Ads should appear as a first-class `광고 운영` workspace section separate from `고객사 운영`, with tabs for 전체 광고 현황, 고객사별 광고 상세, AI 광고 감사, 담당자 액션리스트, and 고객사 리포트 초안. First implementation scope is placeholder UI only; later order is Google Sheets connector plan, data normalizer, dashboard metrics, audit rules, and report draft generator.
+
+- TASK-61: Implemented the `광고 운영` top-level section as UI placeholder only. Added five tabs: 전체 광고 현황, 고객사별 광고 상세, AI 광고 감사, 담당자 액션리스트, 고객사 리포트 초안. Each tab shows Korean preparation copy and static source-role notes for `salman-naver-report-auto`, client Google Sheets, and SALMAN OS. No Google Sheets connection, audit engine, metrics, report generation, GEO, RAG, Calendar, Supabase/RLS/RPC, or schema behavior was changed.
 
 ## Next Work
 

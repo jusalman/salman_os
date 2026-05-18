@@ -157,6 +157,38 @@
   color: var(--muted);
 }
 
+.workspace-nav {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.workspace-nav-button,
+.ads-tab {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 13px;
+  background: rgba(255, 255, 255, 0.68);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+}
+
+.workspace-nav-button:hover,
+.ads-tab:hover {
+  transform: translateY(-1px);
+  border-color: rgba(31, 31, 33, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.workspace-nav-button.active,
+.ads-tab.active {
+  border-color: rgba(31, 31, 33, 0.26);
+  background: rgba(31, 31, 33, 0.07);
+}
+
 .smart-views {
   display: grid;
   gap: 16px;
@@ -303,6 +335,46 @@
   gap: 16px;
 }
 
+.ads-operations {
+  display: grid;
+  gap: 18px;
+}
+
+.ads-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ads-tab {
+  text-align: center;
+}
+
+.ads-placeholder-panel {
+  min-height: 320px;
+  align-content: space-between;
+}
+
+.ads-placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ads-placeholder-grid div {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.ads-placeholder-grid span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .section-head {
   display: flex;
   justify-content: space-between;
@@ -376,6 +448,7 @@
   .workspace,
   .login-panel,
   .panel-grid,
+  .ads-placeholder-grid,
   .client-header,
   .topbar {
     grid-template-columns: 1fr;

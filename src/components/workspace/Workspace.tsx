@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { WorkspaceView } from '../../types'
+import { AdsOperationsPlaceholder } from './AdsOperationsPlaceholder'
 import { BusinessMoneyPanel } from './BusinessMoneyPanel'
 import { ClientDetailHeaderSection } from './ClientDetailHeaderSection'
 import { ClientTabs } from './ClientTabs'
@@ -16,12 +18,15 @@ type WorkspaceProps = {
   onSelectClient: (clientId: string) => void
 }
 
+type WorkspaceSection = 'clients' | 'ads'
+
 export function Workspace({
   viewerName,
   workspaceView,
   selectedClientId,
   onSelectClient,
 }: WorkspaceProps) {
+  const [activeSection, setActiveSection] = useState<WorkspaceSection>('clients')
   const { listView, detailView } = workspaceView
   const { header, panels } = detailView
   const panelSections = [
@@ -43,32 +48,56 @@ export function Workspace({
             <strong>{viewerName}</strong>님으로 접속 중
           </p>
         </div>
-        <SmartOperationViewsPanel data={panels.smartViews} />
+
+        <nav className="workspace-nav" aria-label="SALMAN OS 주요 섹션">
+          <button
+            type="button"
+            className={activeSection === 'clients' ? 'workspace-nav-button active' : 'workspace-nav-button'}
+            onClick={() => setActiveSection('clients')}
+          >
+            고객사 운영
+          </button>
+          <button
+            type="button"
+            className={activeSection === 'ads' ? 'workspace-nav-button active' : 'workspace-nav-button'}
+            onClick={() => setActiveSection('ads')}
+          >
+            광고 운영
+          </button>
+        </nav>
+
+        {activeSection === 'clients' ? <SmartOperationViewsPanel data={panels.smartViews} /> : null}
       </aside>
 
       <div className="main-pane">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow">내부 직원용 운영 화면</p>
-            <h1>고객사 운영센터</h1>
-          </div>
-          <div className="topbar-notes">
-            <span>운영 데이터 기준</span>
-            <span>Google Drive 원본 파일</span>
-          </div>
-        </header>
+        {activeSection === 'ads' ? (
+          <AdsOperationsPlaceholder />
+        ) : (
+          <>
+            <header className="topbar">
+              <div>
+                <p className="eyebrow">내부 직원용 운영 화면</p>
+                <h1>고객사 운영센터</h1>
+              </div>
+              <div className="topbar-notes">
+                <span>운영 데이터 기준</span>
+                <span>Google Drive 원본 파일</span>
+              </div>
+            </header>
 
-        <ClientTabs
-          listView={listView}
-          selectedClientId={selectedClientId}
-          onSelect={onSelectClient}
-        />
+            <ClientTabs
+              listView={listView}
+              selectedClientId={selectedClientId}
+              onSelect={onSelectClient}
+            />
 
-        <ClientDetailHeaderSection client={header} />
+            <ClientDetailHeaderSection client={header} />
 
-        <section className="panel-grid">
-          {panelSections}
-        </section>
+            <section className="panel-grid">
+              {panelSections}
+            </section>
+          </>
+        )}
       </div>
     </section>
   )
