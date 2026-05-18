@@ -29,6 +29,7 @@
 - Current task state: TASK-65 planned Ads v1 metrics, safe formulas, missing/zero handling, health score draft rules, status mapping, and first risk signals without implementing metrics code.
 - Current task state: TASK-66 added pure Ads metrics calculator functions and Node tests without UI wiring, Google Sheets, Supabase/RLS/RPC, SQL, real audit, or report generation changes.
 - Current task state: TASK-67 aligned the static Ads operations mock view model with `calculateAdsMetrics` outputs while keeping data local and without Google Sheets or Supabase/RLS/RPC changes.
+- Current task state: TASK-68 planned the Ads Google Sheets config source and credential boundary without implementing Google Sheets API, adding credentials, or changing Supabase/RLS/RPC.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -138,6 +139,8 @@
 - TASK-66: Added `src/domain/adsMetrics.ts` and `tests/ads/adsMetrics.test.ts`. The pure calculator aggregates raw Ads metric rows, safely calculates `ctr`, `cpc`, `cpa`, and `roas`, maps draft `healthScore` and status, and covers normal data, zero clicks, zero conversions, zero spend, missing data, stale data, and high-cost no-conversion cases. It is not wired into the Ads UI and does not connect Google Sheets or touch Supabase/RLS/RPC.
 
 - TASK-67: Updated `src/components/workspace/AdsOperationsPlaceholder.tsx` so local raw mock rows are passed through `calculateAdsMetrics` before becoming `AdsOperationsViewModel` client summaries. Displayed health score, status, spend, clicks, conversions, CPC, CPA, and ROAS now come from the pure calculator. No Google Sheets connection, real audit/report generation, GEO, RAG, Calendar, Supabase/RLS/RPC, or schema behavior was changed.
+
+- TASK-68: Added `docs/TASK_68_ADS_SHEETS_CONFIG_AND_CREDENTIALS_BOUNDARY.md`. Decision: Ads Sheets config starts as a non-secret mock/docs config with fake spreadsheet ids, later moves to an approved server-side or Supabase-backed config source, and Google credentials must remain server-only/local-only with no service account JSON, private keys, API keys, or service keys committed or exposed through Vite frontend env.
 
 ## Next Work
 
