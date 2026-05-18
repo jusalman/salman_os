@@ -26,6 +26,7 @@
 - Current task state: TASK-62 planned the read-only Ads Google Sheets connector structure without implementing Google Sheets API, credentials, metrics, audit, report generation, or Supabase/RLS/RPC changes.
 - Current task state: TASK-63 planned the Ads mock view model and UI data contract without implementing Google Sheets API, UI data wiring, metrics, audit, report generation, or Supabase/RLS/RPC changes.
 - Current task state: TASK-64 wired the Ads operations UI to a static mock `AdsOperationsViewModel` without Google Sheets, real metrics, audit rules, report generation, or Supabase/RLS/RPC changes.
+- Current task state: TASK-65 planned Ads v1 metrics, safe formulas, missing/zero handling, health score draft rules, status mapping, and first risk signals without implementing metrics code.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -129,6 +130,8 @@
 - TASK-63: Added `docs/TASK_63_ADS_VIEW_MODEL_CONTRACT.md`. Decision: Ads UI should consume `AdsOperationsViewModel`, not raw Google Sheets rows. Contract includes dashboard summary fields, client-level ad summaries, diagnostics, tab-specific data needs, mock data requirements, and no-real-data placeholder states for loading, empty, permission denied, column mismatch, and stale data.
 
 - TASK-64: Updated `src/components/workspace/AdsOperationsPlaceholder.tsx` to use a static mock `AdsOperationsViewModel`. The Ads UI now shows summary cards, a customer ad summary table, mock audit findings, mock action items, and a mock report draft across the five Ads tabs. No Google Sheets connection, credentials, real metrics calculation, audit rules, report generation, GEO, RAG, Calendar, Supabase/RLS/RPC, or schema behavior was changed.
+
+- TASK-65: Added `docs/TASK_65_ADS_METRICS_AND_HEALTH_SCORE_RULES.md`. Decision: Ads v1 metrics are spend, impressions, clicks, ctr, cpc, conversions, cpa, revenue, and roas with safe denominator handling. Health score is a draft 0-100 internal review score based on data completeness/freshness, spend stability, conversion stability, CPC control, ROAS efficiency, and high-cost no-conversion exposure. Status precedence is missing_data, risk, warning, normal. No metrics code or real audit/report automation was implemented.
 
 ## Next Work
 
