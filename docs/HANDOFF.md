@@ -25,6 +25,7 @@
 - Current task state: TASK-61 added the `광고 운영` top-level workspace placeholder UI with five Ads v1 tabs and no Google Sheets, audit, report, Supabase, RLS, or RPC changes.
 - Current task state: TASK-62 planned the read-only Ads Google Sheets connector structure without implementing Google Sheets API, credentials, metrics, audit, report generation, or Supabase/RLS/RPC changes.
 - Current task state: TASK-63 planned the Ads mock view model and UI data contract without implementing Google Sheets API, UI data wiring, metrics, audit, report generation, or Supabase/RLS/RPC changes.
+- Current task state: TASK-64 wired the Ads operations UI to a static mock `AdsOperationsViewModel` without Google Sheets, real metrics, audit rules, report generation, or Supabase/RLS/RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -126,6 +127,8 @@
 - TASK-62: Added `docs/TASK_62_ADS_GOOGLE_SHEETS_CONNECTOR_PLAN.md`. Decision: Ads connector v1 should read configured client spreadsheet ids and raw tabs `데일리SA_RAW`, `데일리전환SA_RAW`, and `위클리키워드SA_RAW` as read-only inputs, normalize them into client-scoped Ads raw tables plus diagnostics, and handle missing sheet id, missing tab, empty data, column mismatch, and permission denied states. Later order: config reader, sheet reader, normalizer, mock fallback, UI wiring.
 
 - TASK-63: Added `docs/TASK_63_ADS_VIEW_MODEL_CONTRACT.md`. Decision: Ads UI should consume `AdsOperationsViewModel`, not raw Google Sheets rows. Contract includes dashboard summary fields, client-level ad summaries, diagnostics, tab-specific data needs, mock data requirements, and no-real-data placeholder states for loading, empty, permission denied, column mismatch, and stale data.
+
+- TASK-64: Updated `src/components/workspace/AdsOperationsPlaceholder.tsx` to use a static mock `AdsOperationsViewModel`. The Ads UI now shows summary cards, a customer ad summary table, mock audit findings, mock action items, and a mock report draft across the five Ads tabs. No Google Sheets connection, credentials, real metrics calculation, audit rules, report generation, GEO, RAG, Calendar, Supabase/RLS/RPC, or schema behavior was changed.
 
 ## Next Work
 
