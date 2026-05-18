@@ -24,6 +24,7 @@
 - Current task state: TASK-60 planned the Ads module screen structure, navigation placement, tab placeholders, and implementation order without implementing Ads UI.
 - Current task state: TASK-61 added the `광고 운영` top-level workspace placeholder UI with five Ads v1 tabs and no Google Sheets, audit, report, Supabase, RLS, or RPC changes.
 - Current task state: TASK-62 planned the read-only Ads Google Sheets connector structure without implementing Google Sheets API, credentials, metrics, audit, report generation, or Supabase/RLS/RPC changes.
+- Current task state: TASK-63 planned the Ads mock view model and UI data contract without implementing Google Sheets API, UI data wiring, metrics, audit, report generation, or Supabase/RLS/RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -123,6 +124,8 @@
 - TASK-61: Implemented the `광고 운영` top-level section as UI placeholder only. Added five tabs: 전체 광고 현황, 고객사별 광고 상세, AI 광고 감사, 담당자 액션리스트, 고객사 리포트 초안. Each tab shows Korean preparation copy and static source-role notes for `salman-naver-report-auto`, client Google Sheets, and SALMAN OS. No Google Sheets connection, audit engine, metrics, report generation, GEO, RAG, Calendar, Supabase/RLS/RPC, or schema behavior was changed.
 
 - TASK-62: Added `docs/TASK_62_ADS_GOOGLE_SHEETS_CONNECTOR_PLAN.md`. Decision: Ads connector v1 should read configured client spreadsheet ids and raw tabs `데일리SA_RAW`, `데일리전환SA_RAW`, and `위클리키워드SA_RAW` as read-only inputs, normalize them into client-scoped Ads raw tables plus diagnostics, and handle missing sheet id, missing tab, empty data, column mismatch, and permission denied states. Later order: config reader, sheet reader, normalizer, mock fallback, UI wiring.
+
+- TASK-63: Added `docs/TASK_63_ADS_VIEW_MODEL_CONTRACT.md`. Decision: Ads UI should consume `AdsOperationsViewModel`, not raw Google Sheets rows. Contract includes dashboard summary fields, client-level ad summaries, diagnostics, tab-specific data needs, mock data requirements, and no-real-data placeholder states for loading, empty, permission denied, column mismatch, and stale data.
 
 ## Next Work
 
