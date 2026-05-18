@@ -17,6 +17,7 @@
 - Current task state: TASK-54 re-ran the ClientList RPC smoke test; the RPC path failed because `public.get_client_list_summaries_v1()` was not found in the PostgREST schema cache.
 - Current task state: TASK-54 retry re-ran the ClientList RPC smoke test after schema cache reload; the RPC path loaded 1 row and returned `테스트 고객사`.
 - Current task state: TASK-55 planned removal of the temporary `smoke_test_read_test_client_only` policy and documented the production ClientList RPC RLS rollout order without executing SQL.
+- Current task state: TASK-56 verified the ClientList RPC read after the user manually removed `smoke_test_read_test_client_only`; the RPC path still returned `테스트 고객사` with no silent mock fallback.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -103,6 +104,7 @@
 - TASK-54: Re-ran the ClientList RPC smoke path after the user's manual SQL step. Result: RPC error `PGRST202` because `public.get_client_list_summaries_v1()` was not found in the schema cache; `테스트 고객사` could not be confirmed through RPC, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders.
 - TASK-54 retry: Re-ran the ClientList RPC smoke path after the user's schema cache reload. Result changed to `loaded` with 1 RPC row, `테스트 고객사` was returned through the RPC path, there was no silent mock fallback, and ClientDetail/SmartViews remain strict placeholders.
 - TASK-55: Added `docs/TASK_55_RLS_CLEANUP_AND_PRODUCTION_ORDER.md`. Decision: remove `smoke_test_read_test_client_only` only after confirming the ClientList RPC exists, returns the expected summary result, and anon can execute it; production must keep ClientList reads on `public.get_client_list_summaries_v1()` and must not open anon direct SELECT on `public.clients`.
+- TASK-56: After the user manually executed the approved TASK-55 RLS cleanup SQL, re-ran the ClientList RPC smoke path only. Result: `public.get_client_list_summaries_v1()` returned 1 row and included `테스트 고객사`; no silent mock fallback occurred. The temporary `smoke_test_read_test_client_only` policy is recorded as manually removed, and ClientDetail/SmartViews remain strict placeholders by repository selection.
 
 ## Next Work
 
