@@ -37,6 +37,7 @@
 - Current task state: TASK-73 planned the Ads Sheets server/local connector boundary without implementing Google Sheets API, adding credentials, or changing Supabase/RLS/RPC.
 - Current task state: TASK-74 added an Ads Sheets connector interface and fake reader tests without Google Sheets API, credentials, UI runtime wiring, or Supabase/RLS/RPC changes.
 - Current task state: TASK-75 planned the local-only Google Sheets reader implementation boundary without implementing Google Sheets API, adding credentials, editing `.env.local`, or changing Supabase/RLS/RPC.
+- Current task state: TASK-76 hardened `.gitignore` for Google Sheets credential, token, local env, and secrets files before any local-only Sheets reader implementation.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -162,6 +163,8 @@
 - TASK-74: Added `src/domain/adsSheetsConnector.ts` and extended `tests/ads/adsOperationsViewModel.test.ts` with fake reader coverage. The connector interface returns sanitized raw sheet rows plus diagnostics, fake tests cover successful read, missing tab, empty tab, permission denied, and column mismatch, and fake output is passed into the existing normalizer/view-model pipeline. No Google Sheets API, credentials, `.env.local`, UI runtime wiring, real sheet read, Supabase/RLS/RPC, GEO, RAG, Calendar, audit, or report generation changes were made.
 
 - TASK-75: Added `docs/TASK_75_ADS_LOCAL_SHEETS_READER_PLAN.md`. Decision: the future local Sheets reader must implement `AdsSheetsReader` only in a server/local Node context, load credentials from local/server-only env or path placeholders, never expose credentials to Vite frontend, keep fake-reader tests as regression coverage, and require a separate approved task before adding `.gitignore` credential patterns or real Google Sheets API code. No credentials, `.env.local`, real sheet read, UI runtime wiring, Supabase/RLS/RPC, GEO, RAG, Calendar, audit, or report generation changes were made.
+
+- TASK-76: Updated `.gitignore` with explicit local env, Google service-account, Google credentials, token, `credentials/`, `secrets/`, and `.secrets/` patterns. Existing useful ignore rules, including `supabase/.temp/`, were kept. No credentials were added, no local files were deleted, no Google Sheets API was implemented, and no Supabase/RLS/RPC changes were made.
 
 ## Next Work
 
