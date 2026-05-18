@@ -12,18 +12,43 @@ dist
 dist-ssr
 *.local
 
-# Local env and credential files
-.env.local
-.env.*.local
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Local secret directories and files
+.secrets/
+secrets/
+*.local.json
+*.secret.json
+*.secrets.json
+
+# Google/GCP/Sheets credentials
+credentials*.json
+*credentials*.json
+client_secret*.json
 service-account*.json
 *service-account*.json
+*service_account*.json
+google-service-account*.json
 google-credentials*.json
-*google*credentials*.json
+gcp-credentials*.json
+sheets-credentials*.json
+credentials/
+
+# OAuth/token files
 token*.json
 *token*.json
-credentials/
-secrets/
-.secrets/
+google-token*.json
+sheets-token*.json
+oauth-token*.json
+tokens/
+
+# Private key material
+*.pem
+*.key
+*.p12
 
 # Editor directories and files
 .vscode/*
