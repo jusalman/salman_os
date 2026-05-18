@@ -1,7 +1,12 @@
 import { useState } from 'react'
+import {
+  calculateAdsMetrics,
+  type AdsMetricDiagnostic,
+  type AdsMetricStatus,
+  type RawAdsMetricRow,
+} from '../../domain/adsMetrics'
 
-type AdsStatus = 'normal' | 'warning' | 'risk' | 'missing_data'
-type AdsSeverity = 'info' | 'warning' | 'error' | 'risk'
+type AdsSeverity = 'info' | 'warning' | 'risk'
 type AdsTab =
   | '전체 광고 현황'
   | '고객사별 광고 상세'
@@ -9,23 +14,13 @@ type AdsTab =
   | '담당자 액션리스트'
   | '고객사 리포트 초안'
 
-type AdsViewDiagnostic = {
-  severity: Exclude<AdsSeverity, 'risk'>
-  code:
-    | 'missing_sheet_id'
-    | 'missing_tab'
-    | 'empty_data'
-    | 'column_mismatch'
-    | 'permission_denied'
-    | 'stale_data'
-  message: string
-}
+type AdsViewDiagnostic = AdsMetricDiagnostic
 
 type AdsClientSummary = {
   clientId: string
   clientName: string
   healthScore: number | null
-  status: AdsStatus
+  status: AdsMetricStatus
   spend: number | null
   clicks: number | null
   conversions: number | null
@@ -40,7 +35,7 @@ type AdsAuditFinding = {
   id: string
   clientId: string
   clientName: string
-  severity: Exclude<AdsSeverity, 'error'>
+  severity: AdsSeverity
   title: string
   reason: string
   source: 'rule_placeholder' | 'future_audit_engine'
@@ -82,6 +77,16 @@ type AdsOperationsViewModel = {
   state: { type: 'ready' }
 }
 
+type MockAdsClientInput = {
+  clientId: string
+  clientName: string
+  rows: RawAdsMetricRow[]
+  lastUpdatedAt: string | null
+  diagnostics?: AdsMetricDiagnostic[]
+  isStale?: boolean
+  highCostNoConversionThreshold?: number
+}
+
 const adsTabs: AdsTab[] = [
   '전체 광고 현황',
   '고객사별 광고 상세',
@@ -90,103 +95,90 @@ const adsTabs: AdsTab[] = [
   '고객사 리포트 초안',
 ]
 
+const mockClientInputs: MockAdsClientInput[] = [
+  {
+    clientId: 'ads-client-01',
+    clientName: '테스트 고객사',
+    rows: [
+      {
+        spend: 100_000,
+        impressions: 10_000,
+        clicks: 500,
+        conversions: 25,
+        revenue: 400_000,
+      },
+    ],
+    lastUpdatedAt: '2026-05-18 09:30',
+  },
+  {
+    clientId: 'ads-client-02',
+    clientName: '브랜드 성장랩',
+    rows: [
+      {
+        spend: 100_000,
+        impressions: 10_000,
+        clicks: 500,
+        conversions: 25,
+        revenue: 400_000,
+      },
+    ],
+    lastUpdatedAt: '2026-05-17 18:10',
+    isStale: true,
+  },
+  {
+    clientId: 'ads-client-03',
+    clientName: '로컬 전환센터',
+    rows: [
+      {
+        spend: 200_000,
+        impressions: 12_000,
+        clicks: 700,
+        conversions: 0,
+        revenue: 0,
+      },
+    ],
+    lastUpdatedAt: '2026-05-18 08:55',
+    highCostNoConversionThreshold: 100_000,
+  },
+  {
+    clientId: 'ads-client-04',
+    clientName: '신규 온보딩몰',
+    rows: [],
+    lastUpdatedAt: null,
+    diagnostics: [
+      {
+        severity: 'error',
+        code: 'missing_sheet_id',
+        message: '광고 원본 Google Sheets ID가 아직 등록되지 않았습니다.',
+      },
+      {
+        severity: 'warning',
+        code: 'missing_tab',
+        message: '위클리키워드SA_RAW 탭 확인이 필요합니다.',
+      },
+    ],
+  },
+]
+
+const mockClients = mockClientInputs.map(toClientSummary)
+
 const mockAdsViewModel: AdsOperationsViewModel = {
   summary: {
-    totalClients: 4,
-    normalCount: 1,
-    warningCount: 1,
-    riskCount: 1,
-    missingDataCount: 1,
+    totalClients: mockClients.length,
+    normalCount: countByStatus(mockClients, 'normal'),
+    warningCount: countByStatus(mockClients, 'warning'),
+    riskCount: countByStatus(mockClients, 'risk'),
+    missingDataCount: countByStatus(mockClients, 'missing_data'),
   },
-  clients: [
-    {
-      clientId: 'ads-client-01',
-      clientName: '테스트 고객사',
-      healthScore: 86,
-      status: 'normal',
-      spend: 1280000,
-      clicks: 4120,
-      conversions: 94,
-      cpc: 311,
-      cpa: 13617,
-      roas: 412,
-      lastUpdatedAt: '2026-05-18 09:30',
-      diagnostics: [],
-    },
-    {
-      clientId: 'ads-client-02',
-      clientName: '브랜드 성장랩',
-      healthScore: 68,
-      status: 'warning',
-      spend: 940000,
-      clicks: 2380,
-      conversions: 31,
-      cpc: 395,
-      cpa: 30323,
-      roas: 184,
-      lastUpdatedAt: '2026-05-17 18:10',
-      diagnostics: [
-        {
-          severity: 'warning',
-          code: 'stale_data',
-          message: '원본 시트 갱신 시간이 하루 이상 지났습니다.',
-        },
-      ],
-    },
-    {
-      clientId: 'ads-client-03',
-      clientName: '로컬 전환센터',
-      healthScore: 42,
-      status: 'risk',
-      spend: 1560000,
-      clicks: 1980,
-      conversions: 14,
-      cpc: 788,
-      cpa: 111429,
-      roas: 71,
-      lastUpdatedAt: '2026-05-18 08:55',
-      diagnostics: [
-        {
-          severity: 'error',
-          code: 'column_mismatch',
-          message: '전환 RAW 탭의 필수 컬럼 일부가 계약과 다릅니다.',
-        },
-      ],
-    },
-    {
-      clientId: 'ads-client-04',
-      clientName: '신규 온보딩몰',
-      healthScore: null,
-      status: 'missing_data',
-      spend: null,
-      clicks: null,
-      conversions: null,
-      cpc: null,
-      cpa: null,
-      roas: null,
-      lastUpdatedAt: null,
-      diagnostics: [
-        {
-          severity: 'error',
-          code: 'missing_sheet_id',
-          message: '광고 원본 Google Sheets ID가 아직 등록되지 않았습니다.',
-        },
-        {
-          severity: 'warning',
-          code: 'missing_tab',
-          message: '위클리키워드SA_RAW 탭 확인이 필요합니다.',
-        },
-      ],
-    },
-  ],
+  clients: mockClients,
   auditFindings: [
     {
       id: 'audit-01',
       clientId: 'ads-client-02',
       clientName: '브랜드 성장랩',
       severity: 'warning',
-      title: '전환당 비용 상승 확인 필요',
-      reason: '최근 샘플 기준 CPA가 내부 기준보다 높게 표시되는 mock 상태입니다.',
+      title: '원본 데이터 신선도 확인 필요',
+      reason: '계산기 결과가 stale_data 진단을 반영해 주의 상태로 분류한 mock 사례입니다.',
       source: 'rule_placeholder',
     },
     {
@@ -194,8 +186,8 @@ const mockAdsViewModel: AdsOperationsViewModel = {
       clientId: 'ads-client-03',
       clientName: '로컬 전환센터',
       severity: 'risk',
-      title: 'ROAS 위험 구간 샘플',
-      reason: 'ROAS가 낮고 CPC가 높은 조합을 위험 예시로 표시합니다.',
+      title: '전환 없는 고비용 구간',
+      reason: '계산기 결과가 high_cost_no_conversion 신호를 감지해 위험 상태로 분류한 mock 사례입니다.',
       source: 'rule_placeholder',
     },
   ],
@@ -204,7 +196,7 @@ const mockAdsViewModel: AdsOperationsViewModel = {
       id: 'action-01',
       clientId: 'ads-client-02',
       clientName: '브랜드 성장랩',
-      title: '검색어 리포트 확인 후 제외 키워드 후보 정리',
+      title: '원본 Google Sheets 갱신 시간 확인',
       ownerName: '운영팀',
       status: 'todo',
       dueDate: '2026-05-20',
@@ -214,7 +206,7 @@ const mockAdsViewModel: AdsOperationsViewModel = {
       id: 'action-02',
       clientId: 'ads-client-03',
       clientName: '로컬 전환센터',
-      title: '전환 추적 컬럼 매칭 상태 확인',
+      title: '고비용 무전환 구간 원인 점검',
       ownerName: null,
       status: 'in_progress',
       dueDate: null,
@@ -227,7 +219,7 @@ const mockAdsViewModel: AdsOperationsViewModel = {
       clientId: 'ads-client-01',
       clientName: '테스트 고객사',
       title: '5월 3주차 네이버 광고 운영 요약 초안',
-      body: '이번 주 광고 운영은 전반적으로 안정적인 흐름입니다. 전환 효율은 유지되고 있으며, 다음 점검에서는 키워드별 비용 변화를 확인합니다.',
+      body: '이번 주 mock 계산 결과는 정상 상태입니다. CPC, CPA, ROAS가 계산 가능한 상태이며 추가 위험 신호는 없습니다.',
       status: 'draft_placeholder',
       updatedAt: '2026-05-18 10:00',
     },
@@ -245,8 +237,8 @@ export function AdsOperationsPlaceholder() {
           <p className="eyebrow">고객사 네이버 광고 운영</p>
           <h1>광고 운영</h1>
           <p className="intro">
-            정적 mock view model 기준으로 광고 현황, 감사 샘플, 담당자 액션, 리포트 초안을
-            미리 확인하는 화면입니다.
+            정적 raw mock 데이터를 adsMetrics 계산기에 통과시킨 결과로 광고 현황, 감사 샘플,
+            담당자 액션, 리포트 초안을 확인하는 화면입니다.
           </p>
         </div>
         <div className="topbar-notes">
@@ -318,7 +310,7 @@ function AuditTab({ findings }: { findings: AdsAuditFinding[] }) {
       <div className="section-head">
         <div>
           <h3>AI 광고 감사</h3>
-          <p>현재는 실제 AI/RAG가 아닌 mock view model 기반 감사 샘플입니다.</p>
+          <p>현재는 실제 AI/RAG가 아닌 adsMetrics 계산기 결과 기반 mock 감사 샘플입니다.</p>
         </div>
       </div>
       <div className="stack">
@@ -434,7 +426,7 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
             <span>{formatNumber(client.conversions)}</span>
             <span>{formatWon(client.cpc)}</span>
             <span>{formatWon(client.cpa)}</span>
-            <span>{formatPercent(client.roas)}</span>
+            <span>{formatRoas(client.roas)}</span>
             <span>{client.lastUpdatedAt ?? '미수집'}</span>
           </div>
         ))}
@@ -443,14 +435,41 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
   )
 }
 
-const statusLabel: Record<AdsStatus, string> = {
+function toClientSummary(input: MockAdsClientInput): AdsClientSummary {
+  const metrics = calculateAdsMetrics(input.rows, {
+    diagnostics: input.diagnostics,
+    isStale: input.isStale,
+    highCostNoConversionThreshold: input.highCostNoConversionThreshold,
+  })
+
+  return {
+    clientId: input.clientId,
+    clientName: input.clientName,
+    healthScore: metrics.healthScore,
+    status: metrics.status,
+    spend: metrics.spend,
+    clicks: metrics.clicks,
+    conversions: metrics.conversions,
+    cpc: metrics.cpc,
+    cpa: metrics.cpa,
+    roas: metrics.roas,
+    lastUpdatedAt: input.lastUpdatedAt,
+    diagnostics: metrics.diagnostics,
+  }
+}
+
+function countByStatus(clients: AdsClientSummary[], status: AdsMetricStatus) {
+  return clients.filter((client) => client.status === status).length
+}
+
+const statusLabel: Record<AdsMetricStatus, string> = {
   normal: '정상',
   warning: '주의',
   risk: '위험',
   missing_data: '데이터 미수집',
 }
 
-const severityLabel: Record<Exclude<AdsSeverity, 'error'>, string> = {
+const severityLabel: Record<AdsSeverity, string> = {
   info: '정보',
   warning: '주의',
   risk: '위험',
@@ -469,13 +488,13 @@ const reportStatusLabel: Record<AdsReportDraft['status'], string> = {
 }
 
 function formatWon(value: number | null) {
-  return value === null ? '-' : `${value.toLocaleString('ko-KR')}원`
+  return value === null ? '-' : `${Math.round(value).toLocaleString('ko-KR')}원`
 }
 
 function formatNumber(value: number | null) {
   return value === null ? '-' : value.toLocaleString('ko-KR')
 }
 
-function formatPercent(value: number | null) {
-  return value === null ? '-' : `${value.toLocaleString('ko-KR')}%`
+function formatRoas(value: number | null) {
+  return value === null ? '-' : `${Math.round(value * 100).toLocaleString('ko-KR')}%`
 }

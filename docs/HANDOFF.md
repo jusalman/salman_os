@@ -28,6 +28,7 @@
 - Current task state: TASK-64 wired the Ads operations UI to a static mock `AdsOperationsViewModel` without Google Sheets, real metrics, audit rules, report generation, or Supabase/RLS/RPC changes.
 - Current task state: TASK-65 planned Ads v1 metrics, safe formulas, missing/zero handling, health score draft rules, status mapping, and first risk signals without implementing metrics code.
 - Current task state: TASK-66 added pure Ads metrics calculator functions and Node tests without UI wiring, Google Sheets, Supabase/RLS/RPC, SQL, real audit, or report generation changes.
+- Current task state: TASK-67 aligned the static Ads operations mock view model with `calculateAdsMetrics` outputs while keeping data local and without Google Sheets or Supabase/RLS/RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -135,6 +136,8 @@
 - TASK-65: Added `docs/TASK_65_ADS_METRICS_AND_HEALTH_SCORE_RULES.md`. Decision: Ads v1 metrics are spend, impressions, clicks, ctr, cpc, conversions, cpa, revenue, and roas with safe denominator handling. Health score is a draft 0-100 internal review score based on data completeness/freshness, spend stability, conversion stability, CPC control, ROAS efficiency, and high-cost no-conversion exposure. Status precedence is missing_data, risk, warning, normal. No metrics code or real audit/report automation was implemented.
 
 - TASK-66: Added `src/domain/adsMetrics.ts` and `tests/ads/adsMetrics.test.ts`. The pure calculator aggregates raw Ads metric rows, safely calculates `ctr`, `cpc`, `cpa`, and `roas`, maps draft `healthScore` and status, and covers normal data, zero clicks, zero conversions, zero spend, missing data, stale data, and high-cost no-conversion cases. It is not wired into the Ads UI and does not connect Google Sheets or touch Supabase/RLS/RPC.
+
+- TASK-67: Updated `src/components/workspace/AdsOperationsPlaceholder.tsx` so local raw mock rows are passed through `calculateAdsMetrics` before becoming `AdsOperationsViewModel` client summaries. Displayed health score, status, spend, clicks, conversions, CPC, CPA, and ROAS now come from the pure calculator. No Google Sheets connection, real audit/report generation, GEO, RAG, Calendar, Supabase/RLS/RPC, or schema behavior was changed.
 
 ## Next Work
 
