@@ -9,16 +9,16 @@ export function ClientDetailHeader({ client }: ClientDetailHeaderProps) {
   return (
     <section className="client-header">
       <div>
-        <p className="eyebrow">Selected client</p>
+        <p className="eyebrow">선택한 고객사</p>
         <h2>{client.name}</h2>
         <p className="client-memo">{client.memo}</p>
       </div>
       <div className="header-meta">
         <span className={`pill ${client.status}`}>{clientStatusLabel[client.status]}</span>
-        <span>Owner: {client.owner}</span>
-        <span>Updated: {client.updatedAt}</span>
+        <span>담당자: {client.owner}</span>
+        <span>업데이트: {client.updatedAt}</span>
         <a href={client.driveRootUrl} target="_blank" rel="noreferrer">
-          Open Drive Root
+          Drive 원본 열기
         </a>
       </div>
     </section>

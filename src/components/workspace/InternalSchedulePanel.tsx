@@ -8,7 +8,7 @@ type InternalSchedulePanelProps = {
 
 export function InternalSchedulePanel({ scheduleItems }: InternalSchedulePanelProps) {
   return (
-    <Panel title="Internal Schedule" subtitle="Supabase-based client schedule">
+    <Panel title="내부 일정" subtitle="SALMAN OS에 기록된 고객사 일정">
       <div className="stack">
         {scheduleItems.map((event) => (
           <article key={event.id} className="item-row">

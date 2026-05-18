@@ -7,7 +7,7 @@ type OperationLogsPanelProps = {
 
 export function OperationLogsPanel({ logs }: OperationLogsPanelProps) {
   return (
-    <Panel title="Operation Logs" subtitle="Recent internal changes">
+    <Panel title="운영 로그" subtitle="최근 내부 변경 기록">
       <div className="stack compact">
         {logs.map((log) => (
           <article key={log.id} className="item-row">

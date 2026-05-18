@@ -8,7 +8,7 @@ type FilesPanelProps = {
 
 export function FilesPanel({ files }: FilesPanelProps) {
   return (
-    <Panel title="Files" subtitle="Source files from Google Drive">
+    <Panel title="자료" subtitle="Google Drive 원본 파일">
       <div className="stack">
         {files.map((file) => (
           <article key={file.id} className="item-row">
@@ -21,7 +21,7 @@ export function FilesPanel({ files }: FilesPanelProps) {
               <span>{fileStatusLabel[file.status]}</span>
               <span>{file.uploadedBy}</span>
               <a href={file.driveUrl} target="_blank" rel="noreferrer">
-                Open
+                열기
               </a>
             </div>
           </article>

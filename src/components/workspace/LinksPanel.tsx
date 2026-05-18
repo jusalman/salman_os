@@ -7,7 +7,7 @@ type LinksPanelProps = {
 
 export function LinksPanel({ links }: LinksPanelProps) {
   return (
-    <Panel title="Links" subtitle="Operational shortcuts">
+    <Panel title="링크" subtitle="운영에 필요한 바로가기">
       <div className="stack compact">
         {links.map((link) => (
           <article key={link.id} className="item-row">
@@ -17,7 +17,7 @@ export function LinksPanel({ links }: LinksPanelProps) {
             </div>
             <div className="item-meta">
               <a href={link.url} target="_blank" rel="noreferrer">
-                Open Link
+                링크 열기
               </a>
             </div>
           </article>

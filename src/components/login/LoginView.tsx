@@ -21,22 +21,22 @@ export function LoginView({
     <section className="login-view">
       <div className="login-panel">
         <div>
-          <p className="eyebrow">SALMAN OS / 사내 운영센터</p>
+          <p className="eyebrow">SALMAN OS / 내부 운영센터</p>
           <h1>고객사 운영센터</h1>
           <p className="intro">
-            고객사 파일, 업무, 일정, 비즈머니, 링크, 운영 로그를 한 화면에서 확인하는 사내
-            운영센터입니다.
+            고객사별 자료, 업무, 일정, 비즈머니, 링크, 운영 로그를 한 화면에서 확인하는
+            내부 직원용 운영 허브입니다.
           </p>
         </div>
 
         <form className="login-form" onSubmit={onSubmit}>
           <label>
-            <span>공용 비밀번호</span>
+            <span>공통 비밀번호</span>
             <input
               type="password"
               value={password}
               onChange={(event) => onPasswordChange(event.target.value)}
-              placeholder="공용 비밀번호 입력"
+              placeholder="공통 비밀번호 입력"
             />
           </label>
           <label>

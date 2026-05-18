@@ -38,9 +38,9 @@ export function Workspace({
       <aside className="sidebar">
         <div className="brand-block">
           <p className="eyebrow">SALMAN OS</p>
-          <h2>Internal client ops</h2>
+          <h2>고객사 운영 허브</h2>
           <p className="sidebar-copy">
-            Signed in as <strong>{viewerName}</strong>
+            <strong>{viewerName}</strong>님으로 접속 중
           </p>
         </div>
         <SmartOperationViewsPanel data={panels.smartViews} />
@@ -49,13 +49,12 @@ export function Workspace({
       <div className="main-pane">
         <header className="topbar">
           <div>
-            <p className="eyebrow">v1 / Internal Staff MVP</p>
-            <h1>Client operation center</h1>
+            <p className="eyebrow">내부 직원용 운영 화면</p>
+            <h1>고객사 운영센터</h1>
           </div>
           <div className="topbar-notes">
-            <span>Supabase = operational data</span>
-            <span>Google Drive = source files</span>
-            <span>No AI / No Google Calendar sync</span>
+            <span>운영 데이터 기준</span>
+            <span>Google Drive 원본 파일</span>
           </div>
         </header>
 

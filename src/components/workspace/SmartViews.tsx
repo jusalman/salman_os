@@ -5,18 +5,18 @@ type SmartViewsProps = {
 }
 
 const cards: Array<{ key: keyof SmartViewsData; title: string }> = [
-  { key: 'todaysItems', title: 'Today' },
-  { key: 'priorityTasks', title: 'Priority tasks' },
-  { key: 'moneyAlerts', title: 'Money checks' },
-  { key: 'recentArchive', title: 'Recent archive' },
+  { key: 'todaysItems', title: '오늘 볼 항목' },
+  { key: 'priorityTasks', title: '우선 업무' },
+  { key: 'moneyAlerts', title: '비즈머니 확인' },
+  { key: 'recentArchive', title: '최근 보관' },
 ]
 
 export function SmartViews({ data }: SmartViewsProps) {
   return (
     <div className="smart-views">
       <div className="section-head">
-        <h3>Smart Operation Views</h3>
-        <span>Template only</span>
+        <h3>스마트 운영 보기</h3>
+        <span>템플릿 기준</span>
       </div>
 
       {cards.map((card) => (

@@ -8,7 +8,7 @@ type TasksPanelProps = {
 
 export function TasksPanel({ tasks }: TasksPanelProps) {
   return (
-    <Panel title="Tasks" subtitle="Operational work by client">
+    <Panel title="업무" subtitle="고객사별 진행 업무">
       <div className="stack">
         {tasks.map((task) => (
           <article key={task.id} className="item-row">

@@ -8,7 +8,7 @@ type BusinessMoneyPanelProps = {
 
 export function BusinessMoneyPanel({ moneyItems }: BusinessMoneyPanelProps) {
   return (
-    <Panel title="Business Money" subtitle="Manual check status only">
+    <Panel title="비즈머니" subtitle="수동 확인 기준 상태">
       <div className="stack">
         {moneyItems.map((item) => (
           <article key={item.id} className="item-row">
@@ -18,10 +18,10 @@ export function BusinessMoneyPanel({ moneyItems }: BusinessMoneyPanelProps) {
             </div>
             <div className="item-meta">
               <span>{moneyStatusLabel[item.status]}</span>
-              <span>{item.lastCheckedAt ?? 'Not checked'}</span>
-              <span>{item.checkedBy ?? 'Unassigned'}</span>
+              <span>{item.lastCheckedAt ?? '미확인'}</span>
+              <span>{item.checkedBy ?? '담당자 없음'}</span>
               <a href={item.url} target="_blank" rel="noreferrer">
-                Check Link
+                확인 링크
               </a>
             </div>
           </article>

@@ -19,6 +19,7 @@
 - Current task state: TASK-55 planned removal of the temporary `smoke_test_read_test_client_only` policy and documented the production ClientList RPC RLS rollout order without executing SQL.
 - Current task state: TASK-56 verified the ClientList RPC read after the user manually removed `smoke_test_read_test_client_only`; the RPC path still returned `테스트 고객사` with no silent mock fallback.
 - Current task state: TASK-57 locked the Supabase ClientList RPC read milestone as the stable baseline before next feature work.
+- Current task state: TASK-58 polished visible Korean UI copy for login, ClientList, workspace headers, and core panels without changing Supabase/RLS/RPC behavior.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -108,6 +109,8 @@
 - TASK-56: After the user manually executed the approved TASK-55 RLS cleanup SQL, re-ran the ClientList RPC smoke path only. Result: `public.get_client_list_summaries_v1()` returned 1 row and included `테스트 고객사`; no silent mock fallback occurred. The temporary `smoke_test_read_test_client_only` policy is recorded as manually removed, and ClientDetail/SmartViews remain strict placeholders by repository selection.
 
 - TASK-57: Added `docs/TASK_57_SUPABASE_RPC_MILESTONE_LOCK.md`. Milestone lock: ClientList production read stays on `public.get_client_list_summaries_v1()`, the temporary smoke-test RLS policy remains removed, anon base-table `clients` SELECT must not be opened, ClientDetail/SmartViews remain placeholders, and next feature work should keep ClientDetail planning, Ads planning, and UI/dashboard refinement as separate scopes.
+
+- TASK-58: Polished visible Korean UI copy across login, loading/error/empty states, ClientList chips, workspace header, Smart Operation Views, and core panels. Removed MVP/debug-looking user-facing copy such as `Internal Staff MVP` and `No AI / No Google Calendar sync`; no auth, Supabase RPC, RLS, schema, ClientDetail, SmartViews, Ads, RAG, or Calendar behavior was changed.
 
 ## Next Work
 

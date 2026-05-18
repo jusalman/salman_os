@@ -43,7 +43,7 @@ function App() {
     event.preventDefault()
 
     if (password !== APP_PASSWORD) {
-      setError('공용 비밀번호가 일치하지 않습니다.')
+      setError('공통 비밀번호가 일치하지 않습니다.')
       return
     }
 
@@ -61,66 +61,66 @@ function App() {
       {viewerName ? (
         loading ? (
           <StatusView
-            title="Loading client data"
-            message="Preparing SALMAN OS internal client records."
+            title="고객사 정보를 불러오는 중입니다"
+            message="SALMAN OS 운영센터에 표시할 고객사 데이터를 준비하고 있습니다."
           />
         ) : loadError ? (
           <StatusView
-            title="Client data unavailable"
+            title="고객사 정보를 불러오지 못했습니다"
             message={loadError}
-            actionLabel="데이터 다시 불러오기"
+            actionLabel="다시 불러오기"
             onAction={() => void reload()}
           />
         ) : clients.length === 0 ? (
           <StatusView
-            title="등록된 고객사가 없습니다"
-            message="아직 표시할 고객사 데이터가 없습니다."
-            actionLabel="데이터 다시 불러오기"
+            title="표시할 고객사가 없습니다"
+            message="아직 SALMAN OS에 연결된 고객사 운영 데이터가 없습니다."
+            actionLabel="다시 불러오기"
             onAction={() => void reload()}
           />
         ) : smartViewsLoading ? (
           <StatusView
-            title="Loading smart views"
-            message="Preparing SALMAN OS operation summaries."
+            title="운영 요약을 준비하는 중입니다"
+            message="고객사별 업무, 일정, 비즈머니 상태를 정리하고 있습니다."
           />
         ) : smartViewsError ? (
           <StatusView
-            title="Smart views unavailable"
+            title="운영 요약을 불러오지 못했습니다"
             message={smartViewsError}
-            actionLabel="Reload smart views"
+            actionLabel="운영 요약 다시 불러오기"
             onAction={() => void reloadSmartViews()}
           />
         ) : !smartViews ? (
           <StatusView
-            title="Smart views unavailable"
-            message="SALMAN OS could not resolve operation summaries."
-            actionLabel="Reload smart views"
+            title="운영 요약을 표시할 수 없습니다"
+            message="SALMAN OS가 현재 고객사 운영 요약을 구성하지 못했습니다."
+            actionLabel="운영 요약 다시 불러오기"
             onAction={() => void reloadSmartViews()}
           />
         ) : selectedClientLoading ? (
           <StatusView
-            title="Loading selected client"
-            message="Preparing SALMAN OS client detail view."
+            title="선택한 고객사를 불러오는 중입니다"
+            message="고객사 운영 화면을 준비하고 있습니다."
           />
         ) : selectedClientError ? (
           <StatusView
-            title="Selected client unavailable"
+            title="선택한 고객사를 불러오지 못했습니다"
             message={selectedClientError}
-            actionLabel="Reload client"
+            actionLabel="고객사 다시 불러오기"
             onAction={() => void reloadSelectedClient()}
           />
         ) : !selectedClient ? (
           <StatusView
-            title="Selected client unavailable"
-            message="SALMAN OS could not resolve a client detail record."
-            actionLabel="Reload client"
+            title="선택한 고객사를 표시할 수 없습니다"
+            message="SALMAN OS가 고객사 상세 정보를 찾지 못했습니다."
+            actionLabel="고객사 다시 불러오기"
             onAction={() => void reloadSelectedClient()}
           />
         ) : !workspaceView ? (
           <StatusView
-            title="Selected client unavailable"
-            message="SALMAN OS could not assemble a workspace view."
-            actionLabel="Reload client"
+            title="운영 화면을 구성할 수 없습니다"
+            message="SALMAN OS가 고객사 운영 화면을 조립하지 못했습니다."
+            actionLabel="고객사 다시 불러오기"
             onAction={() => void reloadSelectedClient()}
           />
         ) : (
@@ -157,7 +157,7 @@ function StatusView({ title, message, actionLabel, onAction }: StatusViewProps) 
     <section className="login-view">
       <div className="login-panel status-panel">
         <div>
-          <p className="eyebrow">SALMAN OS / 사내 운영센터</p>
+          <p className="eyebrow">SALMAN OS / 내부 운영센터</p>
           <h1>{title}</h1>
           <p className="intro">{message}</p>
         </div>

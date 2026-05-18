@@ -20,12 +20,12 @@ export function ClientTabs({ listView, selectedClientId, onSelect }: ClientTabsP
           <strong>{client.name}</strong>
           <span>{clientStatusLabel[client.status]}</span>
           <div className="client-chip-meta">
-            <span>{`Tasks ${client.openTaskCount}`}</span>
-            <span>{`Events ${client.upcomingEventCount}`}</span>
-            <span>{client.hasBizMoneyWarning ? 'Biz warning' : 'Biz clear'}</span>
+            <span>{`업무 ${client.openTaskCount}`}</span>
+            <span>{`일정 ${client.upcomingEventCount}`}</span>
+            <span>{client.hasBizMoneyWarning ? '비즈머니 확인 필요' : '비즈머니 정상'}</span>
           </div>
           <div className="client-chip-flags">
-            {client.hasDriveFolder ? <span>Drive</span> : null}
+            {client.hasDriveFolder ? <span>Drive 폴더</span> : null}
             {client.hasLookerLink ? <span>Looker</span> : null}
             {client.hasSheetLink ? <span>Sheet</span> : null}
             {client.latestLogAt ? <span>{client.latestLogAt}</span> : null}
