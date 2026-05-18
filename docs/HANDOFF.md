@@ -35,6 +35,7 @@
 - Current task state: TASK-71 added a pure Ads mock connector-to-view-model pipeline and tests without Google Sheets API, credentials, UI wiring, or Supabase/RLS/RPC changes.
 - Current task state: TASK-72 wired the Ads operations UI to the mock connector view model pipeline without Google Sheets API, credentials, real audit/report generation, or Supabase/RLS/RPC changes.
 - Current task state: TASK-73 planned the Ads Sheets server/local connector boundary without implementing Google Sheets API, adding credentials, or changing Supabase/RLS/RPC.
+- Current task state: TASK-74 added an Ads Sheets connector interface and fake reader tests without Google Sheets API, credentials, UI runtime wiring, or Supabase/RLS/RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -156,6 +157,8 @@
 - TASK-72: Updated `src/components/workspace/AdsOperationsPlaceholder.tsx` so the Ads operations UI now consumes `buildMockAdsOperationsViewModel()` instead of component-local static metric data. The visible UI remains a Korean mock/no-real-data screen, audit/action/report tabs stay placeholders, and there is still no Google Sheets API, credential, real sheet read, real audit/report generation, GEO, RAG, Calendar, or Supabase/RLS/RPC change.
 
 - TASK-73: Added `docs/TASK_73_ADS_SHEETS_SERVER_BOUNDARY_PLAN.md`. Decision: the Ads UI remains a sanitized frontend consumer, real Google Sheets credentials must stay in a server/local-only connector boundary, domain config/normalizer/metrics/view-model modules remain pure and reusable, and placeholder env names are documented without real values. No Google Sheets API, credentials, `.env.local`, real sheet read, Supabase/RLS/RPC, GEO, RAG, Calendar, audit, or report generation changes were made.
+
+- TASK-74: Added `src/domain/adsSheetsConnector.ts` and extended `tests/ads/adsOperationsViewModel.test.ts` with fake reader coverage. The connector interface returns sanitized raw sheet rows plus diagnostics, fake tests cover successful read, missing tab, empty tab, permission denied, and column mismatch, and fake output is passed into the existing normalizer/view-model pipeline. No Google Sheets API, credentials, `.env.local`, UI runtime wiring, real sheet read, Supabase/RLS/RPC, GEO, RAG, Calendar, audit, or report generation changes were made.
 
 ## Next Work
 

@@ -1,7 +1,16 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { ADS_SHEETS_REQUIRED_RAW_TABS } from '../../src/domain/adsSheetsConfig.ts'
+import {
+  ADS_SHEETS_REQUIRED_RAW_TABS,
+  readMockAdsSheetsClientConfigs,
+  type AdsSheetsClientConfig,
+} from '../../src/domain/adsSheetsConfig.ts'
+import {
+  readAdsSheetsWithReader,
+  type AdsSheetsReader,
+  type AdsSheetsSanitizedClientReadResult,
+} from '../../src/domain/adsSheetsConnector.ts'
 import {
   buildMockAdsOperationsViewModel,
   type MockAdsSheetsRawTablesByClient,
@@ -49,6 +58,44 @@ const normalRawSheets: MockAdsSheetsRawTablesByClient = {
       },
     ],
   },
+}
+
+class FakeAdsSheetsReader implements AdsSheetsReader {
+  private resultsByClientId: Record<string, AdsSheetsSanitizedClientReadResult>
+
+  constructor(resultsByClientId: Record<string, AdsSheetsSanitizedClientReadResult>) {
+    this.resultsByClientId = resultsByClientId
+  }
+
+  readClientSheets(config: AdsSheetsClientConfig): AdsSheetsSanitizedClientReadResult {
+    return (
+      this.resultsByClientId[config.clientId] ?? {
+        clientId: config.clientId,
+        clientName: config.clientName,
+        spreadsheetId: config.spreadsheetId,
+        tabs: {},
+        diagnostics: [
+          {
+            severity: 'error',
+            code: 'permission_denied',
+            clientId: config.clientId,
+            clientName: config.clientName,
+            tabKey: null,
+            message: 'fake reader has no configured result',
+          },
+        ],
+      }
+    )
+  }
+}
+
+function getEnabledMockConfig() {
+  const result = readMockAdsSheetsClientConfigs()
+  const config = result.configs[0]
+
+  assert.ok(config)
+
+  return config
 }
 
 test('builds normal mock connector view model', () => {
@@ -190,4 +237,170 @@ test('aggregates missing config diagnostics', () => {
 
   assert.equal(viewModel.summary.totalClients, 0)
   assert.ok(viewModel.diagnostics.some((diagnostic) => diagnostic.code === 'missing_sheet_id'))
+})
+
+test('reads successful fake connector result into view model pipeline', async () => {
+  const config = getEnabledMockConfig()
+  const readResult = await readAdsSheetsWithReader(
+    [config],
+    new FakeAdsSheetsReader({
+      [config.clientId]: {
+        clientId: config.clientId,
+        clientName: config.clientName,
+        spreadsheetId: config.spreadsheetId,
+        tabs: normalRawSheets[config.clientId] ?? {},
+        diagnostics: [],
+      },
+    }),
+  )
+  const viewModel = buildMockAdsOperationsViewModel({
+    configs: [config],
+    rawSheetsByClientId: readResult.rawSheetsByClientId,
+  })
+
+  assert.equal(readResult.diagnostics.length, 0)
+  assert.equal(viewModel.summary.normalCount, 1)
+  assert.equal(viewModel.clients[0]?.status, 'normal')
+})
+
+test('returns missing tab diagnostics from fake connector and view model pipeline', async () => {
+  const config = getEnabledMockConfig()
+  const readResult = await readAdsSheetsWithReader(
+    [config],
+    new FakeAdsSheetsReader({
+      [config.clientId]: {
+        clientId: config.clientId,
+        clientName: config.clientName,
+        spreadsheetId: config.spreadsheetId,
+        tabs: {
+          dailySa: normalRawSheets[config.clientId]?.dailySa,
+        },
+        diagnostics: [
+          {
+            severity: 'warning',
+            code: 'missing_tab',
+            clientId: config.clientId,
+            clientName: config.clientName,
+            tabKey: 'dailyConversionSa',
+            message: 'fake missing tab',
+          },
+        ],
+      },
+    }),
+  )
+  const viewModel = buildMockAdsOperationsViewModel({
+    configs: [config],
+    rawSheetsByClientId: readResult.rawSheetsByClientId,
+  })
+
+  assert.ok(readResult.diagnostics.some((diagnostic) => diagnostic.code === 'missing_tab'))
+  assert.ok(viewModel.diagnostics.some((diagnostic) => diagnostic.code === 'missing_tab'))
+})
+
+test('returns empty tab diagnostics through fake connector path', async () => {
+  const config = getEnabledMockConfig()
+  const readResult = await readAdsSheetsWithReader(
+    [config],
+    new FakeAdsSheetsReader({
+      [config.clientId]: {
+        clientId: config.clientId,
+        clientName: config.clientName,
+        spreadsheetId: config.spreadsheetId,
+        tabs: {
+          dailySa: [],
+          dailyConversionSa: [],
+          weeklyKeywordSa: [],
+        },
+        diagnostics: [
+          {
+            severity: 'warning',
+            code: 'empty_data',
+            clientId: config.clientId,
+            clientName: config.clientName,
+            tabKey: 'dailySa',
+            message: 'fake empty tab',
+          },
+        ],
+      },
+    }),
+  )
+  const viewModel = buildMockAdsOperationsViewModel({
+    configs: [config],
+    rawSheetsByClientId: readResult.rawSheetsByClientId,
+  })
+
+  assert.ok(readResult.diagnostics.some((diagnostic) => diagnostic.code === 'empty_data'))
+  assert.ok(viewModel.diagnostics.some((diagnostic) => diagnostic.code === 'empty_data'))
+  assert.equal(viewModel.clients[0]?.status, 'missing_data')
+})
+
+test('returns permission denied diagnostic from fake connector', async () => {
+  const config = getEnabledMockConfig()
+  const readResult = await readAdsSheetsWithReader(
+    [config],
+    new FakeAdsSheetsReader({
+      [config.clientId]: {
+        clientId: config.clientId,
+        clientName: config.clientName,
+        spreadsheetId: config.spreadsheetId,
+        tabs: {},
+        diagnostics: [
+          {
+            severity: 'error',
+            code: 'permission_denied',
+            clientId: config.clientId,
+            clientName: config.clientName,
+            tabKey: null,
+            message: 'fake permission denied',
+          },
+        ],
+      },
+    }),
+  )
+
+  assert.equal(readResult.diagnostics.length, 1)
+  assert.equal(readResult.diagnostics[0]?.code, 'permission_denied')
+})
+
+test('returns column mismatch diagnostic through fake connector path', async () => {
+  const config = getEnabledMockConfig()
+  const readResult = await readAdsSheetsWithReader(
+    [config],
+    new FakeAdsSheetsReader({
+      [config.clientId]: {
+        clientId: config.clientId,
+        clientName: config.clientName,
+        spreadsheetId: config.spreadsheetId,
+        tabs: {
+          dailySa: [
+            {
+              date: '2026-05-18',
+              campaignName: 'mock campaign',
+              spend: '100,000',
+            },
+          ],
+          dailyConversionSa: normalRawSheets[config.clientId]?.dailyConversionSa,
+          weeklyKeywordSa: normalRawSheets[config.clientId]?.weeklyKeywordSa,
+        },
+        diagnostics: [
+          {
+            severity: 'error',
+            code: 'column_mismatch',
+            clientId: config.clientId,
+            clientName: config.clientName,
+            tabKey: 'dailySa',
+            message: 'fake column mismatch',
+          },
+        ],
+      },
+    }),
+  )
+  const viewModel = buildMockAdsOperationsViewModel({
+    configs: [config],
+    rawSheetsByClientId: readResult.rawSheetsByClientId,
+  })
+
+  assert.ok(readResult.diagnostics.some((diagnostic) => diagnostic.code === 'column_mismatch'))
+  assert.ok(viewModel.diagnostics.some((diagnostic) => diagnostic.code === 'column_mismatch'))
+  assert.equal(viewModel.clients[0]?.status, 'missing_data')
 })
