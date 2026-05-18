@@ -1,91 +1,18 @@
 import { useState } from 'react'
 import {
-  calculateAdsMetrics,
-  type AdsMetricDiagnostic,
-  type AdsMetricStatus,
-  type RawAdsMetricRow,
-} from '../../domain/adsMetrics'
+  buildMockAdsOperationsViewModel,
+  type AdsClientSummary,
+  type AdsOperationsMockConnectorViewModel,
+  type AdsViewDiagnostic,
+} from '../../domain/adsOperationsViewModel'
+import type { AdsMetricStatus } from '../../domain/adsMetrics'
 
-type AdsSeverity = 'info' | 'warning' | 'risk'
 type AdsTab =
   | '전체 광고 현황'
   | '고객사별 광고 상세'
   | 'AI 광고 감사'
   | '담당자 액션리스트'
   | '고객사 리포트 초안'
-
-type AdsViewDiagnostic = AdsMetricDiagnostic
-
-type AdsClientSummary = {
-  clientId: string
-  clientName: string
-  healthScore: number | null
-  status: AdsMetricStatus
-  spend: number | null
-  clicks: number | null
-  conversions: number | null
-  cpc: number | null
-  cpa: number | null
-  roas: number | null
-  lastUpdatedAt: string | null
-  diagnostics: AdsViewDiagnostic[]
-}
-
-type AdsAuditFinding = {
-  id: string
-  clientId: string
-  clientName: string
-  severity: AdsSeverity
-  title: string
-  reason: string
-  source: 'rule_placeholder' | 'future_audit_engine'
-}
-
-type AdsActionItem = {
-  id: string
-  clientId: string
-  clientName: string
-  title: string
-  ownerName: string | null
-  status: 'todo' | 'in_progress' | 'done'
-  dueDate: string | null
-  sourceFindingId: string | null
-}
-
-type AdsReportDraft = {
-  id: string
-  clientId: string
-  clientName: string
-  title: string
-  body: string
-  status: 'draft_placeholder' | 'ready_for_review' | 'reviewed'
-  updatedAt: string | null
-}
-
-type AdsOperationsViewModel = {
-  summary: {
-    totalClients: number
-    normalCount: number
-    warningCount: number
-    riskCount: number
-    missingDataCount: number
-  }
-  clients: AdsClientSummary[]
-  auditFindings: AdsAuditFinding[]
-  actionItems: AdsActionItem[]
-  reportDrafts: AdsReportDraft[]
-  state: { type: 'ready' }
-}
-
-type MockAdsClientInput = {
-  clientId: string
-  clientName: string
-  rows: RawAdsMetricRow[]
-  lastUpdatedAt: string | null
-  diagnostics?: AdsMetricDiagnostic[]
-  isStale?: boolean
-  highCostNoConversionThreshold?: number
-}
 
 const adsTabs: AdsTab[] = [
   '전체 광고 현황',
@@ -95,137 +22,7 @@ const adsTabs: AdsTab[] = [
   '고객사 리포트 초안',
 ]
 
-const mockClientInputs: MockAdsClientInput[] = [
-  {
-    clientId: 'ads-client-01',
-    clientName: '테스트 고객사',
-    rows: [
-      {
-        spend: 100_000,
-        impressions: 10_000,
-        clicks: 500,
-        conversions: 25,
-        revenue: 400_000,
-      },
-    ],
-    lastUpdatedAt: '2026-05-18 09:30',
-  },
-  {
-    clientId: 'ads-client-02',
-    clientName: '브랜드 성장랩',
-    rows: [
-      {
-        spend: 100_000,
-        impressions: 10_000,
-        clicks: 500,
-        conversions: 25,
-        revenue: 400_000,
-      },
-    ],
-    lastUpdatedAt: '2026-05-17 18:10',
-    isStale: true,
-  },
-  {
-    clientId: 'ads-client-03',
-    clientName: '로컬 전환센터',
-    rows: [
-      {
-        spend: 200_000,
-        impressions: 12_000,
-        clicks: 700,
-        conversions: 0,
-        revenue: 0,
-      },
-    ],
-    lastUpdatedAt: '2026-05-18 08:55',
-    highCostNoConversionThreshold: 100_000,
-  },
-  {
-    clientId: 'ads-client-04',
-    clientName: '신규 온보딩몰',
-    rows: [],
-    lastUpdatedAt: null,
-    diagnostics: [
-      {
-        severity: 'error',
-        code: 'missing_sheet_id',
-        message: '광고 원본 Google Sheets ID가 아직 등록되지 않았습니다.',
-      },
-      {
-        severity: 'warning',
-        code: 'missing_tab',
-        message: '위클리키워드SA_RAW 탭 확인이 필요합니다.',
-      },
-    ],
-  },
-]
-
-const mockClients = mockClientInputs.map(toClientSummary)
-
-const mockAdsViewModel: AdsOperationsViewModel = {
-  summary: {
-    totalClients: mockClients.length,
-    normalCount: countByStatus(mockClients, 'normal'),
-    warningCount: countByStatus(mockClients, 'warning'),
-    riskCount: countByStatus(mockClients, 'risk'),
-    missingDataCount: countByStatus(mockClients, 'missing_data'),
-  },
-  clients: mockClients,
-  auditFindings: [
-    {
-      id: 'audit-01',
-      clientId: 'ads-client-02',
-      clientName: '브랜드 성장랩',
-      severity: 'warning',
-      title: '원본 데이터 신선도 확인 필요',
-      reason: '계산기 결과가 stale_data 진단을 반영해 주의 상태로 분류한 mock 사례입니다.',
-      source: 'rule_placeholder',
-    },
-    {
-      id: 'audit-02',
-      clientId: 'ads-client-03',
-      clientName: '로컬 전환센터',
-      severity: 'risk',
-      title: '전환 없는 고비용 구간',
-      reason: '계산기 결과가 high_cost_no_conversion 신호를 감지해 위험 상태로 분류한 mock 사례입니다.',
-      source: 'rule_placeholder',
-    },
-  ],
-  actionItems: [
-    {
-      id: 'action-01',
-      clientId: 'ads-client-02',
-      clientName: '브랜드 성장랩',
-      title: '원본 Google Sheets 갱신 시간 확인',
-      ownerName: '운영팀',
-      status: 'todo',
-      dueDate: '2026-05-20',
-      sourceFindingId: 'audit-01',
-    },
-    {
-      id: 'action-02',
-      clientId: 'ads-client-03',
-      clientName: '로컬 전환센터',
-      title: '고비용 무전환 구간 원인 점검',
-      ownerName: null,
-      status: 'in_progress',
-      dueDate: null,
-      sourceFindingId: 'audit-02',
-    },
-  ],
-  reportDrafts: [
-    {
-      id: 'report-01',
-      clientId: 'ads-client-01',
-      clientName: '테스트 고객사',
-      title: '5월 3주차 네이버 광고 운영 요약 초안',
-      body: '이번 주 mock 계산 결과는 정상 상태입니다. CPC, CPA, ROAS가 계산 가능한 상태이며 추가 위험 신호는 없습니다.',
-      status: 'draft_placeholder',
-      updatedAt: '2026-05-18 10:00',
-    },
-  ],
-  state: { type: 'ready' },
-}
+const mockAdsViewModel = buildMockAdsOperationsViewModel()
 
 export function AdsOperationsPlaceholder() {
   const [selectedTab, setSelectedTab] = useState<AdsTab>('전체 광고 현황')
@@ -237,12 +34,12 @@ export function AdsOperationsPlaceholder() {
           <p className="eyebrow">고객사 네이버 광고 운영</p>
           <h1>광고 운영</h1>
           <p className="intro">
-            정적 raw mock 데이터를 adsMetrics 계산기에 통과시킨 결과로 광고 현황, 감사 샘플,
-            담당자 액션, 리포트 초안을 확인하는 화면입니다.
+            mock 설정과 raw sheet 샘플을 정규화한 뒤 광고 지표 계산기로 만든 내부 운영용
+            광고 현황입니다. 실제 Google Sheets 연결은 아직 활성화하지 않았습니다.
           </p>
         </div>
         <div className="topbar-notes">
-          <span>실데이터 연결 전</span>
+          <span>mock pipeline</span>
           <span>Google Sheets 미연결</span>
         </div>
       </header>
@@ -260,22 +57,24 @@ export function AdsOperationsPlaceholder() {
         ))}
       </nav>
 
-      {selectedTab === '전체 광고 현황' ? (
+      {mockAdsViewModel.state.type === 'empty' ? (
+        <NoDataPanel message={mockAdsViewModel.state.message} />
+      ) : selectedTab === '전체 광고 현황' ? (
         <OverviewTab viewModel={mockAdsViewModel} />
       ) : selectedTab === '고객사별 광고 상세' ? (
         <ClientDetailTab clients={mockAdsViewModel.clients} />
       ) : selectedTab === 'AI 광고 감사' ? (
-        <AuditTab findings={mockAdsViewModel.auditFindings} />
+        <AuditTab diagnostics={mockAdsViewModel.diagnostics} />
       ) : selectedTab === '담당자 액션리스트' ? (
-        <ActionTab actionItems={mockAdsViewModel.actionItems} />
+        <ActionTab diagnostics={mockAdsViewModel.diagnostics} />
       ) : (
-        <ReportTab drafts={mockAdsViewModel.reportDrafts} />
+        <ReportTab clients={mockAdsViewModel.clients} />
       )}
     </section>
   )
 }
 
-function OverviewTab({ viewModel }: { viewModel: AdsOperationsViewModel }) {
+function OverviewTab({ viewModel }: { viewModel: AdsOperationsMockConnectorViewModel }) {
   return (
     <>
       <section className="ads-summary-grid">
@@ -296,7 +95,10 @@ function ClientDetailTab({ clients }: { clients: AdsClientSummary[] }) {
       <div className="section-head">
         <div>
           <h3>고객사별 광고 상세</h3>
-          <p>캠페인, 광고그룹, 키워드 상세는 이후 Google Sheets connector 연결 후 확장합니다.</p>
+          <p>
+            현재는 mock connector pipeline이 만든 고객사별 지표만 표시합니다. 캠페인,
+            광고그룹, 키워드 상세 drill-down은 실제 connector 승인 이후 분리합니다.
+          </p>
         </div>
       </div>
       <ClientSummaryList clients={clients} />
@@ -304,55 +106,64 @@ function ClientDetailTab({ clients }: { clients: AdsClientSummary[] }) {
   )
 }
 
-function AuditTab({ findings }: { findings: AdsAuditFinding[] }) {
+function AuditTab({ diagnostics }: { diagnostics: AdsViewDiagnostic[] }) {
   return (
     <section className="panel ads-placeholder-panel">
       <div className="section-head">
         <div>
           <h3>AI 광고 감사</h3>
-          <p>현재는 실제 AI/RAG가 아닌 adsMetrics 계산기 결과 기반 mock 감사 샘플입니다.</p>
+          <p>
+            실제 AI 감사나 RAG는 아직 연결하지 않았습니다. 현재는 mock pipeline 진단만
+            내부 검토 신호로 표시합니다.
+          </p>
         </div>
       </div>
-      <div className="stack">
-        {findings.map((finding) => (
-          <article key={finding.id} className="item-row">
-            <div>
-              <strong>{finding.title}</strong>
-              <p>{finding.reason}</p>
-            </div>
-            <div className="item-meta">
-              <span>{finding.clientName}</span>
-              <span>{severityLabel[finding.severity]}</span>
-              <span>룰 placeholder</span>
-            </div>
-          </article>
-        ))}
-      </div>
+      <DiagnosticList diagnostics={diagnostics} emptyMessage="현재 mock 진단이 없습니다." />
     </section>
   )
 }
 
-function ActionTab({ actionItems }: { actionItems: AdsActionItem[] }) {
+function ActionTab({ diagnostics }: { diagnostics: AdsViewDiagnostic[] }) {
   return (
     <section className="panel ads-placeholder-panel">
       <div className="section-head">
         <div>
           <h3>담당자 액션리스트</h3>
-          <p>광고 점검 결과를 담당자 업무로 전환하는 화면의 mock 예시입니다.</p>
+          <p>
+            실제 업무 생성은 아직 구현하지 않았습니다. 진단이 발생하면 담당자 확인
+            후보로만 표시합니다.
+          </p>
+        </div>
+      </div>
+      <DiagnosticList diagnostics={diagnostics} emptyMessage="생성할 mock 액션 후보가 없습니다." />
+    </section>
+  )
+}
+
+function ReportTab({ clients }: { clients: AdsClientSummary[] }) {
+  return (
+    <section className="panel ads-placeholder-panel">
+      <div className="section-head">
+        <div>
+          <h3>고객사 리포트 초안</h3>
+          <p>
+            실제 리포트 생성은 아직 연결하지 않았습니다. 아래 내용은 계산된 mock 지표를
+            기반으로 한 초안 준비 상태입니다.
+          </p>
         </div>
       </div>
       <div className="stack">
-        {actionItems.map((item) => (
-          <article key={item.id} className="item-row">
+        {clients.map((client) => (
+          <article key={client.clientId} className="ads-report-draft">
             <div>
-              <strong>{item.title}</strong>
-              <p>{item.clientName}</p>
+              <p className="eyebrow">{client.clientName}</p>
+              <h3>광고 운영 리포트 초안 준비 중</h3>
+              <p>
+                광고 점수 {client.healthScore ?? '-'}점, 상태 {statusLabel[client.status]} 기준으로
+                담당자 검토용 리포트 초안을 생성할 예정입니다.
+              </p>
             </div>
-            <div className="item-meta">
-              <span>{item.ownerName ?? '담당자 미정'}</span>
-              <span>{actionStatusLabel[item.status]}</span>
-              <span>{item.dueDate ?? '기한 미정'}</span>
-            </div>
+            <span>초안 placeholder</span>
           </article>
         ))}
       </div>
@@ -360,26 +171,14 @@ function ActionTab({ actionItems }: { actionItems: AdsActionItem[] }) {
   )
 }
 
-function ReportTab({ drafts }: { drafts: AdsReportDraft[] }) {
+function NoDataPanel({ message }: { message: string }) {
   return (
     <section className="panel ads-placeholder-panel">
       <div className="section-head">
         <div>
-          <h3>고객사 리포트 초안</h3>
-          <p>고객 발송 기능 없이 내부 검토용 초안 샘플만 표시합니다.</p>
+          <h3>광고 운영 데이터 없음</h3>
+          <p>{message}</p>
         </div>
-      </div>
-      <div className="stack">
-        {drafts.map((draft) => (
-          <article key={draft.id} className="ads-report-draft">
-            <div>
-              <p className="eyebrow">{draft.clientName}</p>
-              <h3>{draft.title}</h3>
-              <p>{draft.body}</p>
-            </div>
-            <span>{reportStatusLabel[draft.status]}</span>
-          </article>
-        ))}
       </div>
     </section>
   )
@@ -400,7 +199,7 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
       <div className="section-head">
         <div>
           <h3>고객사 광고 요약</h3>
-          <p>정적 mock data이며 실제 Google Sheets 값이 아닙니다.</p>
+          <p>mock connector pipeline 결과이며 실제 Google Sheets 읽기는 아직 수행하지 않습니다.</p>
         </div>
       </div>
       <div className="ads-client-table" role="table" aria-label="고객사 광고 요약">
@@ -427,7 +226,7 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
             <span>{formatWon(client.cpc)}</span>
             <span>{formatWon(client.cpa)}</span>
             <span>{formatRoas(client.roas)}</span>
-            <span>{client.lastUpdatedAt ?? '미수집'}</span>
+            <span>{formatDateTime(client.lastUpdatedAt)}</span>
           </div>
         ))}
       </div>
@@ -435,31 +234,46 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
   )
 }
 
-function toClientSummary(input: MockAdsClientInput): AdsClientSummary {
-  const metrics = calculateAdsMetrics(input.rows, {
-    diagnostics: input.diagnostics,
-    isStale: input.isStale,
-    highCostNoConversionThreshold: input.highCostNoConversionThreshold,
-  })
-
-  return {
-    clientId: input.clientId,
-    clientName: input.clientName,
-    healthScore: metrics.healthScore,
-    status: metrics.status,
-    spend: metrics.spend,
-    clicks: metrics.clicks,
-    conversions: metrics.conversions,
-    cpc: metrics.cpc,
-    cpa: metrics.cpa,
-    roas: metrics.roas,
-    lastUpdatedAt: input.lastUpdatedAt,
-    diagnostics: metrics.diagnostics,
+function DiagnosticList({
+  diagnostics,
+  emptyMessage,
+}: {
+  diagnostics: AdsViewDiagnostic[]
+  emptyMessage: string
+}) {
+  if (diagnostics.length === 0) {
+    return (
+      <div className="stack">
+        <article className="item-row">
+          <div>
+            <strong>준비 상태</strong>
+            <p>{emptyMessage}</p>
+          </div>
+          <div className="item-meta">
+            <span>mock</span>
+          </div>
+        </article>
+      </div>
+    )
   }
-}
 
-function countByStatus(clients: AdsClientSummary[], status: AdsMetricStatus) {
-  return clients.filter((client) => client.status === status).length
+  return (
+    <div className="stack">
+      {diagnostics.map((diagnostic, index) => (
+        <article key={`${diagnostic.clientId}-${diagnostic.source}-${index}`} className="item-row">
+          <div>
+            <strong>{diagnostic.clientName}</strong>
+            <p>{diagnostic.message}</p>
+          </div>
+          <div className="item-meta">
+            <span>{diagnosticSeverityLabel[diagnostic.severity]}</span>
+            <span>{diagnostic.code}</span>
+            <span>{diagnostic.source}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  )
 }
 
 const statusLabel: Record<AdsMetricStatus, string> = {
@@ -469,22 +283,10 @@ const statusLabel: Record<AdsMetricStatus, string> = {
   missing_data: '데이터 미수집',
 }
 
-const severityLabel: Record<AdsSeverity, string> = {
+const diagnosticSeverityLabel: Record<AdsViewDiagnostic['severity'], string> = {
   info: '정보',
   warning: '주의',
-  risk: '위험',
-}
-
-const actionStatusLabel: Record<AdsActionItem['status'], string> = {
-  todo: '대기',
-  in_progress: '진행 중',
-  done: '완료',
-}
-
-const reportStatusLabel: Record<AdsReportDraft['status'], string> = {
-  draft_placeholder: '초안 placeholder',
-  ready_for_review: '검토 대기',
-  reviewed: '검토 완료',
+  error: '오류',
 }
 
 function formatWon(value: number | null) {
@@ -497,4 +299,12 @@ function formatNumber(value: number | null) {
 
 function formatRoas(value: number | null) {
   return value === null ? '-' : `${Math.round(value * 100).toLocaleString('ko-KR')}%`
+}
+
+function formatDateTime(value: string | null) {
+  if (value === null) {
+    return '미수집'
+  }
+
+  return value.replace('T', ' ').replace('.000Z', '')
 }
