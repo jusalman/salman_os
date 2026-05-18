@@ -41,6 +41,7 @@
 - Current task state: TASK-77 added pure local credential path validation before any Google Sheets actual API reader implementation.
 - Current task state: TASK-78 planned the Ads Sheets local-only reader activation/env boundary without implementing Google Sheets API or changing runtime behavior.
 - Current task state: TASK-79 added pure Ads Sheets reader activation resolver wiring without Google Sheets API calls or credential exposure.
+- Current task state: TASK-80 added Ads Sheets reader factory wiring for mock/local/error reader selection without actual Google Sheets API calls.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -174,6 +175,8 @@
 - TASK-78: Added `docs/TASK_78_ADS_SHEETS_ACTIVATION_ENV_BOUNDARY.md`. Decision: keep the mock pipeline as the default, allow the local-only Google Sheets reader only behind explicit `ADS_SHEETS_READER_MODE=local`, keep credential/token/service-account path env names server/local-only without `VITE_`, never expose credential paths or secrets to the browser bundle, and block local reader execution with diagnostics instead of silent mock fallback when validation fails. Changed files: `docs/TASK_78_ADS_SHEETS_ACTIVATION_ENV_BOUNDARY.md`, `docs/HANDOFF.md`. Verification: `npm.cmd run lint`, `npm.cmd run build`, `git status --short`. Next optimal TASK: implement local-only Google Sheets reader interface wiring without exposing credentials.
 
 - TASK-79: Added `src/domain/adsSheetsReaderActivation.ts`, `tests/ads/adsSheetsReaderActivation.test.ts`, and `docs/TASK_79_ADS_SHEETS_READER_ACTIVATION_WIRING.md`. The resolver defaults to mock, returns `local_candidate` only for explicit `ADS_SHEETS_READER_MODE=local` with a validated local/server-only credential path, returns error diagnostics for invalid mode or missing/invalid local credential path, and blocks credential-related `VITE_` env exposure. Validation failure does not silently fall back to mock. No Google Sheets API, `googleapis`, credential file reading, `.env.local` output, Vite client credential access, Supabase/RLS/RPC, or Ads UI changes were made. Next optimal TASK: implement a local-only reader factory/sanitized `AdsSheetsReader` wiring layer without actual Google Sheets API calls.
+
+- TASK-80: Added `src/domain/adsSheetsReaderFactory.ts`, `tests/ads/adsSheetsReaderFactory.test.ts`, and `docs/TASK_80_ADS_SHEETS_READER_FACTORY_WIRING.md`. The factory returns `mockReader` for default/mock mode, `localReaderCandidate` only for explicit local mode with valid credential path activation, and a sanitized error reader for invalid mode, missing/invalid local credential path, or credential-related `VITE_` env exposure. Error reader diagnostics do not expose raw credential paths, token paths, or env dumps, and local activation failure does not silently fall back to mock. Verification commands: `node --test tests\ads\adsSheetsReaderActivation.test.ts tests\ads\adsSheetsReaderFactory.test.ts`, full Ads test bundle, `npm.cmd run lint`, `npm.cmd run build`, `git status --short`. Next optimal TASK: implement local Google Sheets API reader behind the factory boundary.
 
 ## Next Work
 
