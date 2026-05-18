@@ -20,6 +20,7 @@
 - Current task state: TASK-56 verified the ClientList RPC read after the user manually removed `smoke_test_read_test_client_only`; the RPC path still returned `테스트 고객사` with no silent mock fallback.
 - Current task state: TASK-57 locked the Supabase ClientList RPC read milestone as the stable baseline before next feature work.
 - Current task state: TASK-58 polished visible Korean UI copy for login, ClientList, workspace headers, and core panels without changing Supabase/RLS/RPC behavior.
+- Current task state: TASK-59 planned the Ads module v1 scope and data flow without implementing Ads UI, Google Sheets integration, SQL, or Supabase/RLS/RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -111,6 +112,8 @@
 - TASK-57: Added `docs/TASK_57_SUPABASE_RPC_MILESTONE_LOCK.md`. Milestone lock: ClientList production read stays on `public.get_client_list_summaries_v1()`, the temporary smoke-test RLS policy remains removed, anon base-table `clients` SELECT must not be opened, ClientDetail/SmartViews remain placeholders, and next feature work should keep ClientDetail planning, Ads planning, and UI/dashboard refinement as separate scopes.
 
 - TASK-58: Polished visible Korean UI copy across login, loading/error/empty states, ClientList chips, workspace header, Smart Operation Views, and core panels. Removed MVP/debug-looking user-facing copy such as `Internal Staff MVP` and `No AI / No Google Calendar sync`; no auth, Supabase RPC, RLS, schema, ClientDetail, SmartViews, Ads, RAG, or Calendar behavior was changed.
+
+- TASK-59: Added `docs/TASK_59_ADS_MODULE_SCOPE_AND_DATA_FLOW.md`. Decision: `salman-naver-report-auto` remains the Naver Ads data collection engine, client Google Sheets remain the raw data store, and SALMAN OS Ads is the visualization/audit/action/report draft layer. Ads v1 tabs are 전체 광고 현황, 고객사별 광고 상세, AI 광고 감사, 담당자 액션리스트, 고객사 리포트 초안. Exclusions: no bid changes, campaign edits, auto budget movement, GEO, or RAG integration yet.
 
 ## Next Work
 
