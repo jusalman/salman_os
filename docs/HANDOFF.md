@@ -34,6 +34,7 @@
 - Current task state: TASK-70 added pure Ads raw sheet parser/normalizer functions and tests without Google Sheets API, credentials, UI wiring, or Supabase/RLS/RPC changes.
 - Current task state: TASK-71 added a pure Ads mock connector-to-view-model pipeline and tests without Google Sheets API, credentials, UI wiring, or Supabase/RLS/RPC changes.
 - Current task state: TASK-72 wired the Ads operations UI to the mock connector view model pipeline without Google Sheets API, credentials, real audit/report generation, or Supabase/RLS/RPC changes.
+- Current task state: TASK-73 planned the Ads Sheets server/local connector boundary without implementing Google Sheets API, adding credentials, or changing Supabase/RLS/RPC.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -153,6 +154,8 @@
 - TASK-71: Added `src/domain/adsOperationsViewModel.ts` and `tests/ads/adsOperationsViewModel.test.ts`. The pure mock pipeline reads mock Ads Sheets config, consumes fake raw sheet rows, normalizes them, calculates metrics with `calculateAdsMetrics`, builds an `AdsOperationsViewModel`-compatible shape, and aggregates missing config, missing tab, empty data, invalid number, and column mismatch diagnostics. It remains disconnected from Google Sheets, credentials, UI wiring, and Supabase/RLS/RPC.
 
 - TASK-72: Updated `src/components/workspace/AdsOperationsPlaceholder.tsx` so the Ads operations UI now consumes `buildMockAdsOperationsViewModel()` instead of component-local static metric data. The visible UI remains a Korean mock/no-real-data screen, audit/action/report tabs stay placeholders, and there is still no Google Sheets API, credential, real sheet read, real audit/report generation, GEO, RAG, Calendar, or Supabase/RLS/RPC change.
+
+- TASK-73: Added `docs/TASK_73_ADS_SHEETS_SERVER_BOUNDARY_PLAN.md`. Decision: the Ads UI remains a sanitized frontend consumer, real Google Sheets credentials must stay in a server/local-only connector boundary, domain config/normalizer/metrics/view-model modules remain pure and reusable, and placeholder env names are documented without real values. No Google Sheets API, credentials, `.env.local`, real sheet read, Supabase/RLS/RPC, GEO, RAG, Calendar, audit, or report generation changes were made.
 
 ## Next Work
 
