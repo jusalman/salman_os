@@ -39,6 +39,7 @@
 - Current task state: TASK-75 planned the local-only Google Sheets reader implementation boundary without implementing Google Sheets API, adding credentials, editing `.env.local`, or changing Supabase/RLS/RPC.
 - Current task state: TASK-76 hardened `.gitignore` for local env, Google/GCP/Sheets credential, OAuth token, private key, and local secret files before any actual Google Sheets API reader implementation.
 - Current task state: TASK-77 added pure local credential path validation before any Google Sheets actual API reader implementation.
+- Current task state: TASK-78 planned the Ads Sheets local-only reader activation/env boundary without implementing Google Sheets API or changing runtime behavior.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -168,6 +169,8 @@
 - TASK-76: Added `docs/TASK_76_GITIGNORE_CREDENTIALS_HARDENING.md` and hardened `.gitignore` with explicit local env, local secret, Google/GCP/Sheets credential, OAuth token, token directory, and private key patterns. `.env.example` remains explicitly allowed for tracking. No secret contents were opened or printed, no credentials were added, no local files were deleted, no Google Sheets API was implemented, and no Supabase/RLS/RPC changes were made. Changed files: `.gitignore`, `docs/TASK_76_GITIGNORE_CREDENTIALS_HARDENING.md`, `docs/HANDOFF.md`. Verification commands: `git status --short`, `git check-ignore --stdin -v` with temporary filenames, `.env.example` negative ignore check, `npm.cmd run lint`, `npm.cmd run build`. Commit hash: `<pending>`. Next optimal TASK: design/implement local credential path validation before the Google Sheets actual API reader.
 
 - TASK-77: Added `src/domain/adsLocalCredentialValidation.ts`, `tests/ads/adsLocalCredentialValidation.test.ts`, and `docs/TASK_77_LOCAL_CREDENTIAL_PATH_VALIDATION.md`. The new pure validator checks only credential path strings for missing values, relative paths, example files, and repository-internal commit-risk paths, while allowing repo-external local absolute Windows/Unix paths. It does not read credential contents, access `.env.local`, parse service account or token JSON, call Google Sheets API, or change Supabase/RLS/RPC, Ads UI, metrics, normalizer, or view model behavior. Next optimal TASK: design the local-only Google Sheets reader activation/env boundary using this validator before implementing the actual API reader.
+
+- TASK-78: Added `docs/TASK_78_ADS_SHEETS_ACTIVATION_ENV_BOUNDARY.md`. Decision: keep the mock pipeline as the default, allow the local-only Google Sheets reader only behind explicit `ADS_SHEETS_READER_MODE=local`, keep credential/token/service-account path env names server/local-only without `VITE_`, never expose credential paths or secrets to the browser bundle, and block local reader execution with diagnostics instead of silent mock fallback when validation fails. Changed files: `docs/TASK_78_ADS_SHEETS_ACTIVATION_ENV_BOUNDARY.md`, `docs/HANDOFF.md`. Verification: `npm.cmd run lint`, `npm.cmd run build`, `git status --short`. Next optimal TASK: implement local-only Google Sheets reader interface wiring without exposing credentials.
 
 ## Next Work
 
