@@ -31,6 +31,7 @@
 - Current task state: TASK-67 aligned the static Ads operations mock view model with `calculateAdsMetrics` outputs while keeping data local and without Google Sheets or Supabase/RLS/RPC changes.
 - Current task state: TASK-68 planned the Ads Google Sheets config source and credential boundary without implementing Google Sheets API, adding credentials, or changing Supabase/RLS/RPC.
 - Current task state: TASK-69 added a pure Ads Sheets mock config reader and tests without Google Sheets API, credentials, UI wiring, or Supabase/RLS/RPC changes.
+- Current task state: TASK-70 added pure Ads raw sheet parser/normalizer functions and tests without Google Sheets API, credentials, UI wiring, or Supabase/RLS/RPC changes.
 - Current write phase: TASK-44 closed.
 - Next task: Wait for the next approved task.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
@@ -144,6 +145,8 @@
 - TASK-68: Added `docs/TASK_68_ADS_SHEETS_CONFIG_AND_CREDENTIALS_BOUNDARY.md`. Decision: Ads Sheets config starts as a non-secret mock/docs config with fake spreadsheet ids, later moves to an approved server-side or Supabase-backed config source, and Google credentials must remain server-only/local-only with no service account JSON, private keys, API keys, or service keys committed or exposed through Vite frontend env.
 
 - TASK-69: Added `src/domain/adsSheetsConfig.ts` and `tests/ads/adsSheetsConfig.test.ts`. The pure mock config reader defines `AdsSheetsClientConfig`, uses fake mock spreadsheet ids only, returns enabled valid configs, reports missing `spreadsheetId`, missing raw tab names, and disabled-client diagnostics, and remains disconnected from Google Sheets, credentials, UI wiring, and Supabase/RLS/RPC.
+
+- TASK-70: Added `src/domain/adsSheetsNormalizer.ts` and `tests/ads/adsSheetsNormalizer.test.ts`. The pure normalizer converts raw Ads sheet rows into normalized rows and `AdsRawTable`, parses comma-formatted numbers safely, returns `null` for empty/missing numeric values, and reports empty table, missing required columns, invalid numbers, and unsupported report type diagnostics. It is not connected to Google Sheets, UI wiring, credentials, or Supabase/RLS/RPC.
 
 ## Next Work
 
