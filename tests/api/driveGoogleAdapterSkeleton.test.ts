@@ -1,0 +1,96 @@
+import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
+import test from 'node:test'
+
+import {
+  createGoogleDriveServerAdapterSkeleton,
+  googleDriveServerAdapterSkeleton,
+} from '../../api/drive/googleDriveServerAdapter.ts'
+import { handleDriveServerRoute } from '../../api/drive/driveServerAdapter.ts'
+import { handleMockDriveListRoute } from '../../api/drive/list.ts'
+import type { DriveServerAdapter } from '../../api/drive/driveServerAdapter.ts'
+
+test('actual Google Drive adapter skeleton satisfies the DriveServerAdapter shape', async () => {
+  const adapter: DriveServerAdapter = createGoogleDriveServerAdapterSkeleton()
+  const response = await adapter.listFiles({ clientId: 'c1' })
+
+  assert.equal(response.ok, false)
+
+  if (response.ok) {
+    return
+  }
+
+  assert.equal(response.error.code, 'drive_backend_unavailable')
+  assert.equal(response.clientId, 'c1')
+})
+
+test('actual Google Drive adapter skeleton returns safe diagnostics through route safety checks', async () => {
+  const response = await handleDriveServerRoute(
+    {
+      operation: 'get_file',
+      body: {
+        clientId: 'c1',
+        fileId: 'mock-drive-file-c1-001',
+      },
+    },
+    googleDriveServerAdapterSkeleton,
+  )
+  const serializedResponse = JSON.stringify(response).toLowerCase()
+
+  assert.equal(response.ok, false)
+
+  if (response.ok) {
+    return
+  }
+
+  assert.equal(response.error.code, 'drive_backend_unavailable')
+  assert.equal(serializedResponse.includes('credential'), false)
+  assert.equal(serializedResponse.includes('token'), false)
+  assert.equal(serializedResponse.includes('privatekey'), false)
+  assert.equal(serializedResponse.includes('private_key'), false)
+  assert.equal(serializedResponse.includes('serviceaccount'), false)
+  assert.equal(serializedResponse.includes('service_account'), false)
+  assert.equal(serializedResponse.includes('.env'), false)
+})
+
+test('actual Google Drive adapter skeleton does not call fetch', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchCalls = 0
+
+  globalThis.fetch = (() => {
+    fetchCalls += 1
+    throw new Error('Unexpected network call from Drive adapter skeleton.')
+  }) as typeof fetch
+
+  try {
+    const response = await googleDriveServerAdapterSkeleton.listCategories({ clientId: 'c1' })
+
+    assert.equal(response.ok, false)
+    assert.equal(fetchCalls, 0)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
+test('actual Google Drive adapter skeleton does not import googleapis or read runtime env', async () => {
+  const source = await readFile(new URL('../../api/drive/googleDriveServerAdapter.ts', import.meta.url), 'utf8')
+
+  assert.equal(source.includes('googleapis'), false)
+  assert.equal(source.includes('process.env'), false)
+  assert.equal(source.includes('import.meta.env'), false)
+})
+
+test('default mock Drive route still uses the fake adapter', async () => {
+  const response = await handleMockDriveListRoute({
+    clientId: 'c1',
+  })
+
+  assert.equal(response.ok, true)
+
+  if (!response.ok || !('files' in response)) {
+    return
+  }
+
+  assert.ok(response.files.length > 0)
+  assert.ok(response.files.every((file) => file.source === 'fake_backend_client'))
+})
