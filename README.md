@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# SALMAN OS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SALMAN OS is an internal staff operations center for connecting client files, tasks, schedules, business money, links, and logs in one workspace.
 
-Currently, two official plugins are available:
+It does not replace Google Sheets, Google Drive, or Google Calendar. v1 keeps Google Drive as the original file storage and uses SALMAN OS as the operating context layer.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Current Scope
 
-## React Compiler
+Included in the current v1 baseline:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- internal staff login flow
+- client operations dashboard
+- mock-first client workspace data
+- Supabase browser client foundation
+- Drive-style file hub using sanitized mock metadata
+- shared Drive backend contract, fake backend client, pure validator, and fake handler harness
 
-## Expanding the ESLint configuration
+Not implemented:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- actual Google Drive API integration
+- `/api/drive/*` route files
+- `googleapis`
+- embedding/vector/RAG answer flow
+- chatbot UI
+- Google Calendar integration
+- Playwright automation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Local Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+npm.cmd run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Default local runtime should work with mock data and should not require `.env.local`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Verification
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Run these before handing off or deploying:
+
+```text
+node --test
+npm.cmd run lint
+npm.cmd run build
+git status --short
 ```
+
+The expected production build output is `dist`.
+
+## Environment Boundary
+
+Allowed frontend `VITE_` values:
+
+- `VITE_DATA_SOURCE`
+- `VITE_SUPABASE_READ_ACTIVATION`
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_APP_ENV`
+
+Forbidden in frontend env or committed files:
+
+- `VITE_GOOGLE_*`
+- `VITE_DRIVE_*`
+- credential, token, secret, service account, or private key values
+- Supabase service role key
+- Google service account JSON
+- local credential paths
+- `.env.local` contents
+
+Do not print credential, token, secret, or `.env.local` contents in logs, docs, tests, or commit messages.
+
+## Deployment Baseline
+
+Current deployment baseline:
+
+- app type: Vite frontend-only
+- build command: `npm.cmd run build`
+- output directory: `dist`
+- no committed `vercel.json`
+- no committed `api/`, `server/`, `src/api/`, or `src/server` route source
+
+Future `/api/drive/*` routes must be added only after a separate approved task. They must use the shared Drive contract, request validator, response safety checker, and server-only secret boundary.
+
+## Reference Docs
+
+- [Handoff](docs/HANDOFF.md)
+- [TASK-100 deployment baseline](docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md)
+- [TASK-99 route baseline and test convention](docs/TASK_99_VERCEL_ROUTE_BASELINE_AND_TEST_CONVENTION.md)
+- [TASK-98 Drive mock route decision](docs/TASK_98_DRIVE_MOCK_ROUTE_DECISION.md)
