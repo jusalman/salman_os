@@ -2,7 +2,7 @@
 
 ## Current Status
 
-- Resume note: When the user says to continue next week, start from TASK-99. TASK-98 decided not to add real `/api/drive/*` mock route files yet because the repo remains Vite frontend-only and TASK-97 already provides pure route validation plus a fake handler harness. Keep the current Drive file hub on the mock repository path. Do not add real Google Drive API packages, credentials, `/api/drive/*` route files, frontend fetch wiring, SQL execution, Supabase schema/RLS/RPC changes, OpenAI API, Playwright, or Google Calendar integration without a separate explicit approval.
+- Resume note: When the user says to continue next week, start from TASK-100. TASK-99 documented the Vercel route baseline and future route test convention while keeping real `/api/drive/*` route files deferred. Keep the current Drive file hub on the mock repository path and keep Drive route behavior behind the shared contract, fake backend client, pure validator, and fake handler harness. Do not add real Google Drive API packages, credentials, `/api/drive/*` route files, frontend fetch wiring, SQL execution, Supabase schema/RLS/RPC changes, OpenAI API, Playwright, or Google Calendar integration without a separate explicit approval.
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
 - Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
 - Current task state: TASK-46 prepared review-only minimal ClientList seed SQL for one test client.
@@ -61,14 +61,17 @@
 - Current task state: TASK-96 added a shared Drive backend route contract and fake backend client that reuse sanitized TASK-94 mock metadata without creating actual `/api/drive/*` routes, calling Google Drive API, adding credentials/env access, changing Supabase schema/RLS/RPC, or implementing embedding/vector/RAG answer or chatbot UI.
 - Current task state: TASK-97 decided to add lightweight pure Drive route request validators, a response safety checker, and a fake route handler harness before actual route/API work; no real `/api/drive/*` route files, Google Drive API calls, package additions, credential/env reads, Supabase schema/RLS/RPC changes, embedding/vector/RAG answer, or chatbot UI were introduced.
 - Current task state: TASK-98 decided to defer Vercel-style `/api/drive/*` mock route files because the repo remains Vite frontend-only, route files would not be meaningful in the current build/runtime, and TASK-97 pure validation plus fake handler harness is the safer current boundary; no route files, Google Drive API calls, package additions, credential/env reads, Supabase schema/RLS/RPC changes, embedding/vector/RAG answer, or chatbot UI were introduced.
-- Current write phase: TASK-98 closed after verification.
+- Current task state: TASK-99 documented the Vercel deployment baseline and future route test convention before adding Drive API routes; route files remain deferred, future route tests should start from pure handler tests in `tests/drive`, and server-only Google secret names are allowed only in future approved server route work while `VITE_` Google credential/secret env remains forbidden.
+- Current write phase: TASK-99 closed after verification.
 - TASK-96 changed files: `src/domain/driveBackendContract.ts`, `src/data/adapters/mock/driveBackendFakeClient.ts`, `tests/drive/driveBackendContract.test.ts`, `tests/drive/driveBackendFakeClient.test.ts`, `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`, `docs/HANDOFF.md`.
 - TASK-96 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-97 changed files: `src/domain/driveRouteValidation.ts`, `src/data/adapters/mock/driveRouteFakeHandler.ts`, `tests/drive/driveRouteValidation.test.ts`, `tests/drive/driveRouteFakeHandler.test.ts`, `docs/TASK_97_DRIVE_ROUTE_VALIDATOR_HARNESS_DECISION.md`, `docs/HANDOFF.md`.
 - TASK-97 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-98 changed files: `docs/TASK_98_DRIVE_MOCK_ROUTE_DECISION.md`, `docs/HANDOFF.md`.
 - TASK-98 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
-- Next task: TASK-99 decide the route activation prerequisites, including whether to add a documented Vercel deployment baseline and route test convention before adding any real `api/drive/*` mock route files.
+- TASK-99 changed files: `docs/TASK_99_VERCEL_ROUTE_BASELINE_AND_TEST_CONVENTION.md`, `docs/HANDOFF.md`.
+- TASK-99 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
+- Next task: TASK-100 decide whether to write a deployment baseline document for SALMAN OS itself, replacing the default Vite README deployment ambiguity, without adding API routes or Google Drive integration.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
