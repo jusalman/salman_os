@@ -57,7 +57,13 @@ The expected production build output is `dist`.
 npm.cmd run drive:smoke:gate
 ```
 
-Run any actual Drive smoke only after explicit approval. Do not print credential paths, token values, private keys, or `.env.local` contents.
+After explicit approval, the local-only list smoke command is:
+
+```text
+npm.cmd run drive:smoke:list
+```
+
+Do not run the list smoke without approval. It must print only a sanitized summary and must not print credential paths, token values, private keys, file IDs, file names, or `.env.local` contents.
 
 ## Environment Boundary
 

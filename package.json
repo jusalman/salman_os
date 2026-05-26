@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "drive:smoke:gate": "node scripts/driveLocalSmokeGate.ts"
+    "drive:smoke:gate": "node scripts/driveLocalSmokeGate.ts",
+    "drive:smoke:list": "node scripts/driveListSmoke.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",

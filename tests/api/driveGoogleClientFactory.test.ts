@@ -8,6 +8,7 @@ import {
   createGoogleDriveClientFactory,
   type GoogleDriveServiceAccountAuthInput,
 } from '../../api/drive/googleDriveClientFactory.ts'
+import { runGoogleDriveListSmoke } from '../../api/drive/googleDriveListSmoke.ts'
 import {
   GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID_ENV_KEY,
   GOOGLE_DRIVE_AUTH_MODE_ENV_KEY,
@@ -105,8 +106,11 @@ test('local smoke gate script is explicit and is not part of default verificatio
   )
 
   assert.equal(packageJson.scripts['drive:smoke:gate'], 'node scripts/driveLocalSmokeGate.ts')
+  assert.equal(packageJson.scripts['drive:smoke:list'], 'node scripts/driveListSmoke.ts')
   assert.equal(packageJson.scripts.build.includes('drive:smoke:gate'), false)
+  assert.equal(packageJson.scripts.build.includes('drive:smoke:list'), false)
   assert.equal(packageJson.scripts.lint.includes('drive:smoke:gate'), false)
+  assert.equal(packageJson.scripts.lint.includes('drive:smoke:list'), false)
   assert.equal(scriptSource.includes('googleapis'), false)
   assert.equal(scriptSource.includes('drive.files'), false)
 })
@@ -127,6 +131,74 @@ test('local smoke gate reports setting names only', async () => {
   assert.ok(report.forbiddenPublicEnvNames.includes('VITE_GOOGLE_CLIENT_ID'))
   assert.equal(serializedReport.includes('SECRET_PATH_SHOULD_NOT_PRINT'), false)
   assert.equal(serializedReport.includes('PUBLIC_VALUE_SHOULD_NOT_PRINT'), false)
+})
+
+test('Drive list smoke runner stops at gate before API work when settings are missing', async () => {
+  let authCalls = 0
+  const result = await runGoogleDriveListSmoke(
+    {},
+    {
+      createServiceAccountAuth() {
+        authCalls += 1
+        return {}
+      },
+      createDriveClient() {
+        throw new Error('Drive client should not be created before gate passes.')
+      },
+    },
+  )
+
+  assert.equal(result.ok, false)
+  assert.equal(result.reason, 'gate_not_ready')
+  assert.equal(authCalls, 0)
+  assert.equal(JSON.stringify(result).includes('credential'), false)
+})
+
+test('Drive list smoke runner outputs sanitized summary from a stubbed Drive client only', async () => {
+  const result = await runGoogleDriveListSmoke(
+    {
+      DRIVE_SERVER_ADAPTER_MODE: 'google_skeleton',
+      [GOOGLE_DRIVE_AUTH_MODE_ENV_KEY]: GOOGLE_DRIVE_AUTH_MODE_SERVICE_ACCOUNT,
+      [GOOGLE_DRIVE_CREDENTIAL_PATH_ENV_KEY]: 'SECRET_PATH_SHOULD_NOT_PRINT',
+      [GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID_ENV_KEY]: 'driveRootFolder_12345',
+    },
+    {
+      createServiceAccountAuth() {
+        return { kind: 'fake-auth' }
+      },
+      createDriveClient() {
+        return {
+          files: {
+            async list() {
+              return {
+                data: {
+                  nextPageToken: 'SECRET_NEXT_PAGE_TOKEN_SHOULD_NOT_PRINT',
+                  files: [
+                    {
+                      id: 'SECRET_FILE_ID_SHOULD_NOT_PRINT',
+                      name: 'Sensitive Client File.pdf',
+                      mimeType: 'application/pdf',
+                      modifiedTime: '2026-05-01T00:00:00.000Z',
+                    },
+                  ],
+                },
+              }
+            },
+          },
+        } as never
+      },
+    },
+  )
+  const serializedResult = JSON.stringify(result)
+
+  assert.equal(result.ok, true)
+  assert.equal(result.reason, 'ok')
+  assert.ok(result.lines.includes('Returned file count: 1'))
+  assert.ok(result.lines.includes('Additional pages present: yes'))
+  assert.equal(serializedResult.includes('SECRET_PATH_SHOULD_NOT_PRINT'), false)
+  assert.equal(serializedResult.includes('SECRET_NEXT_PAGE_TOKEN_SHOULD_NOT_PRINT'), false)
+  assert.equal(serializedResult.includes('SECRET_FILE_ID_SHOULD_NOT_PRINT'), false)
+  assert.equal(serializedResult.includes('Sensitive Client File.pdf'), false)
 })
 
 async function findFilesContaining(root: string, pattern: string): Promise<string[]> {

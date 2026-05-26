@@ -14,6 +14,8 @@ TASK-111 update: actual Google Drive adapter preparation is service-account-firs
 
 TASK-112 update: `googleapis` is installed for server-only Drive work and isolated behind `api/drive/googleDriveClientFactory.ts`. A local smoke gate command exists, but it checks setting names only and does not run a Drive API request. Actual credential file reads, `.env.local` reads, Drive API smoke execution, `.env.example` Google entries, and frontend runtime fetch wiring remain blocked until a separate approved task.
 
+TASK-113 update: the local-only Drive list smoke runner is prepared behind `npm.cmd run drive:smoke:list`, but it must not be executed without explicit user approval. When approved, it must print only a sanitized summary, not credential paths, root folder IDs, file IDs, file names, tokens, private keys, or `.env.local` contents.
+
 ## Current Deployment Structure
 
 Current committed structure:
@@ -221,6 +223,14 @@ npm.cmd run drive:smoke:gate
 ```
 
 The gate reports only setting names and does not perform a Drive API request. Actual Drive smoke execution requires explicit approval after setting handling is reviewed.
+
+Approved command shape after explicit approval:
+
+```text
+npm.cmd run drive:smoke:list
+```
+
+The list smoke command may perform a Drive API request only when the required environment is already provided outside the repo. It must not load `.env.local`, print credential values, print credential paths, or print raw Drive file metadata.
 
 Service account requirements to prove before activation:
 

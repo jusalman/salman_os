@@ -58,6 +58,29 @@ export function evaluateGoogleDriveLocalSmokeGate(
   }
 }
 
+export function formatGoogleDriveLocalSmokeGateReport(
+  report: GoogleDriveLocalSmokeGateReport,
+): string[] {
+  const lines = [
+    report.message,
+    `Required settings: ${report.requiredEnvNames.join(', ')}`,
+  ]
+
+  if (report.missingEnvNames.length > 0) {
+    lines.push(`Missing settings: ${report.missingEnvNames.join(', ')}`)
+  }
+
+  if (report.invalidEnvNames.length > 0) {
+    lines.push(`Invalid settings: ${report.invalidEnvNames.join(', ')}`)
+  }
+
+  if (report.forbiddenPublicEnvNames.length > 0) {
+    lines.push(`Forbidden public settings: ${report.forbiddenPublicEnvNames.join(', ')}`)
+  }
+
+  return lines
+}
+
 function isPresent(value: string | undefined): value is string {
   return typeof value === 'string' && value.trim().length > 0
 }
