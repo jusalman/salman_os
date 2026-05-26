@@ -83,6 +83,8 @@ Current deployment baseline:
 
 The current mock `/api/drive/*` files use only the shared Drive contract, request validator, response safety checker, and fake handler. Actual Google Drive API routes and frontend runtime activation still require separate approved tasks.
 
+Actual Google Drive adapter work is blocked by the readiness checklist and env/secret review gate in [TASK-100 deployment baseline](docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md).
+
 ## Reference Docs
 
 - [Handoff](docs/HANDOFF.md)

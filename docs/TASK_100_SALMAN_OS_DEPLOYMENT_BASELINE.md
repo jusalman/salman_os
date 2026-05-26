@@ -8,6 +8,8 @@ Decision: create a dedicated deployment baseline document now. At TASK-100 time,
 
 TASK-105 update: the repo later added minimal mock `api/drive/*` route boundary adapters. They are not Google Drive API integrations, do not read credentials or env secrets, and are not wired into the default frontend runtime.
 
+TASK-107 update: actual Google Drive adapter work is blocked behind the readiness checklist and env/secret review gate in this document. This update does not add Google Drive API code, `googleapis`, OAuth, service account handling, env reads, `.env.example` Google entries, Supabase schema changes, or frontend runtime activation.
+
 ## Current Deployment Structure
 
 Current committed structure:
@@ -163,6 +165,50 @@ Do not replace or extend the mock `api/drive/*` boundary with actual Google Driv
 - server-only env names are reviewed
 - default UI runtime remains on mock repository or a separate activation gate is approved
 - actual Google Drive API integration is kept in a later, separate task
+
+## Actual Drive Adapter Readiness Checklist
+
+Do not add an actual Google Drive adapter until all of these are true:
+
+- the adapter is implemented only behind `DriveServerAdapter`
+- `api/drive/*` route files continue to call `handleDriveServerRoute()`
+- request validation runs before any adapter call
+- response safety checks run after every adapter response
+- the default adapter remains `driveBackendFakeClient` until a separate activation task
+- frontend UI still does not call `fetch('/api/drive/*')` by default
+- `googleapis` package addition is reviewed in the same task that needs it, not before
+- the chosen auth mode is reviewed before implementation
+- local development and Vercel deployment secret handling are documented for that auth mode
+- route tests cover adapter injection, invalid request blocking, unsafe response blocking, archived default exclusion, and no frontend secret exposure
+- raw Google Drive API responses are mapped into the shared Drive backend contract before returning
+- returned `sourceUrl` or `openUrl` values are either omitted, sanitized placeholders, or explicitly approved safe open links
+- no `excluded` file metadata is returned
+- no credential path, token metadata, service account metadata, raw env value, private key material, or Drive SDK response object is returned
+
+## Env And Secret Review Gate
+
+Current decision:
+
+- do not choose service account or OAuth yet
+- do not add Google Drive env names to `.env.example` yet
+- do not read `.env.local` or any credential file during readiness work
+- do not add `VITE_GOOGLE_*`, `VITE_DRIVE_*`, or any Vite credential/token/secret env
+- keep all future Google Drive secrets server-only and deployment-platform owned
+
+Auth modes to review later:
+
+- service account: likely simpler for organization-owned shared Drive folders, but must prove folder access, least privilege, key rotation, and no private key exposure
+- OAuth refresh token: may match user-owned Drive data better, but must prove consent ownership, refresh token storage, revocation, and rotation
+
+Server-only env name candidates for a later approved implementation task:
+
+- `GOOGLE_DRIVE_AUTH_MODE`
+- `GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON`
+- `GOOGLE_DRIVE_CLIENT_ID`
+- `GOOGLE_DRIVE_CLIENT_SECRET`
+- `GOOGLE_DRIVE_REFRESH_TOKEN`
+
+These names are candidates only. They must not be added to `.env.example`, Vite env, docs with real values, tests with real values, or committed files before the actual adapter task is approved.
 
 ## Rollback Baseline
 

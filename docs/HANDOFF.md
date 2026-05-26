@@ -2,7 +2,7 @@
 
 ## Current Status
 
-- Resume note: When the user says to continue next week, start from TASK-107. After TASK-106, historical docs cleanup moved selected old task artifacts into `docs/archive/tasks/` and kept current Drive/API/Deployment boundary docs in place. Actual Google Drive API, credentials, `googleapis`, frontend fetch wiring, Supabase schema/RLS/RPC changes, embeddings, vectors, and chatbot UI remain out of scope. Keep README/HANDOFF/AGENTS/README_INDEX as the always-read entry points.
+- Resume note: When the user says to continue next week, start from TASK-108. TASK-107 added the actual Google Drive adapter readiness checklist and env/secret review gate to `docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md`. Actual Google Drive API, credentials, `googleapis`, frontend fetch wiring, Supabase schema/RLS/RPC changes, embeddings, vectors, and chatbot UI remain out of scope. Keep README/HANDOFF/AGENTS/README_INDEX as the always-read entry points.
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
 - Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
 - Current task state: TASK-46 prepared review-only minimal ClientList seed SQL for one test client.
@@ -70,7 +70,8 @@
 - Current task state: TASK-105 added mock-only Vercel-style Drive route boundary adapters at `api/drive/list.ts`, `api/drive/detail.ts`, and `api/drive/categories.ts`, plus `tests/api/driveMockApiRoute.test.ts`; these routes call only `handleDriveRouteHarness`, have no Google Drive API/credential/env access, and are not wired into the default UI runtime.
 - Current task state: TASK-106 added `api/drive/driveServerAdapter.ts` as the server-owned adapter boundary, updated the mock route adapters to accept adapter injection through `handleDriveServerRoute`, and added route adapter boundary tests; no new TASK document, Google Drive API, packages, credentials/env reads, frontend fetch wiring, Supabase schema/RLS/RPC changes, embedding/vector/RAG answer, chatbot UI, or UI changes were introduced.
 - Current task state: Docs cleanup moved 12 historical task artifacts to `docs/archive/tasks/`, updated `docs/README_INDEX.md` and this handoff, deleted no documents, and kept current baseline docs plus TASK-94 through TASK-100 Drive/API/Deployment boundary docs in place.
-- Current write phase: Docs cleanup closed after verification.
+- Current task state: TASK-107 added an actual Drive adapter readiness checklist and env/secret review gate to the deployment baseline, kept auth mode undecided, kept `.env.example` Google entries out, kept `VITE_GOOGLE_*` and `VITE_DRIVE_*` forbidden, and kept actual Google Drive API, `googleapis`, credential/env reads, and frontend fetch wiring out of scope.
+- Current write phase: TASK-107 closed after verification.
 - TASK-96 changed files: `src/domain/driveBackendContract.ts`, `src/data/adapters/mock/driveBackendFakeClient.ts`, `tests/drive/driveBackendContract.test.ts`, `tests/drive/driveBackendFakeClient.test.ts`, `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`, `docs/HANDOFF.md`.
 - TASK-96 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-97 changed files: `src/domain/driveRouteValidation.ts`, `src/data/adapters/mock/driveRouteFakeHandler.ts`, `tests/drive/driveRouteValidation.test.ts`, `tests/drive/driveRouteFakeHandler.test.ts`, `docs/TASK_97_DRIVE_ROUTE_VALIDATOR_HARNESS_DECISION.md`, `docs/HANDOFF.md`.
@@ -95,7 +96,9 @@
 - TASK-106 verification: `node --test` passed with 116 tests, `npm.cmd run lint` passed, and `npm.cmd run build` passed.
 - Docs cleanup changed files: moved 12 files into `docs/archive/tasks/`, updated `docs/README_INDEX.md`, and updated `docs/HANDOFF.md`. No code, route, API, credential, env, Supabase, embedding, vector, chatbot, or UI changes were made.
 - Docs cleanup verification: `node --test`, `npm.cmd run lint`, `npm.cmd run build`, `git status --short`, `git diff --stat`, and relative-link/path checks passed.
-- Next task: TASK-107 decide the actual Google Drive adapter readiness checklist and env-secret review gate without adding Google API calls or credentials.
+- TASK-107 changed files: `docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md`, `README.md`, `docs/HANDOFF.md`.
+- TASK-107 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
+- Next task: TASK-108 decide whether to add an actual-adapter placeholder module behind `DriveServerAdapter` without `googleapis` or credential access, or keep implementation deferred.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
