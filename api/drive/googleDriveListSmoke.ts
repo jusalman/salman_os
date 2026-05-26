@@ -90,6 +90,7 @@ function createSafeSmokeSuccessLines(fileList: GoogleDriveListSmokeFileList): st
 
   return [
     'Drive list smoke succeeded. Sanitized summary only.',
+    'Drive API reached: yes',
     `Returned file count: ${fileCount}`,
     `Additional pages present: ${hasMore ? 'yes' : 'no'}`,
   ]

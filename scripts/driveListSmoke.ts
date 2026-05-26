@@ -1,11 +1,25 @@
 import { runGoogleDriveListSmoke } from '../api/drive/googleDriveListSmoke.ts'
+import {
+  formatGoogleDriveLocalSmokeEnvLoadReport,
+  loadGoogleDriveLocalSmokeEnv,
+} from '../api/drive/googleDriveLocalSmokeEnv.ts'
 
-const result = await runGoogleDriveListSmoke(process.env)
+const envLoad = loadGoogleDriveLocalSmokeEnv(process.env)
 
-for (const line of result.lines) {
+for (const line of formatGoogleDriveLocalSmokeEnvLoadReport(envLoad)) {
   console.log(line)
 }
 
-if (!result.ok) {
+if (!envLoad.ok) {
   process.exitCode = 1
+} else {
+  const result = await runGoogleDriveListSmoke(envLoad.env)
+
+  for (const line of result.lines) {
+    console.log(line)
+  }
+
+  if (!result.ok) {
+    process.exitCode = 1
+  }
 }

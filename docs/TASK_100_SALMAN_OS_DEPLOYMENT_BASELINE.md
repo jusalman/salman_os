@@ -200,21 +200,27 @@ Current decision:
 
 - use service account first for SALMAN OS v1 shared internal Drive folder reads
 - defer OAuth until user-owned Drive access, account-level consent, or Picker-style selection is required
-- keep `googleapis` installed but inactive until the first approved local-only Drive API smoke task
+- keep `googleapis` installed and reachable only from the approved local-only Drive list smoke path
 - keep `googleapis` out of `src/` and any frontend bundle path
 - do not add Google Drive env names to `.env.example` yet
-- do not read `.env.local` or any credential file during readiness work
+- do not read `.env.local` from Drive smoke scripts; use same-shell env or ignored `.env.drive.local` for local smoke settings
 - do not add `VITE_GOOGLE_*`, `VITE_DRIVE_*`, or any Vite credential/token/secret env
 - keep all future Google Drive secrets server-only and deployment-platform owned
 
-Approved server-only env name candidates for the next local-only implementation task:
+Route adapter selector:
 
 - `DRIVE_SERVER_ADAPTER_MODE`
+
+Allowed route adapter values remain `fake` and `google_skeleton`. `google_actual` is not a route adapter value.
+
+Approved local-only Drive list smoke settings:
+
+- `GOOGLE_DRIVE_LOCAL_SMOKE_MODE`
 - `GOOGLE_DRIVE_AUTH_MODE`
 - `GOOGLE_DRIVE_CREDENTIAL_PATH`
 - `GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID`
 
-These names are candidates only. They must not be added to `.env.example`, Vite env, docs with real values, tests with real values, or committed files before the local-only actual adapter smoke task is approved.
+The required local smoke mode value is `google_actual`, and the required auth mode value is `service_account`. These names and values must not be added to `.env.example`, Vite env, docs with real credential values, tests with real values, or committed secret files.
 
 Local smoke gate:
 
@@ -222,7 +228,7 @@ Local smoke gate:
 npm.cmd run drive:smoke:gate
 ```
 
-The gate reports only setting names and does not perform a Drive API request. Actual Drive smoke execution requires explicit approval after setting handling is reviewed.
+The gate reports only setting names and does not perform a Drive API request. Actual Drive list smoke must run through `npm.cmd run drive:smoke:list` only after the gate passes, and output must remain limited to API-reached status, sanitized count, and additional-page presence.
 
 Approved command shape after explicit approval:
 

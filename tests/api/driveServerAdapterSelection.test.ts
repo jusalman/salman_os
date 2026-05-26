@@ -92,6 +92,24 @@ test('Drive server adapter selection rejects unknown modes without falling back'
   assert.equal(serializedSelection.includes('token'), false)
 })
 
+test('Drive server adapter selection rejects google actual because it is smoke-only', () => {
+  const selection = selectDriveServerAdapter({
+    [DRIVE_SERVER_ADAPTER_MODE_KEY]: 'google_actual',
+  })
+  const serializedSelection = JSON.stringify(selection).toLowerCase()
+
+  assert.equal(selection.ok, false)
+
+  if (selection.ok) {
+    return
+  }
+
+  assert.equal(selection.response.error.code, 'invalid_request')
+  assert.equal(serializedSelection.includes('google_actual'), false)
+  assert.equal(serializedSelection.includes('credential'), false)
+  assert.equal(serializedSelection.includes('token'), false)
+})
+
 test('Drive server adapter selection blocks public Google or Drive Vite keys', () => {
   const googleSelection = selectDriveServerAdapter({
     VITE_GOOGLE_CLIENT_ID: 'not-returned',
