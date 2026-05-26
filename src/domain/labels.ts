@@ -8,37 +8,37 @@ import type {
 } from './types'
 
 export const clientStatusLabel: Record<ClientStatus, string> = {
-  active: 'Active',
-  attention: 'Check Needed',
-  archived: 'Archived',
+  active: '정상 운영',
+  attention: '확인 필요',
+  archived: '보관',
 }
 
 export const taskStatusLabel: Record<TaskStatus, string> = {
-  doing: 'Doing',
-  blocked: 'Blocked',
-  done: 'Done',
-  archived: 'Archived',
+  doing: '진행 중',
+  blocked: '막힘',
+  done: '완료',
+  archived: '보관',
 }
 
 export const taskPriorityLabel: Record<TaskPriority, string> = {
-  high: 'High',
-  normal: 'Normal',
-  low: 'Low',
+  high: '높음',
+  normal: '보통',
+  low: '낮음',
 }
 
 export const fileStatusLabel: Record<FileStatus, string> = {
-  active: 'Active',
-  archived: '99_Archive',
+  active: '사용 중',
+  archived: '보관',
 }
 
 export const moneyStatusLabel: Record<MoneyStatus, string> = {
-  check_needed: 'Check Needed',
-  checked: 'Checked',
-  issue: 'Issue',
+  check_needed: '확인 필요',
+  checked: '확인 완료',
+  issue: '문제 발생',
 }
 
 export const eventStatusLabel: Record<EventStatus, string> = {
-  scheduled: 'Scheduled',
-  done: 'Done',
-  canceled: 'Canceled',
+  scheduled: '예정',
+  done: '완료',
+  canceled: '취소',
 }

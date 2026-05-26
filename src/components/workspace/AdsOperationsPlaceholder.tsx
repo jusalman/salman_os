@@ -10,15 +10,15 @@ import type { AdsMetricStatus } from '../../domain/adsMetrics'
 type AdsTab =
   | '전체 광고 현황'
   | '고객사별 광고 상세'
-  | 'AI 광고 감사'
-  | '담당자 액션리스트'
+  | '광고 이상징후'
+  | '담당자 액션'
   | '고객사 리포트 초안'
 
 const adsTabs: AdsTab[] = [
   '전체 광고 현황',
   '고객사별 광고 상세',
-  'AI 광고 감사',
-  '담당자 액션리스트',
+  '광고 이상징후',
+  '담당자 액션',
   '고객사 리포트 초안',
 ]
 
@@ -31,16 +31,16 @@ export function AdsOperationsPlaceholder() {
     <section className="ads-operations">
       <header className="topbar">
         <div>
-          <p className="eyebrow">고객사 네이버 광고 운영</p>
-          <h1>광고 운영</h1>
+          <p className="eyebrow">SA/DA 광고 운영</p>
+          <h1>광고 운영 대시보드</h1>
           <p className="intro">
-            mock 설정과 raw sheet 샘플을 정규화한 뒤 광고 지표 계산기로 만든 내부 운영용
-            광고 현황입니다. 실제 Google Sheets 연결은 아직 활성화하지 않았습니다.
+            고객사별 광고비, 클릭, 전환, 효율 지표를 한 번에 확인하고 조치가 필요한
+            항목을 빠르게 분류합니다.
           </p>
         </div>
         <div className="topbar-notes">
-          <span>mock pipeline</span>
-          <span>Google Sheets 미연결</span>
+          <span>운영 미리보기</span>
+          <span>구글 시트 연결 전</span>
         </div>
       </header>
 
@@ -63,9 +63,9 @@ export function AdsOperationsPlaceholder() {
         <OverviewTab viewModel={mockAdsViewModel} />
       ) : selectedTab === '고객사별 광고 상세' ? (
         <ClientDetailTab clients={mockAdsViewModel.clients} />
-      ) : selectedTab === 'AI 광고 감사' ? (
+      ) : selectedTab === '광고 이상징후' ? (
         <AuditTab diagnostics={mockAdsViewModel.diagnostics} />
-      ) : selectedTab === '담당자 액션리스트' ? (
+      ) : selectedTab === '담당자 액션' ? (
         <ActionTab diagnostics={mockAdsViewModel.diagnostics} />
       ) : (
         <ReportTab clients={mockAdsViewModel.clients} />
@@ -96,8 +96,8 @@ function ClientDetailTab({ clients }: { clients: AdsClientSummary[] }) {
         <div>
           <h3>고객사별 광고 상세</h3>
           <p>
-            현재는 mock connector pipeline이 만든 고객사별 지표만 표시합니다. 캠페인,
-            광고그룹, 키워드 상세 drill-down은 실제 connector 승인 이후 분리합니다.
+            고객사별 핵심 광고 지표를 비교합니다. 실제 연결 전까지는 구조 검토용
+            샘플 데이터로 표시합니다.
           </p>
         </div>
       </div>
@@ -111,14 +111,14 @@ function AuditTab({ diagnostics }: { diagnostics: AdsViewDiagnostic[] }) {
     <section className="panel ads-placeholder-panel">
       <div className="section-head">
         <div>
-          <h3>AI 광고 감사</h3>
+          <h3>광고 이상징후</h3>
           <p>
-            실제 AI 감사나 RAG는 아직 연결하지 않았습니다. 현재는 mock pipeline 진단만
-            내부 검토 신호로 표시합니다.
+            원본 데이터 누락, 지표 계산 오류, 비용 대비 전환 저하처럼 담당자가 먼저
+            확인해야 할 신호를 모아 보여줍니다.
           </p>
         </div>
       </div>
-      <DiagnosticList diagnostics={diagnostics} emptyMessage="현재 mock 진단이 없습니다." />
+      <DiagnosticList diagnostics={diagnostics} emptyMessage="현재 확인할 이상징후가 없습니다." />
     </section>
   )
 }
@@ -128,14 +128,14 @@ function ActionTab({ diagnostics }: { diagnostics: AdsViewDiagnostic[] }) {
     <section className="panel ads-placeholder-panel">
       <div className="section-head">
         <div>
-          <h3>담당자 액션리스트</h3>
+          <h3>담당자 액션</h3>
           <p>
-            실제 업무 생성은 아직 구현하지 않았습니다. 진단이 발생하면 담당자 확인
-            후보로만 표시합니다.
+            이상징후가 있는 고객사를 담당자 확인 후보로 정리합니다. 업무 생성은 다음
+            단계에서 별도 승인 후 연결합니다.
           </p>
         </div>
       </div>
-      <DiagnosticList diagnostics={diagnostics} emptyMessage="생성할 mock 액션 후보가 없습니다." />
+      <DiagnosticList diagnostics={diagnostics} emptyMessage="오늘 생성할 액션 후보가 없습니다." />
     </section>
   )
 }
@@ -147,8 +147,7 @@ function ReportTab({ clients }: { clients: AdsClientSummary[] }) {
         <div>
           <h3>고객사 리포트 초안</h3>
           <p>
-            실제 리포트 생성은 아직 연결하지 않았습니다. 아래 내용은 계산된 mock 지표를
-            기반으로 한 초안 준비 상태입니다.
+            고객사에게 공유하기 전 내부 담당자가 먼저 검토할 리포트 초안 상태입니다.
           </p>
         </div>
       </div>
@@ -157,13 +156,13 @@ function ReportTab({ clients }: { clients: AdsClientSummary[] }) {
           <article key={client.clientId} className="ads-report-draft">
             <div>
               <p className="eyebrow">{client.clientName}</p>
-              <h3>광고 운영 리포트 초안 준비 중</h3>
+              <h3>광고 운영 리포트 초안</h3>
               <p>
                 광고 점수 {client.healthScore ?? '-'}점, 상태 {statusLabel[client.status]} 기준으로
                 담당자 검토용 리포트 초안을 생성할 예정입니다.
               </p>
             </div>
-            <span>초안 placeholder</span>
+            <span>검토 대기</span>
           </article>
         ))}
       </div>
@@ -199,7 +198,7 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
       <div className="section-head">
         <div>
           <h3>고객사 광고 요약</h3>
-          <p>mock connector pipeline 결과이며 실제 Google Sheets 읽기는 아직 수행하지 않습니다.</p>
+          <p>운영 화면 구조 확인을 위한 광고 지표 샘플입니다.</p>
         </div>
       </div>
       <div className="ads-client-table" role="table" aria-label="고객사 광고 요약">
@@ -219,7 +218,7 @@ function ClientSummaryList({ clients }: { clients: AdsClientSummary[] }) {
           <div key={client.clientId} className="ads-client-row" role="row">
             <strong>{client.clientName}</strong>
             <span>{client.healthScore ?? '-'}</span>
-            <span>{statusLabel[client.status]}</span>
+            <span className={`status-badge ${client.status}`}>{statusLabel[client.status]}</span>
             <span>{formatWon(client.spend)}</span>
             <span>{formatNumber(client.clicks)}</span>
             <span>{formatNumber(client.conversions)}</span>
@@ -250,7 +249,7 @@ function DiagnosticList({
             <p>{emptyMessage}</p>
           </div>
           <div className="item-meta">
-            <span>mock</span>
+            <span>정상</span>
           </div>
         </article>
       </div>
@@ -266,9 +265,9 @@ function DiagnosticList({
             <p>{diagnostic.message}</p>
           </div>
           <div className="item-meta">
-            <span>{diagnosticSeverityLabel[diagnostic.severity]}</span>
-            <span>{diagnostic.code}</span>
-            <span>{diagnostic.source}</span>
+            <span className={`status-badge ${diagnostic.severity}`}>{diagnosticSeverityLabel[diagnostic.severity]}</span>
+            <span>{diagnosticCodeLabel[diagnostic.code]}</span>
+            <span>{diagnosticSourceLabel(diagnostic.source)}</span>
           </div>
         </article>
       ))}
@@ -287,6 +286,31 @@ const diagnosticSeverityLabel: Record<AdsViewDiagnostic['severity'], string> = {
   info: '정보',
   warning: '주의',
   error: '오류',
+}
+
+const diagnosticCodeLabel: Record<AdsViewDiagnostic['code'], string> = {
+  column_mismatch: '컬럼 불일치',
+  disabled_client: '비활성 고객사',
+  empty_data: '데이터 없음',
+  invalid_number: '숫자 오류',
+  missing_config: '설정 누락',
+  missing_sheet_id: '시트 누락',
+  missing_tab: '탭 누락',
+  unsupported_report_type: '지원 안 함',
+}
+
+function diagnosticSourceLabel(source: string) {
+  const sourceLabels: Record<string, string> = {
+    adsMetrics: '광고 지표',
+    dailyConversionSa: '전환 SA',
+    dailySa: '데일리 SA',
+    enabled: '활성 상태',
+    rawSheetsByClientId: '원본 시트',
+    spreadsheetId: '스프레드시트',
+    weeklyKeywordSa: '주간 키워드',
+  }
+
+  return sourceLabels[source] ?? source.replace('rawTabs.', '원본 탭 ')
 }
 
 function formatWon(value: number | null) {

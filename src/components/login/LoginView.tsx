@@ -20,16 +20,25 @@ export function LoginView({
   return (
     <section className="login-view">
       <div className="login-panel">
-        <div>
+        <div className="login-copy">
           <p className="eyebrow">SALMAN OS / 내부 운영센터</p>
-          <h1>고객사 운영센터</h1>
+          <h1>오늘의 운영을 한눈에.</h1>
           <p className="intro">
-            고객사별 자료, 업무, 일정, 비즈머니, 링크, 운영 로그를 한 화면에서 확인하는
-            내부 직원용 운영 허브입니다.
+            고객사별 업무, 일정, 자료, 비즈머니 상태를 빠르게 확인하는 내부 직원용
+            운영센터입니다.
           </p>
+          <div className="login-highlights" aria-label="운영센터 주요 항목">
+            <span>고객사 현황</span>
+            <span>비즈머니 점검</span>
+            <span>운영 로그</span>
+          </div>
         </div>
 
         <form className="login-form" onSubmit={onSubmit}>
+          <div className="form-head">
+            <h2>입장하기</h2>
+            <p>공통 비밀번호와 이름을 입력해 주세요.</p>
+          </div>
           <label>
             <span>공통 비밀번호</span>
             <input
@@ -49,7 +58,7 @@ export function LoginView({
             />
           </label>
           {error ? <p className="form-error">{error}</p> : null}
-          <button type="submit">SALMAN OS 입장</button>
+          <button type="submit">운영센터 열기</button>
         </form>
       </div>
     </section>

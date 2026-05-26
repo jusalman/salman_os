@@ -20,7 +20,7 @@ export function InternalSchedulePanel({ scheduleItems }: InternalSchedulePanelPr
               <span>{event.eventDate}</span>
               <span>{event.timeRange}</span>
               <span>{event.owner}</span>
-              <span>{eventStatusLabel[event.status]}</span>
+              <span className={`status-badge ${event.status}`}>{eventStatusLabel[event.status]}</span>
             </div>
           </article>
         ))}

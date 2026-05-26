@@ -17,17 +17,19 @@ export function ClientTabs({ listView, selectedClientId, onSelect }: ClientTabsP
           className={client.id === selectedClientId ? 'client-chip active' : 'client-chip'}
           onClick={() => onSelect(client.id)}
         >
-          <strong>{client.name}</strong>
-          <span>{clientStatusLabel[client.status]}</span>
+          <div className="client-chip-title">
+            <strong>{client.name}</strong>
+            <span className={`status-badge ${client.status}`}>{clientStatusLabel[client.status]}</span>
+          </div>
           <div className="client-chip-meta">
             <span>{`업무 ${client.openTaskCount}`}</span>
             <span>{`일정 ${client.upcomingEventCount}`}</span>
-            <span>{client.hasBizMoneyWarning ? '비즈머니 확인 필요' : '비즈머니 정상'}</span>
+            <span>{client.hasBizMoneyWarning ? '비즈머니 확인' : '비즈머니 정상'}</span>
           </div>
           <div className="client-chip-flags">
-            {client.hasDriveFolder ? <span>Drive 폴더</span> : null}
-            {client.hasLookerLink ? <span>Looker</span> : null}
-            {client.hasSheetLink ? <span>Sheet</span> : null}
+            {client.hasDriveFolder ? <span>드라이브</span> : null}
+            {client.hasLookerLink ? <span>루커</span> : null}
+            {client.hasSheetLink ? <span>시트</span> : null}
             {client.latestLogAt ? <span>{client.latestLogAt}</span> : null}
           </div>
         </button>

@@ -13,10 +13,10 @@ export function LinksPanel({ links }: LinksPanelProps) {
           <article key={link.id} className="item-row">
             <div>
               <strong>{link.title}</strong>
-              <p>{link.category}</p>
+              <p>{linkCategoryLabel[link.category]}</p>
             </div>
             <div className="item-meta">
-              <a href={link.url} target="_blank" rel="noreferrer">
+              <a className="action-link" href={link.url} target="_blank" rel="noreferrer">
                 링크 열기
               </a>
             </div>
@@ -25,4 +25,11 @@ export function LinksPanel({ links }: LinksPanelProps) {
       </div>
     </Panel>
   )
+}
+
+const linkCategoryLabel: Record<ClientLinkPanelItem['category'], string> = {
+  admin: '관리자',
+  drive: '구글 드라이브',
+  external: '외부 링크',
+  report: '리포트',
 }

@@ -45,7 +45,7 @@ const REQUIRED_RAW_TAB_KEYS: AdsSheetsRawTabKey[] = [
 export const MOCK_ADS_SHEETS_CLIENT_CONFIGS: AdsSheetsClientConfigInput[] = [
   {
     clientId: 'mock-client-ads-001',
-    clientName: '테스트 고객사',
+    clientName: '더하임치과',
     spreadsheetId: 'mock-spreadsheet-id-001',
     rawTabs: ADS_SHEETS_REQUIRED_RAW_TABS,
     enabled: true,
@@ -53,7 +53,7 @@ export const MOCK_ADS_SHEETS_CLIENT_CONFIGS: AdsSheetsClientConfigInput[] = [
   },
   {
     clientId: 'mock-client-ads-002',
-    clientName: '광고 준비 고객사',
+    clientName: '바른약속의원',
     spreadsheetId: 'mock-spreadsheet-id-002',
     rawTabs: ADS_SHEETS_REQUIRED_RAW_TABS,
     enabled: false,

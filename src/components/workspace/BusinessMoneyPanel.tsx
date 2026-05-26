@@ -17,10 +17,10 @@ export function BusinessMoneyPanel({ moneyItems }: BusinessMoneyPanelProps) {
               <p>{item.note}</p>
             </div>
             <div className="item-meta">
-              <span>{moneyStatusLabel[item.status]}</span>
+              <span className={`status-badge ${item.status}`}>{moneyStatusLabel[item.status]}</span>
               <span>{item.lastCheckedAt ?? '미확인'}</span>
               <span>{item.checkedBy ?? '담당자 없음'}</span>
-              <a href={item.url} target="_blank" rel="noreferrer">
+              <a className="action-link" href={item.url} target="_blank" rel="noreferrer">
                 확인 링크
               </a>
             </div>

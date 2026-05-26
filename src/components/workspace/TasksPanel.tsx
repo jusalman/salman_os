@@ -17,8 +17,8 @@ export function TasksPanel({ tasks }: TasksPanelProps) {
               <p>{task.note}</p>
             </div>
             <div className="item-meta">
-              <span>{taskStatusLabel[task.status]}</span>
-              <span>{taskPriorityLabel[task.priority]}</span>
+              <span className={`status-badge ${task.status}`}>{taskStatusLabel[task.status]}</span>
+              <span>{`우선순위 ${taskPriorityLabel[task.priority]}`}</span>
               <span>{task.assignee}</span>
               <span>{task.dueDate}</span>
             </div>

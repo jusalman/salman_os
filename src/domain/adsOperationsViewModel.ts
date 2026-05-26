@@ -92,9 +92,9 @@ export const MOCK_ADS_RAW_SHEETS_BY_CLIENT_ID: MockAdsSheetsRawTablesByClient = 
     dailySa: [
       {
         date: '2026-05-18',
-        campaignName: 'mock search campaign',
-        adGroupName: 'mock core group',
-        keyword: 'mock hospital keyword',
+        campaignName: '치과 임플란트 검색 캠페인',
+        adGroupName: '핵심 진료 키워드 그룹',
+        keyword: '강남 임플란트 치과',
         spend: '100,000',
         impressions: '10,000',
         clicks: '500',
@@ -105,9 +105,9 @@ export const MOCK_ADS_RAW_SHEETS_BY_CLIENT_ID: MockAdsSheetsRawTablesByClient = 
     dailyConversionSa: [
       {
         date: '2026-05-18',
-        campaignName: 'mock conversion campaign',
-        adGroupName: 'mock conversion group',
-        keyword: 'mock conversion keyword',
+        campaignName: '상담 전환 집중 캠페인',
+        adGroupName: '예약 전환 그룹',
+        keyword: '임플란트 상담 예약',
         spend: '0',
         impressions: '1,000',
         clicks: '50',
@@ -118,9 +118,9 @@ export const MOCK_ADS_RAW_SHEETS_BY_CLIENT_ID: MockAdsSheetsRawTablesByClient = 
     weeklyKeywordSa: [
       {
         date: '2026-05-18',
-        campaignName: 'mock keyword campaign',
-        adGroupName: 'mock keyword group',
-        keyword: 'mock weekly keyword',
+        campaignName: '주간 키워드 확장 캠페인',
+        adGroupName: '지역 확장 그룹',
+        keyword: '논현동 치과 추천',
         spend: '20,000',
         impressions: '2,000',
         clicks: '100',
@@ -154,12 +154,12 @@ export function buildMockAdsOperationsViewModel(
         clientId: config.clientId,
         clientName: config.clientName,
         source: 'rawSheetsByClientId',
-        message: 'mock raw sheet 입력이 없어 광고 운영 데이터를 만들 수 없습니다.',
+        message: '광고 원본 시트 샘플이 없어 운영 데이터를 만들 수 없습니다.',
       })
       metricDiagnostics.push({
         severity: 'error',
         code: 'missing_sheet_id',
-        message: 'mock raw sheet input is missing',
+        message: '광고 원본 시트 샘플이 없습니다.',
       })
     }
 
@@ -173,12 +173,12 @@ export function buildMockAdsOperationsViewModel(
           clientId: config.clientId,
           clientName: config.clientName,
           source: tabKey,
-          message: 'mock raw sheet tab 입력이 없습니다.',
+          message: '필수 광고 원본 탭 샘플이 없습니다.',
         })
         metricDiagnostics.push({
           severity: 'warning',
           code: 'missing_tab',
-          message: 'mock raw sheet tab is missing',
+          message: '필수 광고 원본 탭 샘플이 없습니다.',
         })
         continue
       }
@@ -235,7 +235,7 @@ export function buildMockAdsOperationsViewModel(
     auditFindings: [],
     actionItems: [],
     reportDrafts: [],
-    state: clients.length > 0 ? { type: 'ready' } : { type: 'empty', message: '광고 운영 mock 데이터가 없습니다.' },
+    state: clients.length > 0 ? { type: 'ready' } : { type: 'empty', message: '표시할 광고 운영 샘플 데이터가 없습니다.' },
     diagnostics,
     tablesByClientId,
   }
