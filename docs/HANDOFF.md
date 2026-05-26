@@ -2,7 +2,7 @@
 
 ## Current Status
 
-- Resume note: When the user says to continue next week, start from TASK-102. TASK-101 replaced the default Vite README with a SALMAN OS-specific README covering scope, local dev, verification, env/security boundaries, and deployment baseline links. Keep the current Drive file hub on the mock repository path and keep Drive route behavior behind the shared contract, fake backend client, pure validator, and fake handler harness. Do not add real Google Drive API packages, credentials, `/api/drive/*` route files, frontend fetch wiring, SQL execution, Supabase schema/RLS/RPC changes, OpenAI API, Playwright, or Google Calendar integration without a separate explicit approval.
+- Resume note: When the user says to continue next week, start from TASK-103. TASK-102 added `docs/README_INDEX.md` to define the docs reading order, current core docs, domain doc groups, TASK history policy, archive candidate criteria, and new document rules without moving or deleting files. Keep the current Drive file hub on the mock repository path and keep Drive route behavior behind the shared contract, fake backend client, pure validator, and fake handler harness. Do not add real Google Drive API packages, credentials, `/api/drive/*` route files, frontend fetch wiring, SQL execution, Supabase schema/RLS/RPC changes, OpenAI API, Playwright, or Google Calendar integration without a separate explicit approval.
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
 - Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
 - Current task state: TASK-46 prepared review-only minimal ClientList seed SQL for one test client.
@@ -64,7 +64,8 @@
 - Current task state: TASK-99 documented the Vercel deployment baseline and future route test convention before adding Drive API routes; route files remain deferred, future route tests should start from pure handler tests in `tests/drive`, and server-only Google secret names are allowed only in future approved server route work while `VITE_` Google credential/secret env remains forbidden.
 - Current task state: TASK-100 documented the SALMAN OS deployment baseline for current Vite frontend-only deployment, Vercel static output, allowed public Vite env, forbidden credential/secret env, future `/api` route add conditions, and rollback criteria; no route files, deployment config changes, Google Drive API calls, package additions, credential/env reads, Supabase schema/RLS/RPC changes, embedding/vector/RAG answer, chatbot UI, or UI changes were introduced.
 - Current task state: TASK-101 replaced the default Vite README with a concise SALMAN OS README that documents project purpose, current scope, local development, verification commands, frontend env allowlist, forbidden secrets, deployment baseline, and references to TASK-99/TASK-100; no code, route files, package changes, credential/env reads, Supabase schema/RLS/RPC changes, embedding/vector/RAG answer, chatbot UI, or UI changes were introduced.
-- Current write phase: TASK-101 closed after verification.
+- Current task state: TASK-102 added `docs/README_INDEX.md` as the docs index and maintenance policy, keeping README/HANDOFF/AGENTS/README_INDEX as the always-read entry points, grouping Supabase, Ads, Drive/RAG/deployment documents, treating TASK files as work history, and defining archive candidate criteria without moving, deleting, or rewriting old TASK files.
+- Current write phase: TASK-102 closed after verification.
 - TASK-96 changed files: `src/domain/driveBackendContract.ts`, `src/data/adapters/mock/driveBackendFakeClient.ts`, `tests/drive/driveBackendContract.test.ts`, `tests/drive/driveBackendFakeClient.test.ts`, `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`, `docs/HANDOFF.md`.
 - TASK-96 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-97 changed files: `src/domain/driveRouteValidation.ts`, `src/data/adapters/mock/driveRouteFakeHandler.ts`, `tests/drive/driveRouteValidation.test.ts`, `tests/drive/driveRouteFakeHandler.test.ts`, `docs/TASK_97_DRIVE_ROUTE_VALIDATOR_HARNESS_DECISION.md`, `docs/HANDOFF.md`.
@@ -77,7 +78,9 @@
 - TASK-100 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-101 changed files: `README.md`, `docs/HANDOFF.md`.
 - TASK-101 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
-- Next task: TASK-102 decide whether to add a short `docs/README_INDEX.md` or documentation map for TASK-90 through TASK-101 Drive/deployment planning docs, without adding routes or runtime code.
+- TASK-102 changed files: `docs/README_INDEX.md`, `docs/HANDOFF.md`.
+- TASK-102 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
+- Next task: TASK-103 decide whether to create `docs/archive/tasks/` and move clearly historical TASK files without changing file contents, or continue with Drive/API work using the new docs index.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
