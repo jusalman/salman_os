@@ -3,8 +3,15 @@ import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 
 import {
+  GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID_ENV_KEY,
+  GOOGLE_DRIVE_AUTH_MODE_ENV_KEY,
+  GOOGLE_DRIVE_AUTH_MODE_SERVICE_ACCOUNT,
+  GOOGLE_DRIVE_CREDENTIAL_PATH_ENV_KEY,
+  createGoogleDriveServerAdapterFromConfig,
   createGoogleDriveServerAdapterSkeleton,
   googleDriveServerAdapterSkeleton,
+  readGoogleDriveServerAdapterConfigFromEnvLike,
+  validateGoogleDriveServerAdapterConfig,
 } from '../../api/drive/googleDriveServerAdapter.ts'
 import { handleDriveServerRoute } from '../../api/drive/driveServerAdapter.ts'
 import { handleMockDriveListRoute } from '../../api/drive/list.ts'
@@ -22,6 +29,75 @@ test('actual Google Drive adapter skeleton satisfies the DriveServerAdapter shap
 
   assert.equal(response.error.code, 'drive_backend_unavailable')
   assert.equal(response.clientId, 'c1')
+})
+
+test('actual Google Drive adapter config is service account first and envLike only', () => {
+  const config = readGoogleDriveServerAdapterConfigFromEnvLike({
+    [GOOGLE_DRIVE_AUTH_MODE_ENV_KEY]: GOOGLE_DRIVE_AUTH_MODE_SERVICE_ACCOUNT,
+    [GOOGLE_DRIVE_CREDENTIAL_PATH_ENV_KEY]: 'C:/local-only/drive-key.json',
+    [GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID_ENV_KEY]: 'driveRootFolder_12345',
+  })
+  const validation = validateGoogleDriveServerAdapterConfig(config)
+
+  assert.equal(GOOGLE_DRIVE_AUTH_MODE_SERVICE_ACCOUNT, 'service_account')
+  assert.equal(validation.ok, true)
+
+  if (validation.ok) {
+    assert.equal(validation.config.authMode, GOOGLE_DRIVE_AUTH_MODE_SERVICE_ACCOUNT)
+    assert.equal(validation.config.allowedRootFolderId, 'driveRootFolder_12345')
+  }
+})
+
+test('actual Google Drive adapter config validation rejects incomplete or unsupported config safely', async () => {
+  const adapter = createGoogleDriveServerAdapterFromConfig({
+    authMode: 'oauth',
+    credentialPath: 'SECRET_LOCAL_PATH_SHOULD_NOT_RETURN',
+    allowedRootFolderId: 'driveRootFolder_12345',
+  })
+  const response = await adapter.listFiles({ clientId: 'c1' })
+  const serializedResponse = JSON.stringify(response)
+
+  assert.equal(response.ok, false)
+
+  if (!response.ok) {
+    assert.equal(response.error.code, 'drive_backend_unavailable')
+  }
+
+  assert.equal(serializedResponse.includes('oauth'), false)
+  assert.equal(serializedResponse.includes('SECRET_LOCAL_PATH_SHOULD_NOT_RETURN'), false)
+  assert.equal(serializedResponse.includes('credential'), false)
+  assert.equal(serializedResponse.includes('token'), false)
+  assert.equal(serializedResponse.includes('private_key'), false)
+  assert.equal(serializedResponse.includes('service_account'), false)
+})
+
+test('actual Google Drive adapter config factory still does not call fetch or Drive API', async () => {
+  const originalFetch = globalThis.fetch
+  let fetchCalls = 0
+  const adapter = createGoogleDriveServerAdapterFromConfig({
+    authMode: GOOGLE_DRIVE_AUTH_MODE_SERVICE_ACCOUNT,
+    credentialPath: 'C:/local-only/drive-key.json',
+    allowedRootFolderId: 'driveRootFolder_12345',
+  })
+
+  globalThis.fetch = (() => {
+    fetchCalls += 1
+    throw new Error('Unexpected network call from Drive adapter config factory.')
+  }) as typeof fetch
+
+  try {
+    const response = await adapter.listFiles({ clientId: 'c1' })
+
+    assert.equal(response.ok, false)
+
+    if (!response.ok) {
+      assert.equal(response.error.code, 'drive_backend_unavailable')
+    }
+
+    assert.equal(fetchCalls, 0)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })
 
 test('actual Google Drive adapter skeleton returns safe diagnostics through route safety checks', async () => {
@@ -78,6 +154,14 @@ test('actual Google Drive adapter skeleton does not import googleapis or read ru
   assert.equal(source.includes('googleapis'), false)
   assert.equal(source.includes('process.env'), false)
   assert.equal(source.includes('import.meta.env'), false)
+})
+
+test('actual Google Drive package gate remains closed before local smoke task', async () => {
+  const packageJson = await readFile(new URL('../../package.json', import.meta.url), 'utf8')
+  const packageLock = await readFile(new URL('../../package-lock.json', import.meta.url), 'utf8')
+
+  assert.equal(packageJson.includes('googleapis'), false)
+  assert.equal(packageLock.includes('googleapis'), false)
 })
 
 test('default mock Drive route still uses the fake adapter', async () => {

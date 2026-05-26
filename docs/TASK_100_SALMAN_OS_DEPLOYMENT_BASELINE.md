@@ -10,6 +10,8 @@ TASK-105 update: the repo later added minimal mock `api/drive/*` route boundary 
 
 TASK-107 update: actual Google Drive adapter work is blocked behind the readiness checklist and env/secret review gate in this document. This update does not add Google Drive API code, `googleapis`, OAuth, service account handling, env reads, `.env.example` Google entries, Supabase schema changes, or frontend runtime activation.
 
+TASK-111 update: actual Google Drive adapter preparation is service-account-first for SALMAN OS v1 shared internal Drive folders. OAuth remains deferred until user-owned Drive access, account-level consent, or Picker-style selection is required. This update adds config validation boundaries only; it does not add `googleapis`, read credentials, read `.env.local`, run a Drive API smoke test, add `.env.example` Google entries, or activate frontend runtime fetch wiring.
+
 ## Current Deployment Structure
 
 Current committed structure:
@@ -189,26 +191,30 @@ Do not add an actual Google Drive adapter until all of these are true:
 
 Current decision:
 
-- do not choose service account or OAuth yet
+- use service account first for SALMAN OS v1 shared internal Drive folder reads
+- defer OAuth until user-owned Drive access, account-level consent, or Picker-style selection is required
+- keep `googleapis` out until the first approved local-only Drive API smoke task
 - do not add Google Drive env names to `.env.example` yet
 - do not read `.env.local` or any credential file during readiness work
 - do not add `VITE_GOOGLE_*`, `VITE_DRIVE_*`, or any Vite credential/token/secret env
 - keep all future Google Drive secrets server-only and deployment-platform owned
 
-Auth modes to review later:
+Approved server-only env name candidates for the next local-only implementation task:
 
-- service account: likely simpler for organization-owned shared Drive folders, but must prove folder access, least privilege, key rotation, and no private key exposure
-- OAuth refresh token: may match user-owned Drive data better, but must prove consent ownership, refresh token storage, revocation, and rotation
-
-Server-only env name candidates for a later approved implementation task:
-
+- `DRIVE_SERVER_ADAPTER_MODE`
 - `GOOGLE_DRIVE_AUTH_MODE`
-- `GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON`
-- `GOOGLE_DRIVE_CLIENT_ID`
-- `GOOGLE_DRIVE_CLIENT_SECRET`
-- `GOOGLE_DRIVE_REFRESH_TOKEN`
+- `GOOGLE_DRIVE_CREDENTIAL_PATH`
+- `GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID`
 
-These names are candidates only. They must not be added to `.env.example`, Vite env, docs with real values, tests with real values, or committed files before the actual adapter task is approved.
+These names are candidates only. They must not be added to `.env.example`, Vite env, docs with real values, tests with real values, or committed files before the local-only actual adapter smoke task is approved.
+
+Service account requirements to prove before activation:
+
+- the SALMAN OS Drive root folder is explicitly shared with the service account
+- the configured root folder ID is allowlisted server-side
+- key rotation and least privilege are defined
+- credential paths and private key material are never returned in route responses
+- raw Google Drive API responses are mapped into the shared Drive backend contract before returning
 
 ## Rollback Baseline
 

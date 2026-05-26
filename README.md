@@ -16,6 +16,7 @@ Included in the current v1 baseline:
 - shared Drive backend contract, fake backend client, pure validator, and fake handler harness
 - minimal mock `/api/drive/*` route boundary backed by the existing fake handler
 - server-owned Drive adapter interface with a fake adapter default
+- inactive service-account-first Drive adapter config boundary for future server-only work
 
 Not implemented:
 
@@ -83,7 +84,7 @@ Current deployment baseline:
 
 The current mock `/api/drive/*` files use only the shared Drive contract, request validator, response safety checker, and fake handler. Actual Google Drive API routes and frontend runtime activation still require separate approved tasks.
 
-Actual Google Drive adapter work is blocked by the readiness checklist and env/secret review gate in [TASK-100 deployment baseline](docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md).
+Actual Google Drive adapter work is service-account-first but still inactive. It remains blocked by the readiness checklist, package gate, and env/secret review gate in [TASK-100 deployment baseline](docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md).
 
 ## Reference Docs
 
