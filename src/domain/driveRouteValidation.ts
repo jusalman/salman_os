@@ -33,14 +33,26 @@ const FORBIDDEN_RESPONSE_FRAGMENTS = [
   'credential',
   'token',
   'service_account',
+  'serviceaccount',
   'service account',
   'private_key',
+  'privatekey',
   'private key',
+  'service_role',
   '.env',
   'drive.google.com',
   'oauth',
   'secret',
 ] as const
+const LIST_FILES_REQUEST_KEYS = [
+  'clientId',
+  'category',
+  'status',
+  'sensitivity',
+  'includeArchived',
+] as const
+const GET_FILE_REQUEST_KEYS = ['clientId', 'fileId', 'includeArchived'] as const
+const LIST_CATEGORIES_REQUEST_KEYS = ['clientId', 'includeArchived'] as const
 const SAFE_ID_PATTERN = /^[a-zA-Z0-9_-]{1,120}$/
 
 export type DriveBackendRouteResponse =
@@ -94,6 +106,10 @@ export function validateDriveBackendListFilesRequest(
   const sensitivity = base.record.sensitivity
   const includeArchived = base.record.includeArchived
 
+  if (hasUnexpectedRequestKeys(base.record, LIST_FILES_REQUEST_KEYS)) {
+    return invalidRequest(base.value.clientId)
+  }
+
   if (category !== undefined && !isAllowedString(category, DRIVE_FILE_CATEGORIES)) {
     return invalidRequest(base.value.clientId)
   }
@@ -134,6 +150,10 @@ export function validateDriveBackendGetFileRequest(
   const fileId = base.record.fileId
   const includeArchived = base.record.includeArchived
 
+  if (hasUnexpectedRequestKeys(base.record, GET_FILE_REQUEST_KEYS)) {
+    return invalidRequest(base.value.clientId)
+  }
+
   if (!isSafeId(fileId)) {
     return invalidRequest(base.value.clientId)
   }
@@ -162,6 +182,10 @@ export function validateDriveBackendListCategoriesRequest(
   }
 
   const includeArchived = base.record.includeArchived
+
+  if (hasUnexpectedRequestKeys(base.record, LIST_CATEGORIES_REQUEST_KEYS)) {
+    return invalidRequest(base.value.clientId)
+  }
 
   if (includeArchived !== undefined && typeof includeArchived !== 'boolean') {
     return invalidRequest(base.value.clientId)
@@ -280,4 +304,8 @@ function hasForbiddenRequestKeys(record: Record<string, unknown>): boolean {
     const normalizedKey = key.toLowerCase().replace(/[^a-z0-9_]/gu, '')
     return FORBIDDEN_KEY_FRAGMENTS.some((fragment) => normalizedKey.includes(fragment))
   })
+}
+
+function hasUnexpectedRequestKeys(record: Record<string, unknown>, allowedKeys: readonly string[]) {
+  return Object.keys(record).some((key) => !allowedKeys.includes(key))
 }

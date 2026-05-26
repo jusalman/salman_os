@@ -64,6 +64,25 @@ test('rejects credential-shaped request keys before route handling', () => {
   assert.equal(serializedResult.includes('not-returned'), false)
 })
 
+test('rejects unexpected request keys before route handling', () => {
+  const result = validateDriveBackendListFilesRequest({
+    clientId: 'c1',
+    category: 'client_operations',
+    rawDriveUrl: 'not-returned',
+  })
+  const serializedResult = JSON.stringify(result)
+
+  assert.equal(result.ok, false)
+
+  if (result.ok) {
+    return
+  }
+
+  assert.equal(result.response.error.code, 'invalid_request')
+  assert.equal(serializedResult.includes('rawDriveUrl'), false)
+  assert.equal(serializedResult.includes('not-returned'), false)
+})
+
 test('validates list categories requests without requiring route files', () => {
   const result = validateDriveBackendListCategoriesRequest({
     clientId: 'c1',
@@ -114,4 +133,28 @@ test('flags backend responses that contain unsafe metadata', () => {
 
   assert.equal(result.response.error.code, 'unknown_error')
   assert.equal(serializedResult.includes('drive.google.com'), false)
+})
+
+test('flags backend responses that contain camelCase secret metadata', () => {
+  const result = checkDriveBackendResponseSafety({
+    ok: false,
+    clientId: 'c1',
+    error: {
+      severity: 'error',
+      code: 'unknown_error',
+      message: 'server rejected serviceAccount privateKey metadata',
+    },
+    diagnostics: [],
+  })
+  const serializedResult = JSON.stringify(result)
+
+  assert.equal(result.ok, false)
+
+  if (result.ok) {
+    return
+  }
+
+  assert.equal(result.response.error.code, 'unknown_error')
+  assert.equal(serializedResult.includes('serviceAccount'), false)
+  assert.equal(serializedResult.includes('privateKey'), false)
 })
