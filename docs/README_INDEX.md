@@ -26,6 +26,8 @@ These are the current baseline entry points:
 - `AGENTS.md`
 - `docs/README_INDEX.md`
 
+Do not replace this set with old TASK documents. Use TASK documents only when the task directly touches that domain.
+
 For work that touches implementation, also check:
 
 - `package.json`
@@ -139,11 +141,45 @@ A TASK document is an archive candidate when all are true:
 
 Do not move archive candidates during ordinary feature work. Use a separate archive task.
 
+Never archive or move:
+
+- `README.md`
+- `AGENTS.md`
+- `docs/HANDOFF.md`
+- `docs/README_INDEX.md`
+- the latest active baseline for a domain
+- documents directly linked from `README.md`
+- documents directly required by the current HANDOFF resume note
+
 Suggested future archive location:
 
 ```text
 docs/archive/tasks/
 ```
+
+## Current Archive Review
+
+TASK-103 reviewed archive candidates without moving files.
+
+Keep in place for now:
+
+- `docs/TASK_94_MOCK_DRIVE_BACKEND_REPOSITORY_BOUNDARY.md`
+- `docs/TASK_95_DRIVE_BACKEND_ROUTE_BOUNDARY_DECISION.md`
+- `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`
+- `docs/TASK_97_DRIVE_ROUTE_VALIDATOR_HARNESS_DECISION.md`
+- `docs/TASK_98_DRIVE_MOCK_ROUTE_DECISION.md`
+- `docs/TASK_99_VERCEL_ROUTE_BASELINE_AND_TEST_CONVENTION.md`
+- `docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md`
+
+These are recent Drive, route, and deployment boundary documents and are still directly relevant to future `/api/drive/*` work.
+
+Do not move yet, but likely archive candidates after a dedicated move task:
+
+- early Supabase planning TASK files before `docs/TASK_57_SUPABASE_RPC_MILESTONE_LOCK.md`
+- early Ads planning TASK files before `docs/TASK_80_ADS_SHEETS_READER_FACTORY_WIRING.md`
+- Drive planning TASK files `docs/TASK_90_GOOGLE_DRIVE_API_SYNC_ARCHITECTURE.md` through `docs/TASK_93_DRIVE_BACKEND_ADAPTER_PLAN.md` if their durable rules stay covered by TASK-94 through TASK-100 and this index
+
+Before moving any candidate, update links in `README.md`, `docs/HANDOFF.md`, and this index if needed.
 
 ## New Document Rules
 
@@ -165,4 +201,4 @@ For future Drive/API work:
 
 ## Next Maintenance Step
 
-If docs sprawl still blocks work, run a separate TASK-103 to decide whether to create `docs/archive/tasks/` and move clearly historical TASK files without changing their contents.
+If docs sprawl still blocks work, run a separate TASK-104 to create `docs/archive/tasks/` and move only the clearly historical TASK files identified above without changing their contents.
