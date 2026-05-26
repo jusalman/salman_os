@@ -14,11 +14,12 @@ Included in the current v1 baseline:
 - Supabase browser client foundation
 - Drive-style file hub using sanitized mock metadata
 - shared Drive backend contract, fake backend client, pure validator, and fake handler harness
+- minimal mock `/api/drive/*` route boundary backed by the existing fake handler
 
 Not implemented:
 
 - actual Google Drive API integration
-- `/api/drive/*` route files
+- frontend runtime `fetch('/api/drive/*')` wiring
 - `googleapis`
 - embedding/vector/RAG answer flow
 - chatbot UI
@@ -76,9 +77,10 @@ Current deployment baseline:
 - build command: `npm.cmd run build`
 - output directory: `dist`
 - no committed `vercel.json`
-- no committed `api/`, `server/`, `src/api/`, or `src/server` route source
+- committed `api/drive/*` files are mock-only route boundary adapters
+- no committed `server/`, `src/api/`, or `src/server` route source
 
-Future `/api/drive/*` routes must be added only after a separate approved task. They must use the shared Drive contract, request validator, response safety checker, and server-only secret boundary.
+The current mock `/api/drive/*` files use only the shared Drive contract, request validator, response safety checker, and fake handler. Actual Google Drive API routes and frontend runtime activation still require separate approved tasks.
 
 ## Reference Docs
 

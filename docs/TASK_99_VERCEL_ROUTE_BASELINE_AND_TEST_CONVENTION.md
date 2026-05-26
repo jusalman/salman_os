@@ -4,7 +4,9 @@
 
 TASK-99 decides the deployment baseline and future API route test convention before SALMAN OS adds any real Drive API route files.
 
-Decision: document the Vercel route baseline first and continue to defer real `/api/drive/*` route files. The current boundary remains the TASK-96 shared contract, TASK-96 fake backend client, and TASK-97 pure validator plus fake route handler harness.
+Decision: document the Vercel route baseline first and defer real Google Drive API-backed `/api/drive/*` route files. At TASK-99 time, the current boundary remained the TASK-96 shared contract, TASK-96 fake backend client, and TASK-97 pure validator plus fake route handler harness.
+
+TASK-105 update: minimal mock `api/drive/*` route boundary files were later added after the validator, response safety checker, and route import tests were in place. They still call only the fake handler harness and do not introduce Google Drive API calls, credentials, `googleapis`, frontend fetch wiring, or runtime activation.
 
 ## Current Repo Deployment Structure
 
@@ -13,7 +15,8 @@ The repo is currently a Vite frontend app:
 - `package.json` scripts are `dev`, `build`, `lint`, and `preview`.
 - `vite.config.ts` only configures React.
 - There is no committed `vercel.json`.
-- There is no committed `api/`, `server/`, `src/api/`, or `src/server/` route source.
+- TASK-105 added mock-only `api/drive/*` route boundary adapters.
+- There is no committed `server/`, `src/api/`, or `src/server/` route source.
 - `.vercel/` exists locally, but local Vercel metadata is not a committed deployment baseline.
 - `README.md` is still the default React + TypeScript + Vite template text.
 
@@ -46,19 +49,19 @@ Future Vercel API route:
 - must run request validation and response safety checks
 - must not return raw Google responses, credentials, token metadata, service account metadata, or raw env values
 
-## Why Route Files Are Not Added Now
+## Why Real Google Drive Route Files Were Not Added At TASK-99
 
-Real route files are still deferred because:
+Real Google Drive API-backed route files were deferred because:
 
-- the current repo has no committed route baseline
 - Vite local dev/build does not execute root `api/` files by itself
-- adding `api/drive/*` now would imply deployable runtime behavior that does not exist yet in local development
 - TASK-97 already gives testable handler behavior without adding deployment-specific files
 - the Drive file hub UI must remain on the mock repository path until explicit runtime activation
 
+TASK-105 resolved only the mock route boundary step. Actual Google Drive route behavior, server secret usage, and frontend fetch wiring are still deferred.
+
 ## Future `/api/drive/*` Route Add Conditions
 
-Do not add real Drive route files until all of these are true:
+Do not add real Google Drive API-backed route files until all of these are true:
 
 - deployment target is explicitly confirmed as Vercel for SALMAN OS
 - route folder convention is approved as committed repo structure
@@ -80,7 +83,7 @@ Keep `serverless/functions/*` and a separate backend repo deferred unless the de
 
 ## Route Handler Test Convention
 
-Before real route files exist:
+Before actual Google Drive API-backed route files exist:
 
 - keep Drive route behavior tests in `tests/drive`
 - test pure functions only
@@ -90,13 +93,15 @@ Before real route files exist:
 - do not call `fetch('/api/drive/*')`
 - do not call Google Drive APIs
 
-When real route files are introduced:
+When mock route boundary files are introduced:
 
 - keep contract, validator, and fake handler tests in `tests/drive`
 - add route adapter tests in `tests/api` only if route handler functions can be imported without starting a server
 - keep deployment-specific smoke tests separate from unit tests
 - route tests must assert that unsafe response content is rejected or sanitized
 - route tests must not read credential files or env secret contents
+
+When actual Google Drive API-backed route files are introduced, keep that work separate from mock route boundary files and frontend runtime activation.
 
 ## Env and Secret Boundary
 
@@ -127,12 +132,12 @@ Current local development:
 - Drive UI uses mock repository data
 - Drive route behavior is tested through pure Node tests
 
-Future route local testing should be decided before route files are added:
+Future actual route local testing should be decided before Google Drive API-backed route behavior is added:
 
 - either Vercel local dev is adopted and documented
 - or route handlers remain importable pure functions with Node tests
 
-Until that decision, route files stay out of the repo.
+Until that decision, the committed route files must stay mock-only.
 
 ## Next TASK
 

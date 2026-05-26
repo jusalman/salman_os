@@ -2,7 +2,7 @@
 
 ## Current Status
 
-- Resume note: When the user says to continue next week, start from TASK-105. TASK-104 resumed Drive/API preparation without creating a new TASK document, hardened the pure Drive route validator and fake handler tests, and kept actual `/api/drive/*` route files, Google Drive API, credentials, frontend fetch wiring, Supabase schema/RLS/RPC changes, embeddings, vectors, and chatbot UI out of scope. Keep README/HANDOFF/AGENTS/README_INDEX as the always-read entry points.
+- Resume note: When the user says to continue next week, start from TASK-106. TASK-105 added minimal mock `api/drive/*` route boundary adapters that call only the existing fake handler/validator/safety path, added importable route tests, and kept actual Google Drive API, credentials, `googleapis`, frontend fetch wiring, Supabase schema/RLS/RPC changes, embeddings, vectors, and chatbot UI out of scope. Keep README/HANDOFF/AGENTS/README_INDEX as the always-read entry points.
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
 - Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
 - Current task state: TASK-46 prepared review-only minimal ClientList seed SQL for one test client.
@@ -67,7 +67,8 @@
 - Current task state: TASK-102 added `docs/README_INDEX.md` as the docs index and maintenance policy, keeping README/HANDOFF/AGENTS/README_INDEX as the always-read entry points, grouping Supabase, Ads, Drive/RAG/deployment documents, treating TASK files as work history, and defining archive candidate criteria without moving, deleting, or rewriting old TASK files.
 - Current task state: TASK-103 classified docs archive candidates without moving files: keep recent TASK-94 through TASK-100 Drive/route/deployment baselines in place, treat older Supabase/Ads/Drive planning TASK files as possible archive candidates only after a dedicated move task, and continue using README/HANDOFF/AGENTS/README_INDEX as the always-read docs.
 - Current task state: TASK-104 hardened Drive route preparation by rejecting unexpected route request body keys, expanding response safety checks for camelCase secret metadata, and adding fake route harness tests for file detail access and archived opt-in behavior; no new TASK document, route files, Google Drive API calls, packages, credential/env reads, Supabase schema/RLS/RPC changes, embedding/vector/RAG answer, chatbot UI, or UI changes were introduced.
-- Current write phase: TASK-104 closed after verification.
+- Current task state: TASK-105 added mock-only Vercel-style Drive route boundary adapters at `api/drive/list.ts`, `api/drive/detail.ts`, and `api/drive/categories.ts`, plus `tests/api/driveMockApiRoute.test.ts`; these routes call only `handleDriveRouteHarness`, have no Google Drive API/credential/env access, and are not wired into the default UI runtime.
+- Current write phase: TASK-105 closed after verification.
 - TASK-96 changed files: `src/domain/driveBackendContract.ts`, `src/data/adapters/mock/driveBackendFakeClient.ts`, `tests/drive/driveBackendContract.test.ts`, `tests/drive/driveBackendFakeClient.test.ts`, `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`, `docs/HANDOFF.md`.
 - TASK-96 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-97 changed files: `src/domain/driveRouteValidation.ts`, `src/data/adapters/mock/driveRouteFakeHandler.ts`, `tests/drive/driveRouteValidation.test.ts`, `tests/drive/driveRouteFakeHandler.test.ts`, `docs/TASK_97_DRIVE_ROUTE_VALIDATOR_HARNESS_DECISION.md`, `docs/HANDOFF.md`.
@@ -86,7 +87,9 @@
 - TASK-103 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-104 changed files: `src/domain/driveRouteValidation.ts`, `tests/drive/driveRouteValidation.test.ts`, `tests/drive/driveRouteFakeHandler.test.ts`, `docs/HANDOFF.md`.
 - TASK-104 verification: `node --test` passed with 108 tests, `npm.cmd run lint` passed, and `npm.cmd run build` passed.
-- Next task: TASK-105 decide whether to add minimal Vercel-style mock `/api/drive/*` route files using the existing fake handler/validator only, or keep route files deferred and continue hardening route-adjacent tests.
+- TASK-105 changed files: `api/drive/list.ts`, `api/drive/detail.ts`, `api/drive/categories.ts`, `tests/api/driveMockApiRoute.test.ts`, `README.md`, `docs/TASK_99_VERCEL_ROUTE_BASELINE_AND_TEST_CONVENTION.md`, `docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md`, `docs/HANDOFF.md`.
+- TASK-105 verification: `node --test` passed with 113 tests, `npm.cmd run lint` passed, and `npm.cmd run build` passed.
+- Next task: TASK-106 decide whether to add a server-owned actual Drive adapter interface behind the mock route boundary, without Google Drive API credentials or runtime activation.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.

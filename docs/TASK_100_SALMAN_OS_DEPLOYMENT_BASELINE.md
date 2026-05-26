@@ -4,7 +4,9 @@
 
 TASK-100 decides whether SALMAN OS needs a deployment baseline document before any server route or Google Drive API work starts.
 
-Decision: create a dedicated deployment baseline document now. The repo still stays Vite frontend-only, and no deployment settings, route files, Google Drive API code, credentials, Supabase schema, or UI behavior are changed.
+Decision: create a dedicated deployment baseline document now. At TASK-100 time, the repo still stayed Vite frontend-only, and no deployment settings, route files, Google Drive API code, credentials, Supabase schema, or UI behavior were changed.
+
+TASK-105 update: the repo later added minimal mock `api/drive/*` route boundary adapters. They are not Google Drive API integrations, do not read credentials or env secrets, and are not wired into the default frontend runtime.
 
 ## Current Deployment Structure
 
@@ -19,7 +21,7 @@ Current committed structure:
 - Lint command: `npm.cmd run lint`
 - `vite.config.ts`: React plugin only
 - `vercel.json`: not present
-- `api/`: not present
+- `api/`: present only for mock Drive route boundary adapters added in TASK-105
 - `server/`: not present
 - `src/api/`: not present
 - `src/server/`: not present
@@ -65,7 +67,7 @@ Output directory: dist
 Install command: npm install
 ```
 
-No server route is part of the current production baseline.
+No actual Google Drive API route or server secret dependency is part of the current production baseline.
 
 ## Required Verification Before Deployment
 
@@ -82,13 +84,13 @@ The working tree should be clean after the deployment-ready commit.
 
 ## Vercel Deployment Baseline
 
-Vercel is the preferred future deployment target for server-owned Drive routes, but the current repo does not yet commit Vercel route files or `vercel.json`.
+Vercel is the preferred future deployment target for server-owned Drive routes, but the current repo does not yet commit `vercel.json` or any real Google Drive API route implementation.
 
 Current Vercel baseline:
 
 - deploy as a Vite static frontend
 - build output is `dist`
-- do not add `/api/drive/*` routes until a separate route baseline task approves the committed route structure
+- mock `api/drive/*` route boundary adapters may exist but must call only the fake handler until a separate actual API task
 - do not wire frontend `fetch('/api/drive/*')` until a separate runtime activation task
 
 Future server routes must not be introduced in the same task as a real Google Drive adapter.
@@ -150,12 +152,12 @@ Future server route baseline:
 - server routes must not return credential paths, raw env values, tokens, service account metadata, or raw Google API responses
 - route responses must satisfy the shared Drive backend contract and safety checks
 
-## Future `/api` Route Add Conditions
+## Future Actual `/api` Route Add Conditions
 
-Do not add `/api/drive/*` route files until:
+Do not replace or extend the mock `api/drive/*` boundary with actual Google Drive API behavior until:
 
 - deployment target is confirmed as Vercel for SALMAN OS
-- route folder convention is approved
+- route folder convention remains approved for the target deployment
 - route handler tests are defined
 - request validators and response safety checks are required by convention
 - server-only env names are reviewed
