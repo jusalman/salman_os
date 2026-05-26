@@ -58,8 +58,11 @@
 - Current task state: TASK-93 added `docs/TASK_93_DRIVE_BACKEND_ADAPTER_PLAN.md` to define the backend Drive adapter interface, mock backend flow, API route candidates, validation/error model, security boundary, frontend migration path, and implementation order; no backend code, package install, Google Drive API call, credential, SQL execution, Supabase/RLS/RPC change, or real file mutation was introduced.
 - Current task state: TASK-94 added a mock Drive file repository boundary with Drive domain types, repository interface, mock implementation, hook wiring, file hub UI consumption, and mock repository tests; no Google Drive API call, credential/env read, Supabase schema/RLS/RPC change, SQL execution, embedding/vector/RAG answer, or chatbot UI was introduced.
 - Current task state: TASK-95 decided the future actual Drive adapter boundary as server-owned Vercel-style `/api/drive/*` routes, while keeping v1 on the TASK-94 mock repository and recommending a shared route contract plus fake backend client before any actual route or Google API work; no Google Drive API call, package, credential/env read, Supabase schema/RLS/RPC change, SQL execution, embedding/vector/RAG answer, or chatbot UI was introduced.
-- Current write phase: TASK-95 closed.
-- Next task: TASK-96 add a shared Drive backend route contract and fake backend client while keeping actual Google Drive API, credentials, Supabase Drive metadata activation, embeddings, vectors, and chatbot UI out of scope.
+- Current task state: TASK-96 added a shared Drive backend route contract and fake backend client that reuse sanitized TASK-94 mock metadata without creating actual `/api/drive/*` routes, calling Google Drive API, adding credentials/env access, changing Supabase schema/RLS/RPC, or implementing embedding/vector/RAG answer or chatbot UI.
+- Current write phase: TASK-96 closed after verification.
+- TASK-96 changed files: `src/domain/driveBackendContract.ts`, `src/data/adapters/mock/driveBackendFakeClient.ts`, `tests/drive/driveBackendContract.test.ts`, `tests/drive/driveBackendFakeClient.test.ts`, `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`, `docs/HANDOFF.md`.
+- TASK-96 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
+- Next task: TASK-97 decide whether to add a server route request/response validator and route handler test harness without implementing the real Google Drive API adapter.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
