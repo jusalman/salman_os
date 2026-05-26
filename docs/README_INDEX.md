@@ -4,7 +4,7 @@
 
 This index keeps the growing `docs/` folder usable before more Drive, API, Supabase, or deployment work is added.
 
-It does not move, delete, or rewrite existing TASK documents. TASK documents remain work history unless a later task explicitly archives them.
+Historical TASK documents may live under `docs/archive/tasks/`. Archived TASK files remain available for audit, but they are not default reading material and are not current operating policy.
 
 ## How To Read Docs
 
@@ -15,7 +15,7 @@ Use this order for normal work:
 3. Read `AGENTS.md` for SALMAN OS scope and safety rules.
 4. Read only the domain-specific documents needed for the task.
 
-Do not read every old TASK document by default. Most TASK files are historical context, not current operating policy.
+Do not read every old TASK document by default. Most TASK files, especially files under `docs/archive/tasks/`, are historical context, not current operating policy.
 
 ## Always Read First
 
@@ -53,19 +53,22 @@ Current useful Supabase baseline:
 - `docs/SUPABASE_READ_ADAPTER_MAPPING.md`
 - `docs/TASK_57_SUPABASE_RPC_MILESTONE_LOCK.md`
 
-Supabase task history:
+Supabase task history kept in `docs/`:
 
-- `docs/TASK_32_READ_ADAPTER_PLAN.md`
-- `docs/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md`
-- `docs/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md`
-- `docs/TASK_38_SUPABASE_ACTIVATION_GATE_PLAN.md`
-- `docs/TASK_40_CLIENT_LIST_ACTIVATION_SMOKE_TEST_PLAN.md`
-- `docs/TASK_46_CLIENT_SEED_SQL.md`
 - `docs/TASK_48_RLS_READ_POLICY_PLAN.md`
 - `docs/TASK_49_CLIENT_LIST_READ_SURFACE_SPEC.md`
 - `docs/TASK_50_CLIENT_LIST_RPC_ADAPTER_PLAN.md`
 - `docs/TASK_53_CLIENT_LIST_RPC_SQL.md`
 - `docs/TASK_55_RLS_CLEANUP_AND_PRODUCTION_ORDER.md`
+
+Archived Supabase task history:
+
+- `docs/archive/tasks/TASK_32_READ_ADAPTER_PLAN.md`
+- `docs/archive/tasks/TASK_34_CLIENT_SUMMARY_ASSEMBLY_PLAN.md`
+- `docs/archive/tasks/TASK_35_SUPABASE_CLIENT_LIST_REPOSITORY_PLAN.md`
+- `docs/archive/tasks/TASK_38_SUPABASE_ACTIVATION_GATE_PLAN.md`
+- `docs/archive/tasks/TASK_40_CLIENT_LIST_ACTIVATION_SMOKE_TEST_PLAN.md`
+- `docs/archive/tasks/TASK_46_CLIENT_SEED_SQL.md`
 
 Read old Supabase TASK files only when changing ClientList RPC behavior, RLS policy plans, SQL drafts, or Supabase activation boundaries.
 
@@ -79,16 +82,19 @@ Current useful Ads baseline:
 - `docs/TASK_68_ADS_SHEETS_CONFIG_AND_CREDENTIALS_BOUNDARY.md`
 - `docs/TASK_80_ADS_SHEETS_READER_FACTORY_WIRING.md`
 
-Ads task history:
+Ads task history kept in `docs/`:
 
-- `docs/TASK_60_ADS_SCREEN_STRUCTURE_PLAN.md`
-- `docs/TASK_62_ADS_GOOGLE_SHEETS_CONNECTOR_PLAN.md`
 - `docs/TASK_73_ADS_SHEETS_SERVER_BOUNDARY_PLAN.md`
 - `docs/TASK_75_ADS_LOCAL_SHEETS_READER_PLAN.md`
 - `docs/TASK_76_GITIGNORE_CREDENTIALS_HARDENING.md`
 - `docs/TASK_77_LOCAL_CREDENTIAL_PATH_VALIDATION.md`
 - `docs/TASK_78_ADS_SHEETS_ACTIVATION_ENV_BOUNDARY.md`
 - `docs/TASK_79_ADS_SHEETS_READER_ACTIVATION_WIRING.md`
+
+Archived Ads task history:
+
+- `docs/archive/tasks/TASK_60_ADS_SCREEN_STRUCTURE_PLAN.md`
+- `docs/archive/tasks/TASK_62_ADS_GOOGLE_SHEETS_CONNECTOR_PLAN.md`
 
 Read old Ads TASK files only when changing Ads metrics, Google Sheets reader activation, credential safety, or Ads mock pipeline behavior.
 
@@ -105,18 +111,18 @@ Current useful Drive and deployment baseline:
 - `docs/TASK_99_VERCEL_ROUTE_BASELINE_AND_TEST_CONVENTION.md`
 - `docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md`
 
-Drive/RAG planning history:
+Archived Drive/RAG planning history:
 
-- `docs/TASK_90_GOOGLE_DRIVE_API_SYNC_ARCHITECTURE.md`
-- `docs/TASK_91_DRIVE_METADATA_SCHEMA_PLAN.md`
-- `docs/TASK_92_DRIVE_METADATA_SCHEMA_SQL_DRAFT.sql`
-- `docs/TASK_93_DRIVE_BACKEND_ADAPTER_PLAN.md`
+- `docs/archive/tasks/TASK_90_GOOGLE_DRIVE_API_SYNC_ARCHITECTURE.md`
+- `docs/archive/tasks/TASK_91_DRIVE_METADATA_SCHEMA_PLAN.md`
+- `docs/archive/tasks/TASK_92_DRIVE_METADATA_SCHEMA_SQL_DRAFT.sql`
+- `docs/archive/tasks/TASK_93_DRIVE_BACKEND_ADAPTER_PLAN.md`
 
 Read old Drive/RAG TASK files only when changing Drive metadata planning, Drive backend boundaries, route contracts, or future RAG readiness. They do not authorize actual Google Drive API, embedding, vector, or chatbot implementation.
 
 ## TASK Documents Are Work History
 
-`docs/TASK_*` files are task-level records. They are useful for audit and context, but they should not all be treated as active policy.
+`docs/TASK_*` and `docs/archive/tasks/TASK_*` files are task-level records. They are useful for audit and context, but they should not all be treated as active policy.
 
 Current policy order:
 
@@ -157,9 +163,9 @@ Suggested future archive location:
 docs/archive/tasks/
 ```
 
-## Current Archive Review
+## Current Archive State
 
-TASK-103 reviewed archive candidates without moving files.
+TASK-103 reviewed archive candidates without moving files. A later docs cleanup created `docs/archive/tasks/` and moved clearly historical task artifacts there.
 
 Keep in place for now:
 
@@ -173,13 +179,13 @@ Keep in place for now:
 
 These are recent Drive, route, and deployment boundary documents and are still directly relevant to future `/api/drive/*` work.
 
-Do not move yet, but likely archive candidates after a dedicated move task:
+Moved to `docs/archive/tasks/`:
 
-- early Supabase planning TASK files before `docs/TASK_57_SUPABASE_RPC_MILESTONE_LOCK.md`
-- early Ads planning TASK files before `docs/TASK_80_ADS_SHEETS_READER_FACTORY_WIRING.md`
-- Drive planning TASK files `docs/TASK_90_GOOGLE_DRIVE_API_SYNC_ARCHITECTURE.md` through `docs/TASK_93_DRIVE_BACKEND_ADAPTER_PLAN.md` if their durable rules stay covered by TASK-94 through TASK-100 and this index
+- early Supabase planning TASK files before `docs/TASK_57_SUPABASE_RPC_MILESTONE_LOCK.md` that were absorbed by HANDOFF, mapping docs, or later RPC baselines
+- early Ads screen and connector planning docs absorbed by the current Ads baseline and later reader boundary docs
+- Drive planning TASK files `docs/archive/tasks/TASK_90_GOOGLE_DRIVE_API_SYNC_ARCHITECTURE.md` through `docs/archive/tasks/TASK_93_DRIVE_BACKEND_ADAPTER_PLAN.md`
 
-Before moving any candidate, update links in `README.md`, `docs/HANDOFF.md`, and this index if needed.
+Do not archive newer Drive/API route boundary docs `TASK_94` through `TASK_100` yet.
 
 ## New Document Rules
 
@@ -194,11 +200,11 @@ Create a new TASK document only when:
 
 For future Drive/API work:
 
-- do not create `/api/drive/*` route files until the approved route task
+- do not add actual Google Drive API-backed route behavior until an approved route task
 - do not add Google Drive API packages or credentials in docs-only tasks
 - keep route/API work separate from embedding/vector/RAG answer work
 - keep runtime activation separate from planning documents
 
 ## Next Maintenance Step
 
-If docs sprawl still blocks work, run a separate TASK-104 to create `docs/archive/tasks/` and move only the clearly historical TASK files identified above without changing their contents.
+Continue TASK-107 from the current Drive/API boundary. If docs sprawl grows again, run a separate cleanup task and move only clearly historical files after checking references.
