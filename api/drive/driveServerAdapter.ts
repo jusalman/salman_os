@@ -26,6 +26,8 @@ export type DriveServerAdapterSelection =
       response: DriveBackendErrorResponse
     }
 
+export type DriveServerAdapterInput = DriveServerAdapter | DriveServerAdapterSelection
+
 export const DRIVE_SERVER_ADAPTER_MODE_KEY = 'DRIVE_SERVER_ADAPTER_MODE'
 
 export const fakeDriveServerAdapter: DriveServerAdapter = driveBackendFakeClient
@@ -83,8 +85,38 @@ export async function handleDriveServerRoute(
   return handleDriveRouteHarness(request, adapter)
 }
 
+export async function handleDriveServerRouteWithAdapterSelection(
+  request: DriveRouteHandlerHarnessRequest,
+  selection: DriveServerAdapterSelection,
+): Promise<DriveBackendRouteResponse> {
+  if (!selection.ok) {
+    return selection.response
+  }
+
+  return handleDriveServerRoute(request, selection.adapter)
+}
+
+export async function handleDriveServerRouteWithAdapterInput(
+  request: DriveRouteHandlerHarnessRequest,
+  input?: DriveServerAdapterInput,
+): Promise<DriveBackendRouteResponse> {
+  if (input === undefined) {
+    return handleDriveServerRoute(request)
+  }
+
+  if (isDriveServerAdapterSelection(input)) {
+    return handleDriveServerRouteWithAdapterSelection(request, input)
+  }
+
+  return handleDriveServerRoute(request, input)
+}
+
 function hasForbiddenPublicDriveKey(envLike: DriveServerAdapterEnvLike): boolean {
   return Object.keys(envLike).some((key) => /^VITE_(GOOGLE|DRIVE)(_|$)/u.test(key))
+}
+
+function isDriveServerAdapterSelection(input: DriveServerAdapterInput): input is DriveServerAdapterSelection {
+  return 'ok' in input
 }
 
 function createAdapterSelectionRejectedResponse(): DriveBackendErrorResponse {
