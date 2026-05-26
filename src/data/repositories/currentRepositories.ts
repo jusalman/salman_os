@@ -1,6 +1,7 @@
 import {
   clientDetailMockRepository,
   clientListMockRepository,
+  driveFileMockRepository,
   smartOperationViewsMockRepository,
 } from '../adapters/mock'
 import {
@@ -14,18 +15,21 @@ import { selectRepositories, type RepositorySet } from './repositorySelection'
 const mockRepositories: RepositorySet = {
   clientListRepository: clientListMockRepository,
   clientDetailRepository: clientDetailMockRepository,
+  driveFileRepository: driveFileMockRepository,
   smartOperationViewsRepository: smartOperationViewsMockRepository,
 }
 
 const supabasePlaceholderRepositories: RepositorySet = {
   clientListRepository: clientListSupabasePlaceholderRepository,
   clientDetailRepository: clientDetailSupabasePlaceholderRepository,
+  driveFileRepository: driveFileMockRepository,
   smartOperationViewsRepository: smartOperationViewsSupabasePlaceholderRepository,
 }
 
 const supabaseClientListRepositories: RepositorySet = {
   clientListRepository: createLazySupabaseClientListRepository(),
   clientDetailRepository: clientDetailSupabasePlaceholderRepository,
+  driveFileRepository: driveFileMockRepository,
   smartOperationViewsRepository: smartOperationViewsSupabasePlaceholderRepository,
 }
 
@@ -68,5 +72,6 @@ function createLazySupabaseClientListRepository(): ClientListRepository {
 export const {
   clientListRepository,
   clientDetailRepository,
+  driveFileRepository,
   smartOperationViewsRepository,
 } = currentRepositories

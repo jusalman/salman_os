@@ -1,5 +1,6 @@
 import type { ClientDetailRepository } from './clientDetailRepository.ts'
 import type { ClientListRepository } from './clientListRepository.ts'
+import type { DriveFileRepository } from './driveFileRepository.ts'
 import type { SmartOperationViewsRepository } from './smartOperationViewsRepository.ts'
 
 export type DataSource = 'mock' | 'supabase'
@@ -8,6 +9,7 @@ export type SupabaseReadActivation = 'off' | 'client_list'
 export type RepositorySet = {
   clientListRepository: ClientListRepository
   clientDetailRepository: ClientDetailRepository
+  driveFileRepository: DriveFileRepository
   smartOperationViewsRepository: SmartOperationViewsRepository
 }
 

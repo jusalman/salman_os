@@ -183,6 +183,22 @@ function createRepositorySet(label: string): RepositorySet {
         return undefined
       },
     },
+    driveFileRepository: {
+      async listDriveFiles() {
+        return {
+          clientId: label,
+          categories: [],
+          files: [],
+          diagnostics: [],
+        }
+      },
+      async getDriveFileById() {
+        return undefined
+      },
+      async listDriveFileCategories() {
+        return []
+      },
+    },
     smartOperationViewsRepository: {
       async getSmartOperationViews() {
         return {

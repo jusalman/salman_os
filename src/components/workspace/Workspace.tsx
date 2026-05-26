@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useClientDriveFiles } from '../../hooks/useClientDriveFiles'
 import type { WorkspaceView } from '../../types'
 import { AdsOperationsPlaceholder } from './AdsOperationsPlaceholder'
 import { BusinessMoneyPanel } from './BusinessMoneyPanel'
@@ -29,6 +30,12 @@ export function Workspace({
   const [activeSection, setActiveSection] = useState<WorkspaceSection>('clients')
   const { listView, detailView } = workspaceView
   const { header, panels } = detailView
+  const {
+    driveFilesResult,
+    loading: driveFilesLoading,
+    error: driveFilesError,
+    reload: reloadDriveFiles,
+  } = useClientDriveFiles(header.id)
   const attentionCount = listView.items.filter((client) => client.status === 'attention').length
   const openTaskCount = listView.items.reduce((total, client) => total + client.openTaskCount, 0)
   const upcomingEventCount = listView.items.reduce(
@@ -40,7 +47,13 @@ export function Workspace({
     <TasksPanel key="tasks" tasks={panels.tasks} />,
     <InternalSchedulePanel key="schedule" scheduleItems={panels.schedule} />,
     <BusinessMoneyPanel key="money" moneyItems={panels.money} />,
-    <FilesPanel key="files" files={panels.files} />,
+    <FilesPanel
+      key="files"
+      driveResult={driveFilesResult}
+      loading={driveFilesLoading}
+      error={driveFilesError}
+      onReload={() => void reloadDriveFiles()}
+    />,
     <LinksPanel key="links" links={panels.links} />,
     <OperationLogsPanel key="logs" logs={panels.logs} />,
   ]
