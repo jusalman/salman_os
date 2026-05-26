@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "drive:smoke:gate": "node scripts/driveLocalSmokeGate.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
+    "googleapis": "^172.0.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

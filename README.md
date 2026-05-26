@@ -17,12 +17,12 @@ Included in the current v1 baseline:
 - minimal mock `/api/drive/*` route boundary backed by the existing fake handler
 - server-owned Drive adapter interface with a fake adapter default
 - inactive service-account-first Drive adapter config boundary for future server-only work
+- server-only `googleapis` client factory and local smoke gate command
 
 Not implemented:
 
 - actual Google Drive API integration
 - frontend runtime `fetch('/api/drive/*')` wiring
-- `googleapis`
 - embedding/vector/RAG answer flow
 - chatbot UI
 - Google Calendar integration
@@ -48,6 +48,16 @@ git status --short
 ```
 
 The expected production build output is `dist`.
+
+## Drive Local Smoke Gate
+
+`googleapis` is installed only for server-owned Drive work. The smoke gate checks required setting names without running a Drive API request:
+
+```text
+npm.cmd run drive:smoke:gate
+```
+
+Run any actual Drive smoke only after explicit approval. Do not print credential paths, token values, private keys, or `.env.local` contents.
 
 ## Environment Boundary
 
@@ -82,7 +92,7 @@ Current deployment baseline:
 - committed `api/drive/*` files are mock-only route boundary adapters
 - no committed `server/`, `src/api/`, or `src/server` route source
 
-The current mock `/api/drive/*` files use only the shared Drive contract, request validator, response safety checker, and fake handler. Actual Google Drive API routes and frontend runtime activation still require separate approved tasks.
+The current mock `/api/drive/*` files use only the shared Drive contract, request validator, response safety checker, and fake handler. A server-only Google Drive client factory exists, but actual Google Drive API routes and frontend runtime activation still require separate approved tasks.
 
 Actual Google Drive adapter work is service-account-first but still inactive. It remains blocked by the readiness checklist, package gate, and env/secret review gate in [TASK-100 deployment baseline](docs/TASK_100_SALMAN_OS_DEPLOYMENT_BASELINE.md).
 

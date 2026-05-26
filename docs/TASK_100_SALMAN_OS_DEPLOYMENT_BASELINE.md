@@ -12,6 +12,8 @@ TASK-107 update: actual Google Drive adapter work is blocked behind the readines
 
 TASK-111 update: actual Google Drive adapter preparation is service-account-first for SALMAN OS v1 shared internal Drive folders. OAuth remains deferred until user-owned Drive access, account-level consent, or Picker-style selection is required. This update adds config validation boundaries only; it does not add `googleapis`, read credentials, read `.env.local`, run a Drive API smoke test, add `.env.example` Google entries, or activate frontend runtime fetch wiring.
 
+TASK-112 update: `googleapis` is installed for server-only Drive work and isolated behind `api/drive/googleDriveClientFactory.ts`. A local smoke gate command exists, but it checks setting names only and does not run a Drive API request. Actual credential file reads, `.env.local` reads, Drive API smoke execution, `.env.example` Google entries, and frontend runtime fetch wiring remain blocked until a separate approved task.
+
 ## Current Deployment Structure
 
 Current committed structure:
@@ -26,6 +28,8 @@ Current committed structure:
 - `vite.config.ts`: React plugin only
 - `vercel.json`: not present
 - `api/`: present only for mock Drive route boundary adapters added in TASK-105
+- `api/drive/googleDriveClientFactory.ts`: server-only Google Drive client factory; not imported by `src/`
+- `scripts/driveLocalSmokeGate.ts`: local smoke prerequisite gate; does not call Google Drive API
 - `server/`: not present
 - `src/api/`: not present
 - `src/server/`: not present
@@ -95,6 +99,7 @@ Current Vercel baseline:
 - deploy as a Vite static frontend
 - build output is `dist`
 - mock `api/drive/*` route boundary adapters may exist but must call only the fake handler until a separate actual API task
+- `googleapis` may exist in dependencies but must remain server-only and out of `src/`
 - do not wire frontend `fetch('/api/drive/*')` until a separate runtime activation task
 
 Future server routes must not be introduced in the same task as a real Google Drive adapter.
@@ -178,7 +183,7 @@ Do not add an actual Google Drive adapter until all of these are true:
 - response safety checks run after every adapter response
 - the default adapter remains `driveBackendFakeClient` until a separate activation task
 - frontend UI still does not call `fetch('/api/drive/*')` by default
-- `googleapis` package addition is reviewed in the same task that needs it, not before
+- `googleapis` package import remains isolated to server-owned Drive factory code
 - the chosen auth mode is reviewed before implementation
 - local development and Vercel deployment secret handling are documented for that auth mode
 - route tests cover adapter injection, invalid request blocking, unsafe response blocking, archived default exclusion, and no frontend secret exposure
@@ -193,7 +198,8 @@ Current decision:
 
 - use service account first for SALMAN OS v1 shared internal Drive folder reads
 - defer OAuth until user-owned Drive access, account-level consent, or Picker-style selection is required
-- keep `googleapis` out until the first approved local-only Drive API smoke task
+- keep `googleapis` installed but inactive until the first approved local-only Drive API smoke task
+- keep `googleapis` out of `src/` and any frontend bundle path
 - do not add Google Drive env names to `.env.example` yet
 - do not read `.env.local` or any credential file during readiness work
 - do not add `VITE_GOOGLE_*`, `VITE_DRIVE_*`, or any Vite credential/token/secret env
@@ -207,6 +213,14 @@ Approved server-only env name candidates for the next local-only implementation 
 - `GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID`
 
 These names are candidates only. They must not be added to `.env.example`, Vite env, docs with real values, tests with real values, or committed files before the local-only actual adapter smoke task is approved.
+
+Local smoke gate:
+
+```text
+npm.cmd run drive:smoke:gate
+```
+
+The gate reports only setting names and does not perform a Drive API request. Actual Drive smoke execution requires explicit approval after setting handling is reviewed.
 
 Service account requirements to prove before activation:
 

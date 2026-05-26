@@ -156,12 +156,12 @@ test('actual Google Drive adapter skeleton does not import googleapis or read ru
   assert.equal(source.includes('import.meta.env'), false)
 })
 
-test('actual Google Drive package gate remains closed before local smoke task', async () => {
+test('actual Google Drive package gate is open only for server factory work', async () => {
   const packageJson = await readFile(new URL('../../package.json', import.meta.url), 'utf8')
   const packageLock = await readFile(new URL('../../package-lock.json', import.meta.url), 'utf8')
 
-  assert.equal(packageJson.includes('googleapis'), false)
-  assert.equal(packageLock.includes('googleapis'), false)
+  assert.equal(packageJson.includes('googleapis'), true)
+  assert.equal(packageLock.includes('googleapis'), true)
 })
 
 test('default mock Drive route still uses the fake adapter', async () => {
