@@ -1,5 +1,5 @@
-import { handleDriveRouteHarness } from '../../src/data/adapters/mock/driveRouteFakeHandler.ts'
 import type { DriveBackendRouteResponse } from '../../src/domain/driveRouteValidation.ts'
+import { handleDriveServerRoute, type DriveServerAdapter } from './driveServerAdapter.ts'
 
 type MockDriveApiRequest = {
   body?: unknown
@@ -14,11 +14,15 @@ type MockDriveApiResponse = {
 
 export async function handleMockDriveCategoriesRoute(
   input: unknown,
+  adapter?: DriveServerAdapter,
 ): Promise<DriveBackendRouteResponse> {
-  return handleDriveRouteHarness({
-    operation: 'list_categories',
-    body: input,
-  })
+  return handleDriveServerRoute(
+    {
+      operation: 'list_categories',
+      body: input,
+    },
+    adapter,
+  )
 }
 
 export default async function driveCategoriesRoute(

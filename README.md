@@ -15,6 +15,7 @@ Included in the current v1 baseline:
 - Drive-style file hub using sanitized mock metadata
 - shared Drive backend contract, fake backend client, pure validator, and fake handler harness
 - minimal mock `/api/drive/*` route boundary backed by the existing fake handler
+- server-owned Drive adapter interface with a fake adapter default
 
 Not implemented:
 
