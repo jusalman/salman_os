@@ -2,7 +2,7 @@
 
 ## Current Status
 
-- Resume note: When the user says to continue next week, start from TASK-114 or explicitly approve TASK-113 Drive list smoke execution. TASK-113 ran only `npm.cmd run drive:smoke:gate`, which reported missing setting names, then prepared `npm.cmd run drive:smoke:list` without executing it. Actual Drive API calls, credential reads, `.env.local` reads, `.env.example` Google entries, frontend fetch wiring, Supabase schema/RLS/RPC changes, embeddings, vectors, and chatbot UI remain out of scope. Keep README/HANDOFF/AGENTS/README_INDEX as the always-read entry points.
+- Resume note: When the user says to continue next week, start from TASK-115 or rerun TASK-114 only after providing the required server-only Drive smoke settings in the shell environment. TASK-114 was approved but stopped at `npm.cmd run drive:smoke:gate` because required setting names were missing, so `npm.cmd run drive:smoke:list` was not executed. Actual Drive API calls, credential reads, `.env.local` reads, `.env.example` Google entries, frontend fetch wiring, Supabase schema/RLS/RPC changes, embeddings, vectors, and chatbot UI remain out of scope. Keep README/HANDOFF/AGENTS/README_INDEX as the always-read entry points.
 - Current task state: TASK-44 DESIGN.md inspired premium Salman OS theme applied to login and empty state.
 - Current task state: TASK-45 removed Supabase CLI temp files from git tracking and ignored `supabase/.temp/`.
 - Current task state: TASK-46 prepared review-only minimal ClientList seed SQL for one test client.
@@ -77,7 +77,8 @@
 - Current task state: TASK-111 upgraded the inactive actual Drive adapter skeleton with service-account-first config types, injected envLike mapping, config validation, and a config-backed unavailable adapter. `googleapis` was not added, no credential/env file was read, `.env.example` stayed unchanged, and default `/api/drive/*` behavior remains fake.
 - Current task state: TASK-112 installed `googleapis`, added `api/drive/googleDriveClientFactory.ts` as a server-only service account client factory with injected dependencies, added `api/drive/googleDriveLocalSmokeGate.ts` plus `npm.cmd run drive:smoke:gate` for prerequisite checks, and kept actual Drive API smoke execution, credential file reads, `.env.local` reads, `.env.example` Google entries, frontend fetch wiring, and default route activation out of scope.
 - Current task state: TASK-113 ran the Drive smoke preflight gate only; it reported missing setting names for `DRIVE_SERVER_ADAPTER_MODE`, `GOOGLE_DRIVE_AUTH_MODE`, `GOOGLE_DRIVE_CREDENTIAL_PATH`, and `GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID`. Added `api/drive/googleDriveListSmoke.ts` plus `scripts/driveListSmoke.ts` and `npm.cmd run drive:smoke:list` as an approval-only local list smoke runner that prints sanitized counts only. The actual list smoke was not run.
-- Current write phase: TASK-113 stopped at the required preflight/prepare point after verification.
+- Current task state: TASK-114 received approval to run the local-only Drive list smoke, but the preflight gate failed because the shell environment did not provide `DRIVE_SERVER_ADAPTER_MODE`, `GOOGLE_DRIVE_AUTH_MODE`, `GOOGLE_DRIVE_CREDENTIAL_PATH`, or `GOOGLE_DRIVE_ALLOWED_ROOT_FOLDER_ID`. The actual list smoke command was not run, no Drive API request was made, and no credential path/value, folder ID, file ID, file name, raw Google response, or `.env.local` content was printed.
+- Current write phase: TASK-114 stopped at the gate failure after verification.
 - TASK-96 changed files: `src/domain/driveBackendContract.ts`, `src/data/adapters/mock/driveBackendFakeClient.ts`, `tests/drive/driveBackendContract.test.ts`, `tests/drive/driveBackendFakeClient.test.ts`, `docs/TASK_96_DRIVE_BACKEND_CONTRACT_AND_FAKE_CLIENT.md`, `docs/HANDOFF.md`.
 - TASK-96 verification: `node --test`, `npm.cmd run lint`, and `npm.cmd run build` passed.
 - TASK-97 changed files: `src/domain/driveRouteValidation.ts`, `src/data/adapters/mock/driveRouteFakeHandler.ts`, `tests/drive/driveRouteValidation.test.ts`, `tests/drive/driveRouteFakeHandler.test.ts`, `docs/TASK_97_DRIVE_ROUTE_VALIDATOR_HARNESS_DECISION.md`, `docs/HANDOFF.md`.
@@ -108,7 +109,7 @@
 - TASK-108 verification: `node --test` passed with 121 tests, `npm.cmd run lint` passed, and `npm.cmd run build` passed.
 - TASK-109 changed files: `api/drive/driveServerAdapter.ts`, `tests/api/driveServerAdapterSelection.test.ts`, `docs/HANDOFF.md`.
 - TASK-109 verification: `node --test` passed with 128 tests, `npm.cmd run lint` passed, and `npm.cmd run build` passed.
-- Next task: TASK-114 either explicitly approve `npm.cmd run drive:smoke:list` in a configured local environment, or continue implementation without actual Drive API execution.
+- Next task: TASK-115 either rerun the approved local Drive list smoke after injecting the required server-only settings into the shell environment, or continue implementation without actual Drive API execution.
 - Supabase schema SQL was manually executed by the user in Supabase SQL Editor.
 - SQL Editor result: `Success. No rows returned`.
 - Table Editor confirmed the 8 core tables: `client_events`, `client_files`, `client_links`, `client_members`, `client_money_items`, `client_tasks`, `clients`, `operation_logs`.
