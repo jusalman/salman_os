@@ -42,6 +42,6 @@
 - Google Drive는 원본 파일 저장소이며, Supabase는 운영 데이터 기준이라는 관계를 유지한다.
 - 캘린더라는 표현을 쓰더라도 v1에서는 Supabase 기반 내부 일정 관리임을 명시한다.
 - 상세 Codex 운영 지침은 `docs/CODEX_OPERATING_PROTOCOL.md`를 따른다.
-- 현재 진행 상태는 TASK-17 완료이며, 다음 작업은 TASK-18 Supabase schema SQL 초안 작성이다.
+- 현재 진행 상태와 다음 작업은 `docs/HANDOFF.md` 상단 Current Status를 기준으로 한다.
 - 사용자 승인 전 위험 작업, 범위 확장, 대규모 구조 변경을 하지 않는다.
 - 실제 Supabase 연결, 실제 `.env` 생성, 실제 URL/KEY 입력, SQL 실행은 하지 않는다.
