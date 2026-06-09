@@ -9,7 +9,6 @@ import type {
 } from '../../types'
 import { AdsOperationsPlaceholder } from './AdsOperationsPlaceholder'
 import { BusinessMoneyPanel } from './BusinessMoneyPanel'
-import { ClientDetailHeaderSection } from './ClientDetailHeaderSection'
 import { ClientTabs } from './ClientTabs'
 import { FilesPanel } from './FilesPanel'
 import { InternalSchedulePanel } from './InternalSchedulePanel'
@@ -25,17 +24,38 @@ type WorkspaceProps = {
   onSelectClient: (clientId: string) => void
 }
 
-type DetailTab = 'overview' | 'tasks' | 'schedule' | 'files' | 'ads' | 'money' | 'links' | 'logs'
+type DetailTab =
+  | 'overview'
+  | 'tasks'
+  | 'schedule'
+  | 'files'
+  | 'ads'
+  | 'contracts'
+  | 'money'
+  | 'links'
+  | 'logs'
 
 const detailTabs: { id: DetailTab; label: string }[] = [
   { id: 'overview', label: '개요' },
   { id: 'tasks', label: '업무' },
   { id: 'schedule', label: '일정' },
   { id: 'files', label: '자료실' },
-  { id: 'ads', label: '광고운영' },
-  { id: 'money', label: '비즈머니' },
+  { id: 'ads', label: '광고' },
+  { id: 'contracts', label: '견적/계약' },
+  { id: 'money', label: '정산/비즈머니' },
   { id: 'links', label: '링크' },
   { id: 'logs', label: '로그' },
+]
+
+const sidebarItems = [
+  '대시보드',
+  '고객사 관리',
+  '업무/일정',
+  '광고 운영',
+  '견적/계약/정산',
+  '지식저장소',
+  '리포트',
+  '설정',
 ]
 
 export function Workspace({
@@ -45,6 +65,7 @@ export function Workspace({
   onSelectClient,
 }: WorkspaceProps) {
   const [activeDetailTab, setActiveDetailTab] = useState<DetailTab>('overview')
+  const [preparedNotice, setPreparedNotice] = useState('')
   const { listView, detailView } = workspaceView
   const selectedClientDetailId = detailView?.header.id ?? ''
   const {
@@ -64,12 +85,18 @@ export function Workspace({
 
   function handleOpenClient(clientId: string) {
     setActiveDetailTab('overview')
+    setPreparedNotice('')
     onSelectClient(clientId)
   }
 
   function handleBackToList() {
     setActiveDetailTab('overview')
+    setPreparedNotice('')
     onSelectClient('')
+  }
+
+  function handlePreparedAction(actionName: string) {
+    setPreparedNotice(`${actionName} 기능은 현재 mock UI로만 준비되어 있습니다.`)
   }
 
   return (
@@ -79,35 +106,33 @@ export function Workspace({
           <p className="eyebrow">SALMAN OS</p>
           <h2>Digital HQ</h2>
           <p className="sidebar-copy">
-            <strong>{viewerName}</strong> 님의 커맨드센터
+            <strong>{viewerName}</strong> 님의 운영 워크스페이스
           </p>
         </div>
 
-        <nav className="workspace-nav" aria-label="SALMAN OS 주요 화면">
-          <button
-            type="button"
-            className={isDetailMode ? 'workspace-nav-button' : 'workspace-nav-button active'}
-            onClick={handleBackToList}
-          >
-            <span>고객사 목록</span>
-            <small>전체 운영 현황</small>
-          </button>
-          {detailView ? (
+        <nav className="workspace-nav" aria-label="SALMAN OS 주요 메뉴">
+          {sidebarItems.map((item) => (
             <button
+              key={item}
               type="button"
-              className={isDetailMode ? 'workspace-nav-button active' : 'workspace-nav-button'}
-              onClick={() => handleOpenClient(detailView.header.id)}
+              className={item === '고객사 관리' ? 'workspace-nav-button active' : 'workspace-nav-button'}
+              onClick={
+                item === '고객사 관리'
+                  ? handleBackToList
+                  : () => handlePreparedAction(item)
+              }
             >
-              <span>고객사 상세</span>
-              <small>{detailView.header.name}</small>
+              <span>{item}</span>
             </button>
-          ) : null}
+          ))}
         </nav>
 
         <SmartOperationViewsPanel data={workspaceView.smartViews} />
       </aside>
 
       <div className="main-pane">
+        {preparedNotice ? <p className="prepared-notice">{preparedNotice}</p> : null}
+
         {isDetailMode && detailView ? (
           <ClientDetailScreen
             detailView={detailView}
@@ -129,6 +154,7 @@ export function Workspace({
             workspaceView={workspaceView}
             selectedClientId={selectedClientId}
             onSelectClient={handleOpenClient}
+            onPreparedAction={handlePreparedAction}
           />
         )}
       </div>
@@ -145,6 +171,7 @@ type ClientListScreenProps = {
   workspaceView: WorkspaceView
   selectedClientId: string
   onSelectClient: (clientId: string) => void
+  onPreparedAction: (actionName: string) => void
 }
 
 function ClientListScreen({
@@ -156,22 +183,23 @@ function ClientListScreen({
   workspaceView,
   selectedClientId,
   onSelectClient,
+  onPreparedAction,
 }: ClientListScreenProps) {
   return (
     <section className="client-list-screen">
-      <header className="topbar list-hero">
+      <header className="crm-page-header">
         <div>
-          <p className="eyebrow">Client Control Center</p>
-          <h1>고객사 운영센터</h1>
-          <p className="intro">
-            먼저 고객사를 선택한 뒤 상세 화면에서 업무, 일정, 자료실, 비즈머니, 링크, 로그를
-            탭으로 확인합니다.
-          </p>
+          <p className="eyebrow">Client Management</p>
+          <h1>고객 관리 (CRM)</h1>
+          <p className="intro">고객사 정보 통합 관리 및 운영 데이터베이스</p>
         </div>
-        <div className="topbar-notes">
-          <span>내부 직원용</span>
-          <span>mock-first 운영 데이터</span>
-        </div>
+        <button
+          type="button"
+          className="primary-action"
+          onClick={() => onPreparedAction('클라이언트 등록')}
+        >
+          + 클라이언트 등록
+        </button>
       </header>
 
       <section className="ops-overview" aria-label="운영 요약">
@@ -182,13 +210,27 @@ function ClientListScreen({
         <OverviewMetric label="비즈머니 이슈" value={moneyWarningCount} tone="danger" />
       </section>
 
-      <div className="client-list-heading">
-        <div>
-          <p className="eyebrow">Client Directory</p>
-          <h2>고객사 목록</h2>
-        </div>
-        <span>카드를 클릭하면 상세 화면으로 이동합니다.</span>
-      </div>
+      <section className="crm-filter-bar" aria-label="고객사 검색 및 필터">
+        <label>
+          <span>검색</span>
+          <input type="search" placeholder="회사명 또는 담당자 검색" disabled />
+        </label>
+        <label>
+          <span>상태</span>
+          <select disabled defaultValue="all">
+            <option value="all">전체 상태</option>
+          </select>
+        </label>
+        <label>
+          <span>담당자</span>
+          <select disabled defaultValue="all">
+            <option value="all">전체 담당자</option>
+          </select>
+        </label>
+        <button type="button" className="secondary-action" disabled>
+          필터 준비 중
+        </button>
+      </section>
 
       <ClientTabs
         listView={workspaceView.listView}
@@ -224,7 +266,7 @@ function ClientDetailScreen({
 
   return (
     <section className="client-detail-screen">
-      <header className="topbar detail-hero">
+      <header className="crm-page-header detail-heading">
         <div>
           <button type="button" className="back-button" onClick={onBack}>
             고객사 목록
@@ -239,8 +281,6 @@ function ClientDetailScreen({
           <span>최근 업데이트 {header.updatedAt}</span>
         </div>
       </header>
-
-      <ClientDetailHeaderSection client={header} />
 
       <nav className="detail-tabs" aria-label="고객사 상세 탭">
         {detailTabs.map((tab) => (
@@ -277,6 +317,8 @@ function ClientDetailScreen({
           />
         ) : activeDetailTab === 'ads' ? (
           <AdsOperationsPlaceholder />
+        ) : activeDetailTab === 'contracts' ? (
+          <ContractsPlaceholder />
         ) : activeDetailTab === 'money' ? (
           <BusinessMoneyPanel moneyItems={panels.money} />
         ) : activeDetailTab === 'links' ? (
@@ -319,7 +361,7 @@ function ClientOverview({
           <div className="section-head">
             <div>
               <h3>최근 자료</h3>
-              <p>고객사 상세 자료실에서 전체 구조를 확인합니다.</p>
+              <p>자료실 탭에서 폴더, 파일, 상세 정보를 확인합니다.</p>
             </div>
           </div>
           <PreviewList
@@ -350,6 +392,23 @@ function ClientOverview({
         </article>
       </section>
     </div>
+  )
+}
+
+function ContractsPlaceholder() {
+  return (
+    <section className="panel">
+      <div className="section-head">
+        <div>
+          <h3>견적/계약</h3>
+          <p>견적서, 계약 상태, 정산 연결 정보는 후속 승인 작업에서 연결할 영역입니다.</p>
+        </div>
+      </div>
+      <div className="empty-state">
+        <strong>준비된 관리 영역</strong>
+        <p>현재 v1에서는 실제 계약 생성이나 외부 고객 포털 기능을 실행하지 않습니다.</p>
+      </div>
+    </section>
   )
 }
 
