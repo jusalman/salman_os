@@ -181,6 +181,12 @@ export type ClientLogPanelItem = {
   actor: string
   action: string
   createdAt: string
+  target: string
+  status: 'recorded' | 'check_needed' | 'archived'
+  relatedTaskTitle: string
+  relatedFileName: string
+  relatedScheduleTitle: string
+  note: string
 }
 
 export type SelectedClientDetailPanels = {

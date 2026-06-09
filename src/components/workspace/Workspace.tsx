@@ -15,6 +15,7 @@ import { FilesPanel } from './FilesPanel'
 import { InternalSchedulePanel } from './InternalSchedulePanel'
 import { LinksPanel } from './LinksPanel'
 import { OperationLogsPanel } from './OperationLogsPanel'
+import { resolveCurrentOperatorName } from './operatorRecord'
 import { TasksPanel } from './TasksPanel'
 
 type WorkspaceProps = {
@@ -73,6 +74,7 @@ export function Workspace({
   const [activeSection, setActiveSection] = useState<WorkspaceSection>('dashboard')
   const [activeDetailTab, setActiveDetailTab] = useState<DetailTab>('overview')
   const [preparedNotice, setPreparedNotice] = useState('')
+  const currentOperatorName = resolveCurrentOperatorName(viewerName)
   const { listView, detailView } = workspaceView
   const selectedClientDetailId = detailView?.header.id ?? ''
   const {
@@ -129,7 +131,10 @@ export function Workspace({
           <p className="eyebrow">내부 운영센터</p>
           <h2>SALMAN OS</h2>
           <p className="sidebar-copy">SALMAN Workspace</p>
-          <p className="current-operator">현재 작업자: {viewerName}</p>
+          <p className="current-operator">현재 작업자: {currentOperatorName}</p>
+          <p className="current-operator-note">
+            이 이름은 작업 기록, 수정 이력, 향후 챗봇 대화 로그에 표시됩니다.
+          </p>
         </div>
 
         <nav className="workspace-nav" aria-label="SALMAN OS 주요 메뉴">
@@ -165,6 +170,7 @@ export function Workspace({
           <ClientDetailScreen
             detailView={detailView}
             activeDetailTab={activeDetailTab}
+            currentOperatorName={currentOperatorName}
             driveFilesResult={driveFilesResult}
             driveFilesLoading={driveFilesLoading}
             driveFilesError={driveFilesError}
@@ -514,6 +520,7 @@ function ClientListScreen({
 type ClientDetailScreenProps = {
   detailView: SelectedClientDetailView
   activeDetailTab: DetailTab
+  currentOperatorName: string
   driveFilesResult: ReturnType<typeof useClientDriveFiles>['driveFilesResult']
   driveFilesLoading: boolean
   driveFilesError: string
@@ -525,6 +532,7 @@ type ClientDetailScreenProps = {
 function ClientDetailScreen({
   detailView,
   activeDetailTab,
+  currentOperatorName,
   driveFilesResult,
   driveFilesLoading,
   driveFilesError,
@@ -575,15 +583,20 @@ function ClientDetailScreen({
             recentLogs={panels.logs.slice(0, 3)}
           />
         ) : activeDetailTab === 'tasks' ? (
-          <TasksPanel tasks={panels.tasks} />
+          <TasksPanel tasks={panels.tasks} currentOperatorName={currentOperatorName} />
         ) : activeDetailTab === 'schedule' ? (
-          <InternalSchedulePanel scheduleItems={panels.schedule} clientName={header.name} />
+          <InternalSchedulePanel
+            scheduleItems={panels.schedule}
+            clientName={header.name}
+            currentOperatorName={currentOperatorName}
+          />
         ) : activeDetailTab === 'files' ? (
           <FilesPanel
             driveResult={driveFilesResult}
             loading={driveFilesLoading}
             error={driveFilesError}
             onReload={onReloadDriveFiles}
+            currentOperatorName={currentOperatorName}
           />
         ) : activeDetailTab === 'ads' ? (
           <AdsOperationsPlaceholder />
@@ -594,7 +607,7 @@ function ClientDetailScreen({
         ) : activeDetailTab === 'links' ? (
           <LinksPanel links={panels.links} />
         ) : (
-          <OperationLogsPanel logs={panels.logs} />
+          <OperationLogsPanel logs={panels.logs} currentOperatorName={currentOperatorName} />
         )}
       </section>
     </section>

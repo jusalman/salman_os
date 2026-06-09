@@ -2,12 +2,14 @@ import { useMemo, useState } from 'react'
 import { taskPriorityLabel, taskStatusLabel } from '../../domain/labels'
 import type { ClientTaskPanelItem } from '../../types'
 import { Panel } from '../common/Panel'
+import { createMockOperationLogNotice } from './operatorRecord'
 
 type TasksPanelProps = {
   tasks: ClientTaskPanelItem[]
+  currentOperatorName: string
 }
 
-export function TasksPanel({ tasks }: TasksPanelProps) {
+export function TasksPanel({ tasks, currentOperatorName }: TasksPanelProps) {
   const [selectedTaskId, setSelectedTaskId] = useState('')
   const [notice, setNotice] = useState('')
   const selectedTask = tasks.find((task) => task.id === selectedTaskId) ?? tasks[0] ?? null
@@ -22,7 +24,7 @@ export function TasksPanel({ tasks }: TasksPanelProps) {
   )
 
   function handlePreparedAction(actionName: string) {
-    setNotice(`${actionName} 기능은 현재 mock UI로만 준비되어 있습니다.`)
+    setNotice(createMockOperationLogNotice(actionName, currentOperatorName))
   }
 
   return (
@@ -49,6 +51,7 @@ export function TasksPanel({ tasks }: TasksPanelProps) {
         <div className="ops-state-strip" aria-label="업무 mock-first 상태">
           <span>mock-first 데이터</span>
           <span>쓰기 기능 비활성</span>
+          <span>현재 작업자 {currentOperatorName}</span>
           <span>로딩 완료 후 표시</span>
         </div>
 
@@ -64,7 +67,10 @@ export function TasksPanel({ tasks }: TasksPanelProps) {
         {tasks.length === 0 ? (
           <div className="ops-empty">
             <strong>등록된 업무가 없습니다.</strong>
-            <p>업무 추가는 현재 mock UI로만 준비되어 있습니다.</p>
+            <p>
+              업무 추가는 현재 mock UI로만 준비되어 있으며, 실제 저장 단계에서
+              operation_logs에 작업자 이름과 함께 기록됩니다.
+            </p>
           </div>
         ) : (
           <div className="ops-workbench">
@@ -168,7 +174,10 @@ function TaskDetailPanel({
 
       <div className="ops-log-placeholder">
         <strong>작업 로그</strong>
-        <p>작업 수정 이력과 담당자 변경 로그는 후속 승인 작업에서 연결할 mock 준비 영역입니다.</p>
+        <p>
+          작업 수정 이력과 담당자 변경 로그는 후속 승인 작업에서 현재 작업자 이름과
+          함께 operation_logs에 연결할 mock 준비 영역입니다.
+        </p>
       </div>
 
       <div className="ops-detail-actions">

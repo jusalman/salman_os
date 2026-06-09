@@ -73,5 +73,67 @@ export function projectClientLogPanelItems(client: ClientRecord): ClientLogPanel
     actor: log.actor,
     action: log.action,
     createdAt: log.createdAt,
+    target: resolveLogTarget(log.message),
+    status: resolveLogStatus(log.action, log.message),
+    relatedTaskTitle: resolveRelatedTaskTitle(log.message),
+    relatedFileName: resolveRelatedFileName(log.message),
+    relatedScheduleTitle: resolveRelatedScheduleTitle(log.message),
+    note: `${client.name} 운영 로그입니다. 현재는 mock-first 읽기 모델이며 실제 저장 단계에서 operation_logs 기준으로 확장합니다.`,
   }))
+}
+
+function resolveLogTarget(message: string) {
+  if (message.includes('비즈머니') || message.includes('결제')) {
+    return '정산/비즈머니'
+  }
+
+  if (message.includes('파일') || message.includes('자료') || message.includes('소재')) {
+    return '자료실'
+  }
+
+  if (message.includes('예산안')) {
+    return '견적/계약'
+  }
+
+  if (message.includes('운영 종료') || message.includes('고객사')) {
+    return '고객사 상태'
+  }
+
+  return '운영 기록'
+}
+
+function resolveLogStatus(action: string, message: string): ClientLogPanelItem['status'] {
+  if (action === '보관' || message.includes('보관')) {
+    return 'archived'
+  }
+
+  if (message.includes('확인 필요') || message.includes('오류')) {
+    return 'check_needed'
+  }
+
+  return 'recorded'
+}
+
+function resolveRelatedTaskTitle(message: string) {
+  if (message.includes('진행 업무') || message.includes('업무')) {
+    return '진행 업무 연결 준비'
+  }
+
+  return '연결 업무 없음'
+}
+
+function resolveRelatedFileName(message: string) {
+  if (message.includes('파일') || message.includes('자료') || message.includes('소재')) {
+    return '관련 자료 연결 준비'
+  }
+
+  return '연결 파일 없음'
+}
+
+function resolveRelatedScheduleTitle(message: string) {
+  if (message.includes('오늘')) {
+    return '오늘 확인 일정 연결 준비'
+  }
+
+  return '연결 일정 없음'
 }

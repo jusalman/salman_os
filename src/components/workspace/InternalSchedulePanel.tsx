@@ -3,15 +3,18 @@ import { TODAY } from '../../config/constants'
 import { eventStatusLabel } from '../../domain/labels'
 import type { ClientSchedulePanelItem } from '../../types'
 import { Panel } from '../common/Panel'
+import { createMockOperationLogNotice } from './operatorRecord'
 
 type InternalSchedulePanelProps = {
   scheduleItems: ClientSchedulePanelItem[]
   clientName: string
+  currentOperatorName: string
 }
 
 export function InternalSchedulePanel({
   scheduleItems,
   clientName,
+  currentOperatorName,
 }: InternalSchedulePanelProps) {
   const [selectedEventId, setSelectedEventId] = useState('')
   const [notice, setNotice] = useState('')
@@ -32,7 +35,7 @@ export function InternalSchedulePanel({
   )
 
   function handlePreparedAction(actionName: string) {
-    setNotice(`${actionName} 기능은 현재 mock UI로만 준비되어 있습니다.`)
+    setNotice(createMockOperationLogNotice(actionName, currentOperatorName))
   }
 
   return (
@@ -59,6 +62,7 @@ export function InternalSchedulePanel({
         <div className="ops-state-strip" aria-label="일정 mock-first 상태">
           <span>Supabase 내부 일정 기준</span>
           <span>쓰기 기능 비활성</span>
+          <span>현재 작업자 {currentOperatorName}</span>
           <span>Google Calendar 연동 없음</span>
         </div>
 
@@ -74,7 +78,10 @@ export function InternalSchedulePanel({
         {scheduleItems.length === 0 ? (
           <div className="ops-empty">
             <strong>등록된 일정이 없습니다.</strong>
-            <p>일정 추가는 현재 mock UI로만 준비되어 있습니다.</p>
+            <p>
+              일정 추가는 현재 mock UI로만 준비되어 있으며, 실제 저장 단계에서
+              operation_logs에 작업자 이름과 함께 기록됩니다.
+            </p>
           </div>
         ) : (
           <div className="ops-workbench">

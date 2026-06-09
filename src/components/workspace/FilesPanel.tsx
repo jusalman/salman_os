@@ -7,18 +7,26 @@ import type {
   DriveFileSummary,
 } from '../../domain/driveFiles'
 import { Panel } from '../common/Panel'
+import { resolveCurrentOperatorName } from './operatorRecord'
 
 type FilesPanelProps = {
   driveResult: DriveFileRepositoryResult | null
   loading: boolean
   error: string
   onReload: () => void
+  currentOperatorName: string
 }
 
 const EMPTY_DRIVE_FILES: DriveFileSummary[] = []
 const EMPTY_DRIVE_CATEGORIES: DriveFileCategorySummary[] = []
 
-export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanelProps) {
+export function FilesPanel({
+  driveResult,
+  loading,
+  error,
+  onReload,
+  currentOperatorName,
+}: FilesPanelProps) {
   const [selectedFolderId, setSelectedFolderId] = useState<DriveFileCategory | 'all'>('all')
   const [selectedFileId, setSelectedFileId] = useState('')
   const [notice, setNotice] = useState('')
@@ -43,7 +51,9 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
   }
 
   function handlePreparedAction(actionName: string) {
-    setNotice(`${actionName} 기능은 mock Drive repository 경계에서만 준비된 상태입니다.`)
+    setNotice(
+      `${actionName} 기능은 mock Drive repository 경계에서만 준비된 상태입니다. 실제 저장은 아직 없고, 후속 저장 단계에서는 현재 작업자 ${resolveCurrentOperatorName(currentOperatorName)} 이름과 함께 operation_logs에 기록됩니다.`,
+    )
   }
 
   return (
@@ -164,7 +174,7 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
               <aside className="drive-detail-panel" aria-label="파일 상세">
                 <div className="drive-column-head">
                   <strong>파일 상세</strong>
-                  <span>mock metadata</span>
+                  <span>현재 작업자 {resolveCurrentOperatorName(currentOperatorName)}</span>
                 </div>
                 {selectedFile ? (
                   <FileDetail

@@ -292,6 +292,13 @@
   font-weight: 700;
 }
 
+.current-operator-note {
+  margin: 7px 0 0;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
 .workspace-nav {
   display: grid;
   gap: 6px;
@@ -948,6 +955,11 @@
   gap: 16px;
 }
 
+.logs-management {
+  display: grid;
+  gap: 16px;
+}
+
 .ops-toolbar {
   display: flex;
   align-items: flex-start;
@@ -967,6 +979,28 @@
   margin: 4px 0 0;
   color: var(--textSecondary);
   font-size: 0.9rem;
+}
+
+.current-operator-card {
+  display: grid;
+  gap: 5px;
+  max-width: 320px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: var(--surface);
+  text-align: right;
+}
+
+.current-operator-card strong {
+  color: var(--textPrimary);
+  font-size: 0.9rem;
+}
+
+.current-operator-card span {
+  color: var(--textSecondary);
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
 .ops-actions,
@@ -1081,6 +1115,13 @@
   align-items: start;
 }
 
+.log-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.72fr);
+  gap: 14px;
+  align-items: start;
+}
+
 .ops-list-panel,
 .ops-detail-panel {
   display: grid;
@@ -1109,6 +1150,11 @@
 .schedule-table-head,
 .schedule-row {
   grid-template-columns: minmax(220px, 1.4fr) 0.72fr 0.72fr 0.72fr 0.7fr 0.9fr minmax(180px, 1.15fr);
+}
+
+.log-table-head,
+.log-row {
+  grid-template-columns: 0.9fr 0.72fr 0.62fr 0.78fr minmax(240px, 1.55fr) 0.72fr;
 }
 
 .ops-list-panel {
@@ -1198,6 +1244,23 @@
   color: var(--textSecondary);
 }
 
+.log-action-pill {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: var(--accentSoft);
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .related-file-pill.attached {
   border-color: rgba(19, 116, 71, 0.2);
   background: var(--success-weak);
@@ -1229,6 +1292,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin: 0;
+}
+
+.log-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .ops-detail-grid div,
@@ -1799,6 +1866,10 @@
     grid-template-columns: 1fr;
   }
 
+  .log-workbench {
+    grid-template-columns: 1fr;
+  }
+
   .drive-layout {
     grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr);
   }
@@ -1872,6 +1943,11 @@
     grid-template-columns: 1fr;
   }
 
+  .current-operator-card {
+    max-width: none;
+    text-align: left;
+  }
+
   .ops-actions {
     justify-content: flex-start;
   }
@@ -1938,6 +2014,10 @@
   }
 
   .ops-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .log-detail-grid {
     grid-template-columns: 1fr;
   }
 
