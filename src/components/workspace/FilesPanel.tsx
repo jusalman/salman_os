@@ -35,8 +35,7 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
     () => driveResult?.diagnostics.filter((diagnostic) => diagnostic.severity !== 'info') ?? [],
     [driveResult],
   )
-  const selectedFile =
-    visibleFiles.find((file) => file.id === selectedFileId) ?? visibleFiles[0] ?? null
+  const selectedFile = visibleFiles.find((file) => file.id === selectedFileId) ?? null
 
   function handleSelectFolder(folderId: DriveFileCategory | 'all') {
     setSelectedFolderId(folderId)
@@ -52,8 +51,8 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
       <div className="drive-hub">
         <div className="drive-toolbar">
           <div>
-            <strong>Google Drive 원본 파일 인덱스</strong>
-            <p>실제 Drive API 연결 없이 mock Drive metadata만 표시합니다.</p>
+            <strong>고객사 자료실</strong>
+            <p>폴더별 자료와 파일 상세 정보를 mock Drive metadata 기준으로 확인합니다.</p>
           </div>
           <div className="drive-actions">
             <button type="button" onClick={() => handlePreparedAction('파일 추가')}>
@@ -123,14 +122,18 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
               <div className="drive-file-list">
                 <div className="drive-column-head">
                   <strong>파일</strong>
-                  <span>{visibleFiles.length.toLocaleString('ko-KR')}개</span>
+                  <span>
+                    {selectedFolderId === 'all' ? '전체 자료' : getCategoryName(selectedFolderId, folders)}
+                    {' · '}
+                    {visibleFiles.length.toLocaleString('ko-KR')}개
+                  </span>
                 </div>
                 {visibleFiles.length > 0 ? (
                   visibleFiles.map((file) => (
                     <button
                       key={file.id}
                       type="button"
-                      className={selectedFile?.id === file.id ? 'drive-file-row active' : 'drive-file-row'}
+                      className={selectedFileId === file.id ? 'drive-file-row active' : 'drive-file-row'}
                       onClick={() => setSelectedFileId(file.id)}
                     >
                       <div className="drive-file-main">
@@ -138,6 +141,11 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
                         <div>
                           <strong>{file.name}</strong>
                           <p>{file.folderPath}</p>
+                          <div className="drive-file-submeta">
+                            <span>{file.uploadedBy}</span>
+                            <span>{file.uploadedAt}</span>
+                            <span>{driveFileSensitivityLabel[file.sensitivity]}</span>
+                          </div>
                         </div>
                       </div>
                       <span className={`status-badge ${file.status}`}>
@@ -148,7 +156,7 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
                 ) : (
                   <div className="drive-empty">
                     <strong>이 폴더에는 표시할 파일이 없습니다.</strong>
-                    <p>기본 목록에서는 archived/excluded 파일을 표시하지 않습니다.</p>
+                    <p>기본 목록에서는 archived 파일과 excluded 파일을 표시하지 않습니다.</p>
                   </div>
                 )}
               </div>
@@ -165,8 +173,8 @@ export function FilesPanel({ driveResult, loading, error, onReload }: FilesPanel
                   />
                 ) : (
                   <div className="drive-empty">
-                    <strong>선택된 파일이 없습니다.</strong>
-                    <p>가운데 파일 리스트에서 파일을 선택하세요.</p>
+                    <strong>파일을 선택하면 상세 정보가 표시됩니다.</strong>
+                    <p>가운데 파일 리스트에서 확인할 자료를 선택하세요.</p>
                   </div>
                 )}
               </aside>
@@ -187,12 +195,15 @@ function FileDetail({
 }) {
   return (
     <div className="drive-detail-content">
-      <span className="drive-file-type">{file.fileType}</span>
-      <h4>{file.name}</h4>
-      <dl>
+      <div className="drive-detail-title">
+        <span className="drive-file-type">{file.fileType}</span>
+        <h4>{file.name}</h4>
+      </div>
+
+      <dl className="drive-detail-grid">
         <div>
-          <dt>폴더</dt>
-          <dd>{file.folderPath}</dd>
+          <dt>파일 유형</dt>
+          <dd>{file.fileType}</dd>
         </div>
         <div>
           <dt>상태</dt>
@@ -203,37 +214,75 @@ function FileDetail({
           </dd>
         </div>
         <div>
-          <dt>업로드 담당</dt>
+          <dt>민감도</dt>
+          <dd>
+            <span className={`status-badge ${file.sensitivity}`}>
+              {driveFileSensitivityLabel[file.sensitivity]}
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>폴더 위치</dt>
+          <dd>{file.folderPath}</dd>
+        </div>
+        <div>
+          <dt>등록자</dt>
           <dd>{file.uploadedBy}</dd>
         </div>
         <div>
-          <dt>연결 업무</dt>
-          <dd>연결 준비 중</dd>
+          <dt>등록일</dt>
+          <dd>{file.uploadedAt}</dd>
+        </div>
+      </dl>
+
+      <div className="drive-source-box">
+        <strong>원본 파일</strong>
+        {file.sourceUrl ? (
+          <a className="action-link" href={file.sourceUrl} target="_blank" rel="noreferrer">
+            원본 열기
+          </a>
+        ) : (
+          <span className="drive-link-pending">원본 링크 준비 중</span>
+        )}
+      </div>
+
+      <dl className="drive-detail-notes">
+        <div>
+          <dt>연결된 업무</dt>
+          <dd>업무 연결은 후속 승인 작업에서 연결할 mock 준비 영역입니다.</dd>
         </div>
         <div>
           <dt>메모</dt>
-          <dd>원본 파일 링크와 업무 연결은 mock metadata 기준으로만 표시합니다.</dd>
+          <dd>원본 파일 위치와 업무 연결 메모는 mock Drive repository 경계 안에서만 표시합니다.</dd>
         </div>
       </dl>
-      {file.sourceUrl ? (
-        <a className="action-link" href={file.sourceUrl} target="_blank" rel="noreferrer">
-          원본 열기
-        </a>
-      ) : (
-        <button
-          type="button"
-          className="ghost-action"
-          onClick={() => onPreparedAction('원본 열기')}
-        >
-          원본 열기 준비 중
-        </button>
-      )}
+
+      <button
+        type="button"
+        className="ghost-action drive-archive-action"
+        onClick={() => onPreparedAction('보관 이동')}
+      >
+        보관 이동
+      </button>
     </div>
   )
+}
+
+function getCategoryName(
+  categoryId: DriveFileCategory,
+  folders: DriveFileCategorySummary[],
+) {
+  return folders.find((folder) => folder.id === categoryId)?.name ?? '선택 폴더'
 }
 
 const driveFileStatusLabel: Record<DriveFileStatus, string> = {
   active: '사용 중',
   archived: '보관',
   excluded: '제외',
+}
+
+const driveFileSensitivityLabel: Record<DriveFileSummary['sensitivity'], string> = {
+  approved: '승인됨',
+  internal: '내부용',
+  restricted: '제한',
 }

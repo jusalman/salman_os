@@ -1143,6 +1143,26 @@
   font-size: 0.86rem;
 }
 
+.drive-file-submeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 8px;
+  color: var(--textSecondary);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.drive-file-submeta span {
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 0 8px;
+  background: var(--surfaceElevated);
+}
+
 .drive-file-type {
   min-height: 36px;
   display: inline-flex;
@@ -1162,9 +1182,18 @@
   gap: 14px;
 }
 
+.drive-detail-title {
+  display: grid;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
 .drive-detail-content h4 {
   margin: 0;
   font-size: 1.05rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .drive-detail-content dl {
@@ -1191,6 +1220,52 @@
   color: var(--textPrimary);
   font-size: 0.9rem;
   overflow-wrap: anywhere;
+}
+
+.drive-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.drive-detail-grid div:nth-child(4) {
+  grid-column: 1 / -1;
+}
+
+.drive-source-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--surface);
+}
+
+.drive-source-box strong {
+  color: var(--textPrimary);
+  font-size: 0.92rem;
+}
+
+.drive-link-pending {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0 10px;
+  background: var(--surface-muted);
+  color: var(--textSecondary);
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
+.drive-detail-notes div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.drive-archive-action {
+  justify-self: stretch;
 }
 
 .drive-empty,
@@ -1237,14 +1312,16 @@
 .status-badge.scheduled,
 .status-badge.normal,
 .status-badge.checked,
-.status-badge.done {
+.status-badge.done,
+.status-badge.approved {
   background: var(--success-weak);
   color: var(--success);
 }
 
 .status-badge.attention,
 .status-badge.warning,
-.status-badge.check_needed {
+.status-badge.check_needed,
+.status-badge.internal {
   background: var(--warning-weak);
   color: var(--warning);
 }
@@ -1259,7 +1336,8 @@
 .status-badge.blocked,
 .status-badge.issue,
 .status-badge.risk,
-.status-badge.error {
+.status-badge.error,
+.status-badge.restricted {
   background: var(--danger-weak);
   color: var(--danger);
 }
@@ -1432,7 +1510,8 @@
   }
 
   .drive-toolbar,
-  .drive-file-row {
+  .drive-file-row,
+  .drive-source-box {
     display: grid;
     grid-template-columns: 1fr;
   }
@@ -1498,5 +1577,13 @@
   .dashboard-right-panel,
   .checklist-card {
     padding: 14px;
+  }
+
+  .drive-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .drive-detail-grid div:nth-child(4) {
+    grid-column: auto;
   }
 }
