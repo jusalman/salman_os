@@ -29,6 +29,7 @@ export function projectClientTaskPanelItems(client: ClientRecord): ClientTaskPan
     priority: task.priority,
     assignee: task.assignee,
     dueDate: task.dueDate,
+    relatedFileId: task.relatedFileId,
   }))
 }
 

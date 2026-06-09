@@ -577,7 +577,7 @@ function ClientDetailScreen({
         ) : activeDetailTab === 'tasks' ? (
           <TasksPanel tasks={panels.tasks} />
         ) : activeDetailTab === 'schedule' ? (
-          <InternalSchedulePanel scheduleItems={panels.schedule} />
+          <InternalSchedulePanel scheduleItems={panels.schedule} clientName={header.name} />
         ) : activeDetailTab === 'files' ? (
           <FilesPanel
             driveResult={driveFilesResult}

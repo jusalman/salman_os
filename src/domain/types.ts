@@ -145,6 +145,7 @@ export type ClientTaskPanelItem = {
   priority: ClientTask['priority']
   assignee: string
   dueDate: string
+  relatedFileId?: string
 }
 
 export type ClientSchedulePanelItem = {
