@@ -14,12 +14,13 @@ export function projectWorkspaceView({
   selectedClient,
   smartViews,
 }: ProjectWorkspaceViewParams): WorkspaceView | null {
-  if (!selectedClient || !smartViews) {
+  if (!smartViews) {
     return null
   }
 
   return {
     listView: projectClientListView(clients),
-    detailView: projectSelectedClientDetailView(selectedClient, smartViews),
+    detailView: selectedClient ? projectSelectedClientDetailView(selectedClient, smartViews) : null,
+    smartViews,
   }
 }

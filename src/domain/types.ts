@@ -198,7 +198,8 @@ export type SelectedClientDetailView = {
 
 export type WorkspaceView = {
   listView: ClientListView
-  detailView: SelectedClientDetailView
+  detailView: SelectedClientDetailView | null
+  smartViews: SmartViewsData
 }
 
 export type SmartViewItem = {

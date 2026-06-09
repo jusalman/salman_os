@@ -22,7 +22,7 @@ function App() {
   const [viewerName, setViewerName] = useState('')
   const [error, setError] = useState('')
   const [selectedClientId, setSelectedClientId] = useState('')
-  const fallbackClientId = clients[0]?.id ?? ''
+  const fallbackClientId = selectedClientId
   const {
     selectedClient,
     resolvedClientId,
@@ -33,9 +33,10 @@ function App() {
     selectedClientId,
     fallbackClientId,
   })
+  const selectedClientForWorkspace = selectedClientId ? selectedClient : null
   const workspaceView = projectWorkspaceView({
     clients,
-    selectedClient,
+    selectedClient: selectedClientForWorkspace,
     smartViews,
   })
 
@@ -97,19 +98,19 @@ function App() {
             actionLabel="운영 요약 다시 불러오기"
             onAction={() => void reloadSmartViews()}
           />
-        ) : selectedClientLoading ? (
+        ) : selectedClientId && selectedClientLoading ? (
           <StatusView
             title="선택한 고객사를 불러오는 중입니다"
             message="고객사 운영 화면을 준비하고 있습니다."
           />
-        ) : selectedClientError ? (
+        ) : selectedClientId && selectedClientError ? (
           <StatusView
             title="선택한 고객사를 불러오지 못했습니다"
             message={selectedClientError}
             actionLabel="고객사 다시 불러오기"
             onAction={() => void reloadSelectedClient()}
           />
-        ) : !selectedClient ? (
+        ) : selectedClientId && !selectedClient ? (
           <StatusView
             title="선택한 고객사를 표시할 수 없습니다"
             message="SALMAN OS가 고객사 상세 정보를 찾지 못했습니다."
