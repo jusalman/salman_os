@@ -1202,6 +1202,25 @@
   grid-template-columns: minmax(220px, 1.35fr) 0.78fr 0.78fr 0.72fr 0.82fr 0.72fr;
 }
 
+.ads-ops-summary-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.ads-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.74fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.ads-campaign-table-head,
+.ads-campaign-row {
+  grid-template-columns:
+    minmax(230px, 1.45fr) 0.46fr 0.72fr 0.78fr 0.58fr 0.72fr 0.62fr 0.88fr
+    0.68fr;
+  min-width: 1080px;
+}
+
 .ops-list-panel {
   overflow-x: auto;
 }
@@ -1289,6 +1308,29 @@
   color: var(--textSecondary);
 }
 
+.ads-type-badge {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: var(--accentSoft);
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ads-type-badge.da {
+  border-color: rgba(168, 100, 8, 0.18);
+  background: var(--warning-weak);
+  color: var(--warning);
+}
+
 .log-action-pill {
   min-height: 26px;
   display: inline-flex;
@@ -1310,6 +1352,135 @@
   border-color: rgba(19, 116, 71, 0.2);
   background: var(--success-weak);
   color: var(--success);
+}
+
+.ads-risk-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ads-risk-signal-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 92px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 13px;
+  background: var(--surfaceElevated);
+}
+
+.ads-risk-signal-card strong {
+  color: var(--textPrimary);
+  font-size: 0.92rem;
+}
+
+.ads-risk-signal-card p {
+  margin: 5px 0 0;
+  color: var(--textSecondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.ads-risk-signal-card span {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 9px;
+  background: var(--surface-muted);
+  color: var(--textSecondary);
+  font-size: 0.76rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.ads-risk-signal-card.active.normal {
+  border-color: rgba(37, 99, 235, 0.22);
+  background: #f8fbff;
+}
+
+.ads-risk-signal-card.active.normal span {
+  background: var(--accentSoft);
+  color: var(--accent);
+}
+
+.ads-risk-signal-card.active.warning {
+  border-color: rgba(168, 100, 8, 0.25);
+  background: var(--warning-weak);
+}
+
+.ads-risk-signal-card.active.warning span {
+  background: #ffffff;
+  color: var(--warning);
+}
+
+.ads-risk-signal-card.active.danger {
+  border-color: rgba(194, 65, 75, 0.25);
+  background: var(--danger-weak);
+}
+
+.ads-risk-signal-card.active.danger span {
+  background: #ffffff;
+  color: var(--danger);
+}
+
+.ads-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ads-metric-strip div {
+  display: grid;
+  gap: 5px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 10px;
+  background: var(--surface);
+}
+
+.ads-metric-strip span {
+  color: var(--textSecondary);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.ads-metric-strip strong {
+  color: var(--textPrimary);
+  font-size: 0.98rem;
+}
+
+.ads-signal-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.ads-signal-pill {
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: var(--accentSoft);
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ads-signal-pill.warning {
+  background: var(--warning-weak);
+  color: var(--warning);
+}
+
+.ads-signal-pill.danger {
+  background: var(--danger-weak);
+  color: var(--danger);
 }
 
 .ops-detail-title {
@@ -1779,7 +1950,8 @@
 
 .status-badge.archived,
 .status-badge.canceled,
-.status-badge.missing_data {
+.status-badge.missing_data,
+.status-badge.paused {
   background: var(--archive-weak);
   color: var(--archive);
 }
@@ -1895,7 +2067,8 @@
   }
 
   .ops-overview,
-  .ads-summary-grid {
+  .ads-summary-grid,
+  .ads-ops-summary-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -1917,6 +2090,14 @@
 
   .money-workbench {
     grid-template-columns: 1fr;
+  }
+
+  .ads-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .ads-risk-signal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .drive-layout {
@@ -2032,6 +2213,7 @@
   .ops-overview,
   .ops-summary-grid,
   .ads-summary-grid,
+  .ads-risk-signal-grid,
   .detail-summary-grid,
   .overview-preview-grid {
     grid-template-columns: 1fr;

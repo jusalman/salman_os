@@ -661,7 +661,11 @@ function ClientDetailScreen({
             currentOperatorName={currentOperatorName}
           />
         ) : activeDetailTab === 'ads' ? (
-          <AdsOperationsPlaceholder />
+          <AdsOperationsPlaceholder
+            clientName={header.name}
+            currentOperatorName={currentOperatorName}
+            moneyItems={panels.money}
+          />
         ) : activeDetailTab === 'contracts' ? (
           <ContractsPlaceholder />
         ) : activeDetailTab === 'money' ? (
