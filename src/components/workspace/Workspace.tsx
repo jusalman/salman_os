@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { clientStatusLabel } from '../../domain/labels'
 import { useClientDriveFiles } from '../../hooks/useClientDriveFiles'
 import type {
   ClientFilePanelItem,
@@ -78,7 +79,7 @@ export function Workspace({
           <p className="eyebrow">SALMAN OS</p>
           <h2>Digital HQ</h2>
           <p className="sidebar-copy">
-            <strong>{viewerName}</strong> 님의 내부 운영센터
+            <strong>{viewerName}</strong> 님의 커맨드센터
           </p>
         </div>
 
@@ -160,7 +161,7 @@ function ClientListScreen({
     <section className="client-list-screen">
       <header className="topbar list-hero">
         <div>
-          <p className="eyebrow">오늘의 운영 현황</p>
+          <p className="eyebrow">Client Control Center</p>
           <h1>고객사 운영센터</h1>
           <p className="intro">
             먼저 고객사를 선택한 뒤 상세 화면에서 업무, 일정, 자료실, 비즈머니, 링크, 로그를
@@ -228,13 +229,14 @@ function ClientDetailScreen({
           <button type="button" className="back-button" onClick={onBack}>
             고객사 목록
           </button>
-          <p className="eyebrow">고객사 상세</p>
+          <p className="eyebrow">Client Workroom</p>
           <h1>{header.name}</h1>
           <p className="intro">{header.memo}</p>
         </div>
-        <div className="topbar-notes">
-          <span>{header.owner}</span>
-          <span>{header.updatedAt}</span>
+        <div className="detail-hero-meta" aria-label="고객사 핵심 정보">
+          <span className={`status-badge ${header.status}`}>{clientStatusLabel[header.status]}</span>
+          <span>담당자 {header.owner}</span>
+          <span>최근 업데이트 {header.updatedAt}</span>
         </div>
       </header>
 

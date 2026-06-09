@@ -5,6 +5,7 @@ export function projectClientListItem(summary: ClientSummary): ClientListItem {
     id: summary.id,
     name: summary.name,
     status: summary.status,
+    owner: summary.owner,
     openTaskCount: summary.openTaskCount,
     upcomingEventCount: summary.upcomingEventCount,
     hasBizMoneyWarning: summary.hasBizMoneyWarning,

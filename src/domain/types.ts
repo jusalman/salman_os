@@ -86,6 +86,7 @@ export type ClientListItem = {
   id: string
   name: string
   status: ClientSummary['status']
+  owner: string
   openTaskCount: number
   upcomingEventCount: number
   hasBizMoneyWarning: boolean
