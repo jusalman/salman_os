@@ -49,7 +49,7 @@ function App() {
     }
 
     if (!staffName.trim()) {
-      setError('이름을 입력해 주세요.')
+      setError('작업자 이름을 입력해 주세요.')
       return
     }
 

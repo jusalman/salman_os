@@ -136,6 +136,12 @@
   font-weight: 800;
 }
 
+.login-form label small {
+  color: var(--textSecondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .login-form input,
 .crm-filter-bar input,
 .crm-filter-bar select {
@@ -275,8 +281,15 @@
 }
 
 .brand-block .eyebrow,
-.brand-block .sidebar-copy {
+.brand-block .sidebar-copy,
+.current-operator {
   color: rgba(255, 255, 255, 0.68);
+}
+
+.current-operator {
+  margin: 14px 0 0;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .workspace-nav {

@@ -37,7 +37,7 @@ export function LoginView({
         <form className="login-form" onSubmit={onSubmit}>
           <div className="form-head">
             <h2>입장하기</h2>
-            <p>공통 비밀번호와 이름을 입력해 주세요.</p>
+            <p>공통 비밀번호와 작업자 이름을 입력해 주세요.</p>
           </div>
           <label>
             <span>공통 비밀번호</span>
@@ -49,13 +49,16 @@ export function LoginView({
             />
           </label>
           <label>
-            <span>이름</span>
+            <span>작업자 이름</span>
             <input
               type="text"
               value={staffName}
               onChange={(event) => onStaffNameChange(event.target.value)}
-              placeholder="이름 입력"
+              placeholder="작업자 이름 입력"
             />
+            <small>
+              작업 기록, 수정 이력, 향후 챗봇 대화 로그에 표시할 이름을 입력하세요.
+            </small>
           </label>
           {error ? <p className="form-error">{error}</p> : null}
           <button type="submit">운영센터 열기</button>

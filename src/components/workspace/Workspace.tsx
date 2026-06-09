@@ -126,11 +126,10 @@ export function Workspace({
     <section className="workspace">
       <aside className="sidebar">
         <div className="brand-block">
-          <p className="eyebrow">SALMAN OS</p>
-          <h2>Digital HQ</h2>
-          <p className="sidebar-copy">
-            <strong>{viewerName}</strong> 님의 운영 워크스페이스
-          </p>
+          <p className="eyebrow">내부 운영센터</p>
+          <h2>SALMAN OS</h2>
+          <p className="sidebar-copy">SALMAN Workspace</p>
+          <p className="current-operator">현재 작업자: {viewerName}</p>
         </div>
 
         <nav className="workspace-nav" aria-label="SALMAN OS 주요 메뉴">
@@ -540,7 +539,7 @@ function ClientDetailScreen({
       <header className="crm-page-header detail-heading">
         <div>
           <button type="button" className="back-button" onClick={onBack}>
-            고객사 목록
+            고객사 목록으로
           </button>
           <p className="eyebrow">Client Workroom</p>
           <h1>{header.name}</h1>
