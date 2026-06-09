@@ -7,6 +7,7 @@ import type {
   ClientSchedulePanelItem,
   ClientTaskPanelItem,
 } from '../../types'
+import { resolveBusinessMoneyStatus } from '../../domain/businessMoney'
 
 export function projectClientFilePanelItems(client: ClientRecord): ClientFilePanelItem[] {
   return client.files.map((file) => ({
@@ -50,7 +51,9 @@ export function projectClientMoneyPanelItems(client: ClientRecord): ClientMoneyP
     id: item.id,
     title: item.title,
     note: item.note,
-    status: item.status,
+    status: resolveBusinessMoneyStatus(item),
+    currentBalance: item.currentBalance ?? null,
+    minimumAlertAmount: item.minimumAlertAmount,
     lastCheckedAt: item.lastCheckedAt,
     checkedBy: item.checkedBy,
     url: item.url,

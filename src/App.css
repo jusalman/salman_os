@@ -178,6 +178,10 @@
 .ads-tab,
 .detail-tab,
 .client-table-item,
+.dashboard-client-row,
+.dashboard-log-row,
+.money-alert-row,
+.ops-row,
 .drive-folder,
 .drive-file-row {
   font: inherit;
@@ -554,13 +558,15 @@
 }
 
 .dashboard-client-list,
-.dashboard-log-list {
+.dashboard-log-list,
+.money-alert-list {
   display: grid;
   gap: 8px;
 }
 
 .dashboard-client-row,
-.dashboard-log-row {
+.dashboard-log-row,
+.money-alert-row {
   width: 100%;
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
@@ -586,15 +592,24 @@
   align-items: center;
 }
 
+.money-alert-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.35fr) 0.78fr 0.78fr 0.7fr 0.82fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
 .dashboard-client-row:hover,
-.dashboard-log-row:hover {
+.dashboard-log-row:hover,
+.money-alert-row:hover {
   transform: translateY(-1px);
   border-color: rgba(37, 99, 235, 0.28);
   background: #f8fbff;
 }
 
 .dashboard-client-row strong,
-.dashboard-log-row strong {
+.dashboard-log-row strong,
+.money-alert-row strong {
   display: block;
   overflow: hidden;
   color: var(--textPrimary);
@@ -604,10 +619,23 @@
 
 .dashboard-client-row span,
 .dashboard-log-row span,
-.dashboard-log-row em {
+.dashboard-log-row em,
+.money-alert-row span {
   color: var(--textSecondary);
   font-size: 0.86rem;
   font-style: normal;
+}
+
+.money-alert-main {
+  min-width: 0;
+}
+
+.money-alert-main span {
+  display: block;
+  overflow: hidden;
+  margin-top: 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dashboard-client-row > div:first-child span {
@@ -950,7 +978,8 @@
   text-align: right;
 }
 
-.ops-management {
+.ops-management,
+.money-management {
   display: grid;
   gap: 16px;
 }
@@ -1108,6 +1137,10 @@
   border-left-color: var(--danger);
 }
 
+.ops-summary-card.warning {
+  border-left-color: var(--warning);
+}
+
 .ops-workbench {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.75fr);
@@ -1118,6 +1151,13 @@
 .log-workbench {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.72fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.money-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.78fr);
   gap: 14px;
   align-items: start;
 }
@@ -1155,6 +1195,11 @@
 .log-table-head,
 .log-row {
   grid-template-columns: 0.9fr 0.72fr 0.62fr 0.78fr minmax(240px, 1.55fr) 0.72fr;
+}
+
+.money-table-head,
+.money-row {
+  grid-template-columns: minmax(220px, 1.35fr) 0.78fr 0.78fr 0.72fr 0.82fr 0.72fr;
 }
 
 .ops-list-panel {
@@ -1870,6 +1915,10 @@
     grid-template-columns: 1fr;
   }
 
+  .money-workbench {
+    grid-template-columns: 1fr;
+  }
+
   .drive-layout {
     grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.2fr);
   }
@@ -1953,7 +2002,8 @@
   }
 
   .dashboard-client-row,
-  .dashboard-log-row {
+  .dashboard-log-row,
+  .money-alert-row {
     grid-template-columns: 1fr;
   }
 

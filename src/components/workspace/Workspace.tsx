@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { clientStatusLabel } from '../../domain/labels'
+import { formatWon } from '../../domain/businessMoney'
+import { clientStatusLabel, moneyStatusLabel } from '../../domain/labels'
+import type { BusinessMoneyAlertItem } from '../../domain/smartViews'
 import { useClientDriveFiles } from '../../hooks/useClientDriveFiles'
 import type {
   ClientListItem,
@@ -89,7 +91,7 @@ export function Workspace({
     (total, client) => total + client.upcomingEventCount,
     0,
   )
-  const moneyWarningCount = listView.items.filter((client) => client.hasBizMoneyWarning).length
+  const moneyWarningCount = workspaceView.smartViews.moneyAlerts.length
   const isDetailMode = Boolean(selectedClientId && detailView)
 
   function handleOpenDashboard() {
@@ -253,7 +255,9 @@ function DashboardScreen({
           <p className="eyebrow">Today Command</p>
           <h1>오늘의 운영 현황</h1>
           <p className="intro">
-            오늘 확인해야 할 고객사, 업무, 일정, 비즈머니 상태를 한 화면에서 먼저 점검합니다.
+            오늘 확인해야 할 고객사, 업무, SALMAN OS 내부 일정, 비즈머니 상태를 한
+            화면에서 먼저 점검합니다. 일정은 현재 내부 일정 기준이며, 추후 Google
+            Calendar 연동 가능성만 준비합니다.
           </p>
         </div>
       </header>
@@ -280,6 +284,22 @@ function DashboardScreen({
             </div>
             <DashboardClientList
               clients={attentionClients}
+              onSelectClient={onSelectClient}
+            />
+          </section>
+
+          <section className="panel dashboard-panel dashboard-money-alert-panel">
+            <div className="section-head">
+              <div>
+                <h3>비즈머니 알림</h3>
+                <p>최소 알림 금액 이하, 위험, 미확인 항목만 표시합니다.</p>
+              </div>
+              <span className="section-count">
+                {workspaceView.smartViews.moneyAlerts.length.toLocaleString('ko-KR')}건
+              </span>
+            </div>
+            <DashboardMoneyAlerts
+              alerts={workspaceView.smartViews.moneyAlerts}
               onSelectClient={onSelectClient}
             />
           </section>
@@ -384,6 +404,48 @@ function DashboardRecentLogs({
           <strong>{client.name}</strong>
           <span>{client.latestLogAt}</span>
           <em>상세 로그 열기</em>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function DashboardMoneyAlerts({
+  alerts,
+  onSelectClient,
+}: {
+  alerts: BusinessMoneyAlertItem[]
+  onSelectClient: (clientId: string) => void
+}) {
+  if (alerts.length === 0) {
+    return (
+      <div className="empty-state compact-empty">
+        <strong>표시할 비즈머니 알림이 없습니다.</strong>
+        <p>최소 알림 금액 이하 또는 미확인 상태의 고객사가 없습니다.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="money-alert-list">
+      {alerts.map((alert) => (
+        <button
+          key={`${alert.clientId}-${alert.title}`}
+          type="button"
+          className="money-alert-row"
+          onClick={() => onSelectClient(alert.clientId)}
+        >
+          <div className="money-alert-main">
+            <strong>{alert.clientName}</strong>
+            <span>{alert.title}</span>
+          </div>
+          <span>{formatWon(alert.currentBalance)}</span>
+          <span>{formatWon(alert.minimumAlertAmount)}</span>
+          <span className={`status-badge ${getMoneyStatusClass(alert.status)}`}>
+            {moneyStatusLabel[alert.status]}
+          </span>
+          <span>{alert.lastCheckedAt ?? '미확인'}</span>
+          <span className="open-action">고객사 열기</span>
         </button>
       ))}
     </div>
@@ -603,7 +665,10 @@ function ClientDetailScreen({
         ) : activeDetailTab === 'contracts' ? (
           <ContractsPlaceholder />
         ) : activeDetailTab === 'money' ? (
-          <BusinessMoneyPanel moneyItems={panels.money} />
+          <BusinessMoneyPanel
+            moneyItems={panels.money}
+            currentOperatorName={currentOperatorName}
+          />
         ) : activeDetailTab === 'links' ? (
           <LinksPanel links={panels.links} />
         ) : (
@@ -750,4 +815,12 @@ function OverviewMetric({
       <strong>{value.toLocaleString('ko-KR')}</strong>
     </article>
   )
+}
+
+function getMoneyStatusClass(status: BusinessMoneyAlertItem['status']) {
+  if (status === 'unknown') {
+    return 'missing_data'
+  }
+
+  return status
 }

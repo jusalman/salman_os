@@ -1,11 +1,27 @@
-import { TODAY } from '../config/constants'
-import { moneyStatusLabel } from './labels'
-import type { ClientRecord, SmartViewItem } from '../types'
+import { TODAY } from '../config/constants.ts'
+import {
+  formatWon,
+  isBusinessMoneyAlertStatus,
+  resolveBusinessMoneyStatus,
+} from './businessMoney.ts'
+import { moneyStatusLabel } from './labels.ts'
+import type { ClientRecord, MoneyStatus, SmartViewItem } from '../types'
+
+export type BusinessMoneyAlertItem = SmartViewItem & {
+  clientId: string
+  currentBalance: number | null
+  minimumAlertAmount: number
+  status: MoneyStatus
+  lastCheckedAt: string | null
+  checkedBy: string | null
+  url: string
+  note: string
+}
 
 export type SmartViews = {
   todaysItems: SmartViewItem[]
   priorityTasks: SmartViewItem[]
-  moneyAlerts: SmartViewItem[]
+  moneyAlerts: BusinessMoneyAlertItem[]
   recentArchive: SmartViewItem[]
 }
 
@@ -31,11 +47,23 @@ export function buildSmartViews(clients: ClientRecord[]): SmartViews {
     ),
     moneyAlerts: clients.flatMap((client) =>
       client.moneyItems
-        .filter((item) => item.status !== 'checked')
+        .map((item) => ({
+          item,
+          status: resolveBusinessMoneyStatus(item),
+        }))
+        .filter(({ status }) => isBusinessMoneyAlertStatus(status))
         .map((item) => ({
           clientName: client.name,
-          title: item.title,
-          meta: moneyStatusLabel[item.status],
+          clientId: client.id,
+          title: item.item.title,
+          meta: `${moneyStatusLabel[item.status]} · ${formatWon(item.item.currentBalance)} / ${formatWon(item.item.minimumAlertAmount)}`,
+          currentBalance: item.item.currentBalance ?? null,
+          minimumAlertAmount: item.item.minimumAlertAmount,
+          status: item.status,
+          lastCheckedAt: item.item.lastCheckedAt,
+          checkedBy: item.item.checkedBy,
+          url: item.item.url,
+          note: item.item.note,
         })),
     ),
     recentArchive: clients.flatMap((client) =>

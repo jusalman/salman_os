@@ -8,6 +8,7 @@ import type {
   OperationLog,
 } from '../../types'
 import { TODAY } from '../../config/constants.ts'
+import { isBusinessMoneyAlertStatus, resolveBusinessMoneyStatus } from '../../domain/businessMoney.ts'
 
 type ClientSummarySource = {
   id: string
@@ -43,7 +44,9 @@ export function projectClientSummary(
   const upcomingEventCount = collections.events.filter((event) =>
     isUpcomingScheduledEvent(event, referenceDate),
   ).length
-  const hasBizMoneyWarning = collections.moneyItems.some((item) => item.status !== 'checked')
+  const hasBizMoneyWarning = collections.moneyItems.some((item) =>
+    isBusinessMoneyAlertStatus(resolveBusinessMoneyStatus(item, referenceDate)),
+  )
   const latestLogAt = collections.logs[0]?.createdAt ?? null
   const hasDriveFolder =
     client.driveRootUrl.trim().length > 0 ||

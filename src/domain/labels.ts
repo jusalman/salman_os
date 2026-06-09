@@ -33,8 +33,9 @@ export const fileStatusLabel: Record<FileStatus, string> = {
 
 export const moneyStatusLabel: Record<MoneyStatus, string> = {
   check_needed: '확인 필요',
-  checked: '확인 완료',
-  issue: '문제 발생',
+  checked: '정상',
+  issue: '위험',
+  unknown: '미확인',
 }
 
 export const eventStatusLabel: Record<EventStatus, string> = {

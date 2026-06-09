@@ -5,7 +5,7 @@ export type TaskStatus = 'doing' | 'blocked' | 'done' | 'archived'
 export type TaskPriority = 'high' | 'normal' | 'low'
 export type EventStatus = 'scheduled' | 'done' | 'canceled'
 export type FileStatus = 'active' | 'archived'
-export type MoneyStatus = 'check_needed' | 'checked' | 'issue'
+export type MoneyStatus = 'check_needed' | 'checked' | 'issue' | 'unknown'
 
 export type ClientFile = {
   id: string
@@ -45,6 +45,8 @@ export type ClientMoneyItem = {
   title: string
   url: string
   status: MoneyStatus
+  currentBalance?: number | null
+  minimumAlertAmount: number
   lastCheckedAt: string | null
   checkedBy: string | null
   note: string
@@ -163,6 +165,8 @@ export type ClientMoneyPanelItem = {
   title: string
   note: string
   status: ClientMoneyItem['status']
+  currentBalance: number | null
+  minimumAlertAmount: number
   lastCheckedAt: string | null
   checkedBy: string | null
   url: string
